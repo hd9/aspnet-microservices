@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Product";
+}
+
+
+<div class="row" style="min-height:400px">
+    <div class="col-md-9 col-sm-12">
+        <partial name="~/Views/Partials/Catalog/_Product.cshtml" />
+    </div>
+    <div class="col-md-3">
+        <partial name="~/Views/Partials/Order/_Cart.cshtml" />
+    </div>
+</div>
+
+<partial name="~/Views/Partials/Recommendation/_recommendation.cshtml" />
+
+<script src="~/js/catalog.js"></script>

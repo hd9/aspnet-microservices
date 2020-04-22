@@ -1,0 +1,29 @@
+﻿<div id="nlApp" class="bg-light p-4 mt-3">
+    <h3>Newsletter</h3>
+    <p class="small">
+        Want to subscribe with our newsletter?<br />
+        Signups are managed by <span class="badge badge-success">Newsletter Microservice</span>.
+    </p>
+
+    <div v-if="!submitted">
+        <div class="my-4">
+            <form>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Name</label>
+                    <input type="text" class="form-control form-control-sm" placeholder="Enter your name" v-model="name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control form-control-sm" aria-describedby="emailHelp" v-model="email" v-on:keyup.enter="submit">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else 😊.</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" v-on:click="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div v-if="submitted" style="min-height:300px">
+        <h3>Thanks for submitting!</h3>
+        <p>Click <a href="#" v-on:click="resubmit">here</a> to submit another email.</p>
+    </div>
+
+</div>

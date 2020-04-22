@@ -1,0 +1,14 @@
+﻿<div id="catApp">
+    <div class="row">
+        <div class="col-sm-6 col-lg-4 my-3" v-for="c in categories">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ c.name }}</h5>
+                    <a v-bind:href="c.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
+                    <p class="small">Check our selection of <strong>{{ c.name }}</strong>.</p>
+                    <a v-bind:href="c.url" class="small">View all products in {{ c.name }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿<div id="recommApp" class="my-5">
+    <h3>Recommended for you</h3>
+    Recommendations provided by the <span class="badge badge-success">Recommendation Microservice</span>.
+    <div class="row my-4">
+        <div class="col-sm-4 col-lg-2" v-for="p in products">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.name }}</h5>
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect></svg>
+                    <a v-bind:href="p.url" class="small">View product</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

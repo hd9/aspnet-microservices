@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Category"] = Model.CategoryName;
+    ViewData["CategoryId"] = Model.CategoryId;
+    ViewData["ProductName"] = Model.Name;
+}
+
+<div class="mb-lg-5">
+    <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
+    <div class="row" id="prodApp">
+        <div class="col-sm-6 col-md-4" ref="cat" id="@Model.Id">
+            <partial name="~/Views/Shared/_fakeImg.cshtml" />
+        </div>
+        <div class="col-sm-6 col-md-8">
+            <h4 class="border-bottom">@Model.Name</h4>
+            <p class="small mb-4">@Model.Description</p>
+            <p class="small mb-4">Rating: @Model.Rating / 5</p>
+            <p class="text-danger font-weight-bold">@Model.Currency $ @Model.Price</p>
+            <p><a href="#" class="btn btn-outline-danger btn-sm" v-on:click="addToCart">Add to cart</a></p>
+        </div>
+    </div>
+</div>

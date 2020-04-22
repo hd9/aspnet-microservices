@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Account";
+}
+
+<div id="acctApp" class="my-lg-5">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">My Account</h5>
+                    <a v-bind:href="c.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
+                    <ul>
+                        <li><a v-bind:href="c.url" class="small">My information</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">My Orders</h5>
+                    <a v-bind:href="c.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
+                    <ul>
+                        <li><a v-bind:href="c.url" class="small">My information</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/account.js"></script>

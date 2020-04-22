@@ -1,0 +1,14 @@
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        @if (ViewData["ProductName"] == null)
+        {
+            <li class="breadcrumb-item active" aria-current="page">@ViewData["Category"]</li>
+        }
+        else
+        {
+            <li class="breadcrumb-item"><a href="/products/@ViewData["CategoryId"]">@ViewData["Category"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@ViewData["ProductName"]</li>
+        }
+    </ol>
+</nav>

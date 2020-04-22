@@ -1,0 +1,12 @@
+﻿<div class="my-5 bg-light p-4 mt-3">
+    <h3 class="border-bottom py-2">Notifications</h3>
+    <p class="small mt-3">
+        The application also provides notifications via asynchronous messages
+        exchanged via a RabbitMQ Docker container and processed by a .NET Core backend
+        <span class="badge badge-warning">Notification microservice</span>.
+        Every signup for the newsletter sends an async message to the
+        <span class="badge badge-warning">Notification microservice</span>
+        that's responsible for emailing the user a confirmation message.
+        The notification service also logs the data on a MySQL database.
+    </p>
+</div>

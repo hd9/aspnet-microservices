@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    ViewData["Category"] = Model.Name;
+    ViewData["CategoryId"] = Model.Id;
+}
+
+<div class="row">
+    <h3 class="display-4">@Model.Name</h3>
+    <p class="lead">@Model.Description</p>
+    <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
+</div>
+
+<div class="row" style="min-height:400px">
+    <div class="col-md-9 col-sm-12">
+        <partial name="~/Views/Partials/Catalog/_Products.cshtml" />
+    </div>
+    <div class="col-md-3">
+        <partial name="~/Views/Partials/Order/_Cart.cshtml" />
+    </div>
+</div>
+
+<partial name="~/Views/Partials/Recommendation/_recommendation.cshtml" />
+
+<script src="~/js/catalog.js"></script>
