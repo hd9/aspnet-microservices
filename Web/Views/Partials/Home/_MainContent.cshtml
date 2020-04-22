@@ -1,4 +1,7 @@
-﻿
+﻿@{ 
+    var nlClaim = User.FindFirst("NewsletterSubscribed");
+    var nlSubscribed = nlClaim != null && nlClaim.Value == "True";
+}
 
 <div class="row">
     <div class="col-md-8 col-sm-12">
@@ -11,9 +14,12 @@
         }
         else
         {
-            <partial name="~/Views/Partials/Home/_AccountInfo.cshtml" />
+            <partial name="~/Views/Partials/Home/_SignInInfo.cshtml" />
         }
-        <partial name="~/Views/Partials/Newsletter/_Newsletter.cshtml" />
+        @if (!nlSubscribed)
+        {
+            <partial name="~/Views/Partials/Newsletter/_Newsletter.cshtml" />
+        }
         <partial name="~/Views/Partials/Notification/_Notifications.cshtml" />
     </div>
 </div>

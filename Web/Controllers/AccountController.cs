@@ -121,7 +121,8 @@ namespace Web.Controllers
             {
                 new Claim("Id", acct.Id),
                 new Claim("Username", acct.Email),
-                new Claim("Name", acct.Name)
+                new Claim("Name", acct.Name),
+                new Claim("NewsletterSubscribed", acct.SubscribedToNewsletter.ToString()),
             };
 
             var authProperties = new AuthenticationProperties();

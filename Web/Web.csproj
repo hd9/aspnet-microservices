@@ -5,14 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Partials\Home\_AccountInfo.cshtml" />
     <Content Remove="Views\Partials\Home\_Header.cshtml" />
     <Content Remove="Views\Partials\Home\_MainContent.cshtml" />
     <Content Remove="Views\Partials\Home\_SignIn.cshtml" />
+    <Content Remove="Views\Partials\Home\_SignInInfo.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Partials\Home\_AccountInfo.cshtml" />
+    <None Include="Views\Partials\Home\_SignInInfo.cshtml" />
     <None Include="Views\Partials\Home\_SignIn.cshtml" />
     <None Include="Views\Partials\Home\_MainContent.cshtml" />
     <None Include="Views\Partials\Home\_Header.cshtml" />

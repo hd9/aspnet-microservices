@@ -27,7 +27,7 @@ namespace Web.Services
 
             _accounts = new List<Account>
             {
-                new Account { Name = "User 1", Email = "usr1@mail.com", Password = "pwd01", Id = "usr1xx1" },
+                new Account { Name = "User 1", Email = "usr1@mail.com", Password = "pwd01", Id = "usr1xx1", SubscribedToNewsletter = true },
                 new Account { Name = "User 2", Email = "usr2@mail.com", Password = "pwd02", Id = "usr2xx2" },
                 new Account { Name = "User 3", Email = "usr3@mail.com", Password = "pwd03", Id = "usr3xx3" }
             };

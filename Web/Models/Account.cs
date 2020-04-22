@@ -15,5 +15,6 @@ namespace Web.Models
         public string Region { get; set; }
         public string Country { get; set; }
         public string Password { get; set; }
+        public bool SubscribedToNewsletter { get; set; }
     }
 }
