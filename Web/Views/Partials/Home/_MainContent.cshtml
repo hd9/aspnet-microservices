@@ -5,7 +5,14 @@
         <partial name="~/Views/Partials/Catalog/_Categories.cshtml" />
     </div>
     <div class="col-md-4">
-        <partial name="~/Views/Partials/Home/_SignIn.cshtml" />
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <partial name="~/Views/Partials/Home/_SignIn.cshtml" />
+        }
+        else
+        {
+            <partial name="~/Views/Partials/Home/_AccountInfo.cshtml" />
+        }
         <partial name="~/Views/Partials/Newsletter/_Newsletter.cshtml" />
         <partial name="~/Views/Partials/Notification/_Notifications.cshtml" />
     </div>

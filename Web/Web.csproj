@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Partials\Home\_AccountInfo.cshtml" />
     <Content Remove="Views\Partials\Home\_Header.cshtml" />
     <Content Remove="Views\Partials\Home\_MainContent.cshtml" />
     <Content Remove="Views\Partials\Home\_SignIn.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Partials\Home\_AccountInfo.cshtml" />
     <None Include="Views\Partials\Home\_SignIn.cshtml" />
     <None Include="Views\Partials\Home\_MainContent.cshtml" />
     <None Include="Views\Partials\Home\_Header.cshtml" />
@@ -19,6 +21,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

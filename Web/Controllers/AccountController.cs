@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Web.Models;
 using Web.Services;
+using static Core.Infrastructure.Extentions.ExceptionExtensions;
 
 namespace Web.Controllers
 {
@@ -34,7 +35,6 @@ namespace Web.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            // todo :: get acct data from acctSvc
             return View();
         }
 
@@ -61,10 +61,16 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignIn request)
         {
-            // todo :: get claims from accSvc
-            var claims = new List<Claim>
+            var acct = await _accSvc.TrySignIn(request);
+
+            if (acct == null)
+                return Unauthorized();
+                
+            var claims = new List<Claim> 
             {
-                new Claim("FullName", "Bruno Hildenbrand")
+                new Claim("Id", acct.Id),
+                new Claim("Username", acct.Email),
+                new Claim("Name", acct.Name)
             };
 
             var authProperties = new AuthenticationProperties();
@@ -76,6 +82,8 @@ namespace Web.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
+
+            var n = User.Identity.Name;
 
             return RedirectToAction("Index", "Account");
         }

@@ -47,7 +47,11 @@ namespace Web.Services
                 new Product { Id = "pppro-789", Name = "Toshiba Netflix 55", Price = 450, Currency = "CAD", Description = "TODO", CategoryId = "tvs", CategoryName = "TVs", Rating = 4 } ,
                 new Product { Id = "ggc-789", Name = "Grass Curter", Price = 40, Currency = "CAD", Description = "TODO", CategoryId = "home", CategoryName = "Home & Garden", Rating = 4 } ,
                 new Product { Id = "bbqc-789", Name = "BBQ Coal", Price = 40, Currency = "CAD", Description = "TODO", CategoryId = "home", CategoryName = "Home & Garden", Rating = 4 } ,
-                new Product { Id = "seab-789", Name = "Sony Earbuddy", Price = 40, Currency = "CAD", Description = "TODO", CategoryId = "headphones-audio", CategoryName = "Headphones & Audio", Rating = 4 }
+                new Product { Id = "seab-789", Name = "Sony Earbuddy", Price = 40, Currency = "CAD", Description = "TODO", CategoryId = "headphones-audio", CategoryName = "Headphones & Audio", Rating = 4 },
+                new Product { Id = "iphone-753", Name = "iPhone 7", Price = 400, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
+                new Product { Id = "iphone-X11", Name = "iPhone X", Price = 999, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
+                new Product { Id = "sg-11", Name = "Samsung Galaxy 11", Price = 600, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
+                new Product { Id = "sg-20", Name = "Samsung Galaxy 20", Price = 800, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 }
             };
 
             products.ForEach(p => p.Description = $"{lorem1} {lorem2}");
@@ -77,6 +81,7 @@ namespace Web.Services
                 new Category { Id = "home", Name = "Home" } ,
                 new Category { Id = "musical-instruments", Name = "Musical Instruments" } ,
                 new Category { Id = "headphones-audio", Name = "Headphones & Audio" } ,
+                new Category { Id = "phones", Name = "Phones" } ,
             };
 
             cats.ForEach(c => c.Description = $"Our selection for {c.Name} if amazing! {lorem2}");

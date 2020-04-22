@@ -23,7 +23,7 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public void Signup(SignUp signup)
+        public void Signup(NewsletterSignUp signup)
         {
             var url = $"{cfg["Services:Newsletter"]}/signup";
             logger.LogInformation($"[NewsletterSvc] Posting new signup form to: ${url}");

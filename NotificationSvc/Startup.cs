@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Core;
-using Core.Shared;
+using Core.Models;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using NotificationSvc.Consumers;

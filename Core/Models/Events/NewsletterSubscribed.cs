@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Shared
+namespace Core.Models.Events
 {
     public class NewsletterSubscribed : EventBase
     {

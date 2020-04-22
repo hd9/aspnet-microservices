@@ -1,12 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Account";
+    //var name = User.Identity.Name;    // does not work: https://github.com/dotnet/aspnetcore/issues/14160
+    var name = User.Claims.First(c => c.Type == "Name").Value;
 }
 
-    <div id="acctApp" class="my-lg-5">
-        <h4 class="display-4">My Account</h4>
-        <p class="lead">Welcome back!</p>
-        <partial name="~/Views/Partials/Account/_MyAccount.cshtml" />
-        <a class="btn btn-danger my-3" href="/account/signout">Sign out</a>
+<div id="acctApp" class="my-lg-5">
+    <h4 class="display-4">My Account</h4>
+    <p class="lead">Welcome back, @name!</p>
+    <partial name="~/Views/Partials/Account/_MyAccount.cshtml" />
+    <div class="my-3">
+        <a asp-action="SignOut" class="btn btn-danger">Sign out</a>
+        <a asp-controller="Home" class="btn btn-primary">Keep shopping</a>
+
     </div>
+</div>
 
 <script src="~/js/account.js"></script>

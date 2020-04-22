@@ -1,4 +1,4 @@
-﻿using Core.Shared;
+﻿using Core.Models.Events;
 using MassTransit;
 using NewsletterSvc.Infrastructure;
 using NewsletterSvc.Models;

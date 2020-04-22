@@ -1,4 +1,3 @@
-using Core.Shared;
 using Core.Infrastructure.Options;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -69,15 +68,6 @@ namespace NewsletterSvc
 
         private IBusControl InitMassTransit()
         {
-            //var host = "rabbitmq://localhost";
-
-            //var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
-            //{
-            //    cfg.Host(new Uri(host));
-            //});
-
-            //await bus.StartAsync();
-
             var bus = Bus.Factory.CreateUsingRabbitMq(sbc =>
             {
                 sbc.Host(cfg.MassTransit.Host);

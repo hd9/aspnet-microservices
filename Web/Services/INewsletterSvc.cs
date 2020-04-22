@@ -4,6 +4,6 @@ namespace Web.Services
 {
     public interface INewsletterSvc
     {
-        void Signup(SignUp signup);
+        void Signup(NewsletterSignUp signup);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Core;
-using Core.Shared;
+using Core.Models;
+using Core.Models.Events;
 using MassTransit;
 using NotificationSvc.Models;
 using System;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Shared
+namespace Core.Models.Base
 {
     public abstract class RequestBase
     {

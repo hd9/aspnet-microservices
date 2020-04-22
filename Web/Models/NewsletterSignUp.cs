@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Web.Models
 {
-    public class SignUp
+    public class NewsletterSignUp
     {
         public string Name { get; set; }
         public string Email { get; set; }

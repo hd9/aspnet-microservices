@@ -15,5 +15,7 @@ namespace Web.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public bool IsValid() => Email != null && Password != null;
     }
 }

@@ -26,7 +26,7 @@ namespace Web.Controllers
         /// <param name="signup"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Signup([FromBody] SignUp signup)
+        public IActionResult Signup([FromBody] NewsletterSignUp signup)
         {
             if (signup == null) return BadRequest();
             _nlSvc.Signup(signup);

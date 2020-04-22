@@ -1,4 +1,4 @@
-﻿using Core.Shared;
+﻿using Core.Models;
 using Dapper;
 using MassTransit;
 using MySql.Data.MySqlClient;

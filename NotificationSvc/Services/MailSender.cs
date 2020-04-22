@@ -1,4 +1,4 @@
-﻿using Core.Shared;
+﻿using Core.Models;
 using MassTransit;
 using NotificationSvc.Infrastructure;
 using NotificationSvc.Infrastructure.Options;
