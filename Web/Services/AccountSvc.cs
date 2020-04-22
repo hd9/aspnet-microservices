@@ -33,19 +33,32 @@ namespace Web.Services
             };
         }
 
-        public async Task<Account> GetAccount(string email)
+        public async Task<Account> GetAccountByEmail(string email)
         {
             return _accounts.FirstOrDefault(a => a.Email == email);
+        }
+
+        public async Task<Account> GetAccount(string id)
+        {
+            return _accounts.FirstOrDefault(a => a.Id == id);
 
 
             // todo :: implement microservice
-            var url = $"{_cfg["Services:Account"]}/account/details/{email}";
+            var url = $"{_cfg["Services:Account"]}/account/details/{id}";
             _logger.LogInformation($"[CatalogSvc] Querying account data from: ${url}");
 
             var resp = await _httpClient.GetAsync(url);
 
             return JsonConvert.DeserializeObject<Account>(
                 await resp.Content.ReadAsStringAsync());
+        }
+
+        public async Task UpdateAccount(Account acct)
+        {
+            if (acct == null)
+                return;
+
+            // todo :: implement http call
         }
 
         public async Task CreateAccount(Account acct)
@@ -62,9 +75,9 @@ namespace Web.Services
             if (request == null || !request.IsValid())
                 return null;
 
-            var acct = await GetAccount(request.Email);
+            var acct = await GetAccountByEmail(request.Email);
 
-            return request.Password == acct.Password ? acct : null;
+            return acct != null && acct.Password == request.Password ? acct : null;
         }
     }
 }

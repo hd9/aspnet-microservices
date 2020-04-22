@@ -21,11 +21,11 @@ namespace Web.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IAccountSvc _accSvc;
+        private readonly IAccountSvc _acctSvc;
 
         public AccountController(IAccountSvc accSvc, ILogger<HomeController> logger)
         {
-            _accSvc = accSvc;
+            _acctSvc = accSvc;
             _logger = logger;
         }
 
@@ -38,18 +38,66 @@ namespace Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Account Details
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Details()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var acct = await _acctSvc.GetAccount(id);
+
+            Throw<UnauthorizedAccessException>.If(acct == null);
+
+            return View(acct);
+        }
+
+        /// <summary>
+        /// Allows creating an account
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult Create()
         {
-            return View();
+            return View(new Account());
         }
 
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> Create(Account request)
+        {
+            throw new NotImplementedException();
+        }
+
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> Update(Account request)
+        {
+            if (request == null)
+                return BadRequest();
+
+            request.Id = User.Claims.First(c => c.Type == "Id").Value;
+
+            await _acctSvc.UpdateAccount(request);
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Renders the sign in page
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult SignIn()
         {
             return View();
         }
 
+        /// <summary>
+        /// Signs user out
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync();
@@ -61,10 +109,13 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignIn request)
         {
-            var acct = await _accSvc.TrySignIn(request);
+            var acct = await _acctSvc.TrySignIn(request);
 
             if (acct == null)
-                return Unauthorized();
+            {
+                ViewData["Error"] = "Unable to login with the information provided";
+                return View();
+            }
                 
             var claims = new List<Claim> 
             {

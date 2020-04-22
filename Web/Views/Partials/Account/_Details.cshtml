@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["EditMode"] = true;
+}
+
+<div class="row" id="editAcctApp">
+    <div class="col-md-10 col-sm-12 col-lg-6">
+        <h3 class="py-3">Account Details</h3>
+        <form asp-action="Update">
+            <partial name="~/Views/Partials/Account/_AccountForm.cshtml" />
+            <div class="my-3">
+                <a asp-action="Index" class="btn btn-primary" v-if="!editMode">Back to account</a>
+                <a class="btn btn-danger" v-on:click="edit" v-if="!editMode" href="#">Edit</a>
+                <a class="btn btn-primary" v-on:click="cancel" v-if="editMode" href="#">Cancel</a>
+                <button type="submit" class="btn btn-danger" v-if="editMode">Update</button>
+            </div>
+        </form>
+    </div>
+</div>

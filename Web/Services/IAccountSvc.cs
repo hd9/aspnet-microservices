@@ -7,5 +7,7 @@ namespace Web.Services
     {
         Task<Account> TrySignIn(SignIn request);
         Task CreateAccount(Account acct);
+        Task UpdateAccount(Account acct);
+        Task<Account> GetAccount(string id);
     }
 }

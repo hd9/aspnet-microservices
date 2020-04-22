@@ -55,3 +55,22 @@ var products = new Vue({
         });
     }
 });
+
+
+//edit account
+var editAcctApp = new Vue({
+    el: '#editAcctApp',
+    data: {
+        editMode: false
+    },
+    methods: {
+        edit: function () {
+            this.editMode = true;
+        },
+        cancel: function (e) {
+            this.editMode = false;
+            console.log(e);
+            e.preventDefault();
+        }
+    }
+});

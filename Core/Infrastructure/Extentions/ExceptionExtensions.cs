@@ -6,6 +6,12 @@ namespace Core.Infrastructure.Extentions
 {
     public static class ExceptionExtensions
     {
+
+        /// <summary>
+        /// A one-liner way to throw expressions.
+        /// Read: https://blog.hildenco.com/2017/08/improving-code-readability-with-generic.html
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public class Throw<T>
             where T : Exception
         {
