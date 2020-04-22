@@ -2,29 +2,11 @@
     ViewData["Title"] = "Account";
 }
 
-<div id="acctApp" class="my-lg-5">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">My Account</h5>
-                    <a v-bind:href="c.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
-                    <ul>
-                        <li><a v-bind:href="c.url" class="small">My information</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">My Orders</h5>
-                    <a v-bind:href="c.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
-                    <ul>
-                        <li><a v-bind:href="c.url" class="small">My information</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div id="acctApp" class="my-lg-5">
+        <h4 class="display-4">My Account</h4>
+        <p class="lead">Welcome back!</p>
+        <partial name="~/Views/Partials/Account/_MyAccount.cshtml" />
+        <a class="btn btn-danger my-3" href="/account/signout">Sign out</a>
     </div>
-</div>
 
 <script src="~/js/account.js"></script>

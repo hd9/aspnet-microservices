@@ -1,16 +1,18 @@
-﻿
+﻿@model SignIn
+
 <div>
     <h3>Sign In</h3>
 
-    <form>
+    <form method="post">
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <label for="emlInput">Email address</label>
+            <input asp-for="Email" type="email" class="form-control" id="emlInput" aria-describedby="emailHelp"/>
+            @*<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">*@
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else 😉.</small>
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1">
+            <label for="pwdInput">Password</label>
+            <input asp-for="Password" class="form-control" id="pwdInput">
         </div>
         <button type="submit" class="btn btn-primary">Sign In</button>
     </form>

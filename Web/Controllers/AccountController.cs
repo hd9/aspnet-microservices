@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Web.Models;
@@ -29,7 +34,7 @@ namespace Web.Controllers
         /// <returns></returns>
         public IActionResult Index()
         {
-            // todo :: get acct from session
+            // todo :: get acct data from acctSvc
             return View();
         }
 
@@ -45,6 +50,35 @@ namespace Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignIn request)
+        {
+            // todo :: get claims from accSvc
+            var claims = new List<Claim>
+            {
+                new Claim("FullName", "Bruno Hildenbrand")
+            };
+
+            var authProperties = new AuthenticationProperties();
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            return RedirectToAction("Index", "Account");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

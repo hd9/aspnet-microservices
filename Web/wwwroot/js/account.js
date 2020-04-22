@@ -1,8 +1,4 @@
 ﻿// account
-
-alert('todo');
-
-
 var nlApp = new Vue({
     el: '#nlApp',
     data: {
@@ -14,14 +10,12 @@ var nlApp = new Vue({
         submit: function () {
             if (this.name.length < 5 || this.email.length < 5) {
                 alert("Names and emails should have at least 5 characters");
-                return;
+                return false;
             }
 
             axios
                 .post('/signup', { Name: this.name, Email: this.email })
-                .then(response => {
-                    this.submitted = true;
-                })
+                .then(r => { this.submitted = true; })
                 .catch(error => console.log(error));
 
             this.submitted = true;
