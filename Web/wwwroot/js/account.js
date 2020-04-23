@@ -40,19 +40,17 @@ var products = new Vue({
         }
     },
     mounted() {
-        this.$nextTick(function () {
-            axios.get('/products')
-                .then(function (r) {
-                    if (r && r.data) {
-                        r.data.forEach(p => {
-                            products.products.push(p);
-                        });
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        });
+        axios.get('/products')
+            .then(function (r) {
+                if (r && r.data) {
+                    r.data.forEach(p => {
+                        products.products.push(p);
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 });
 
@@ -74,3 +72,29 @@ var editAcctApp = new Vue({
         }
     }
 });
+
+// my orders
+var myOrdersApp = new Vue({
+    el: '#ordersApp',
+    data: {
+        hasOrders: false,
+        orders: []
+    },
+    methods: {
+
+    },
+    mounted() {
+        axios.get('/api/account/orders')
+            .then(function (r) {
+                if (r && r.data) {
+                    r.data.forEach(o => {
+                        myOrdersApp.hasOrders = true;
+                        myOrdersApp.orders.push(o);
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+})

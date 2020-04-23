@@ -1,11 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Account";
-    //var name = User.Identity.Name;    // does not work: https://github.com/dotnet/aspnetcore/issues/14160
-    var name = User.Claims.First(c => c.Type == "Name").Value;
+﻿@using System.Security.Claims;
+@{
+    ViewData["Title"] = "My Account";
+    var name = User.FindFirstValue("Name");
 }
 
-<div id="acctApp" class="my-lg-5">
-    <h4 class="display-4">My Account</h4>
+<div id="acctApp" class="my-lg-3">
+    <h4 class="display-4">@ViewData["Title"]</h4>
     <p class="lead">Welcome back, @name!</p>
     <partial name="~/Views/Partials/Account/_MyAccount.cshtml" />
     <div class="my-3">

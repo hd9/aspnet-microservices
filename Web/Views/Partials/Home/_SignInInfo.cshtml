@@ -1,15 +1,16 @@
-﻿@{ 
-    var name = User.Claims.First(c => c.Type == "Name").Value;
+﻿@using System.Security.Claims;
+@{
+    var name = User.FindFirstValue("Name");
 }
 
 
-    <div class="mb-lg-2 bg-light p-4 mt-3">
-        <h4 class="border-bottom py-2">Welcome back, @name!</h4>
-        <p class="mb-3 small">You have no unread notifications.</p>
-        <a asp-controller="Account" asp-action="Index">Go to my account</a>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <span class="navbar-text text-info"> | <a asp-controller="Account" asp-action="SignOut">Sign out</a> </span>
-        }
-    </div>
+<div class="mb-lg-2 bg-light p-4 mt-3">
+    <h4 class="border-bottom py-2">Welcome back, @name!</h4>
+    <p class="mb-3 small">You have no unread notifications.</p>
+    <a asp-controller="Account" asp-action="Index">Go to my account</a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <span class="navbar-text text-info"> | <a asp-controller="Account" asp-action="SignOut">Sign out</a> </span>
+    }
+</div>
 

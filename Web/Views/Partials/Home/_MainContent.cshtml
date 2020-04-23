@@ -1,6 +1,6 @@
-﻿@{ 
-    var nlClaim = User.FindFirst("NewsletterSubscribed");
-    var nlSubscribed = nlClaim != null && nlClaim.Value == "True";
+﻿@using System.Security.Claims;
+@{
+    var nlSubscribed = User.FindFirstValue("NewsletterSubscribed") == "True";
 }
 
 <div class="row">

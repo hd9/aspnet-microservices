@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "My orders";
+}
+
+<div id="ordersApp" class="my-lg-3">
+    <h4 class="display-4">@ViewData["Title"]</h4>
+    <p class="lead">These are the existing orders for your account.</p>
+    <partial name="~/Views/Partials/Account/_Orders.cshtml" />
+    <div class="my-3">
+        <a asp-action="Index" class="btn btn-danger">My Account</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Keep shopping</a>
+    </div>
+</div>
+
+<script src="~/js/account.js"></script>

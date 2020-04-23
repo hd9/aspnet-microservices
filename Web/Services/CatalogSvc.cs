@@ -50,6 +50,7 @@ namespace Web.Services
                 new Product { Id = "seab-789", Name = "Sony Earbuddy", Price = 40, Currency = "CAD", Description = "TODO", CategoryId = "headphones-audio", CategoryName = "Headphones & Audio", Rating = 4 },
                 new Product { Id = "iphone-753", Name = "iPhone 7", Price = 400, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
                 new Product { Id = "iphone-X11", Name = "iPhone X", Price = 999, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
+                new Product { Id = "iphone-X11-case1", Name = "iPhone X Case", Price = 9.99f, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 2 },
                 new Product { Id = "sg-11", Name = "Samsung Galaxy 11", Price = 600, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 },
                 new Product { Id = "sg-20", Name = "Samsung Galaxy 20", Price = 800, Currency = "CAD", Description = "TODO", CategoryId = "phones", CategoryName = "Headphones & Audio", Rating = 4 }
             };

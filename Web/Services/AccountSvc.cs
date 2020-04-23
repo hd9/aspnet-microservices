@@ -18,6 +18,7 @@ namespace Web.Services
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _cfg;
         private readonly List<Account> _accounts;
+        private readonly List<Order> _orders;
 
         public AccountSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterSvc> logger)
         {
@@ -30,6 +31,22 @@ namespace Web.Services
                 new Account { Name = "User 1", Email = "usr1@mail.com", Password = "pwd01", Id = "usr1xx1", SubscribedToNewsletter = true },
                 new Account { Name = "User 2", Email = "usr2@mail.com", Password = "pwd02", Id = "usr2xx2" },
                 new Account { Name = "User 3", Email = "usr3@mail.com", Password = "pwd03", Id = "usr3xx3" }
+            };
+
+            _orders = new List<Order>
+            {
+                new Order {
+                    Id = "ox1abc",
+                    AccountId = "usr1xx1",
+                    CreatedOn = DateTime.UtcNow.AddDays(-13),
+                    Currency = "CAD",
+                    Tax = 0.05f,
+                    LineItems = new List<LineItem> {
+                        new LineItem { Id = "iphone-X11", Name = "iPhone X", Price = 999, Qty = 1 },
+                        new LineItem { Id = "sb-789", Name = "Soccer Ball", Price = 15, Qty = 1 },
+                        new LineItem { Id = "iphone-X11-case1", Name = "iPhone X Case", Price = 9.99f, Qty = 3 },
+                    }
+                }
             };
         }
 
@@ -78,6 +95,13 @@ namespace Web.Services
             var acct = await GetAccountByEmail(request.Email);
 
             return acct != null && acct.Password == request.Password ? acct : null;
+        }
+
+        public async Task<IList<Order>> GetOrders(string acctId)
+        {
+            return _orders.Where(o => o.AccountId == acctId).ToList();
+
+            // todo :: implement rest call
         }
     }
 }

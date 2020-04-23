@@ -53,6 +53,15 @@ namespace Web.Controllers
         }
 
         /// <summary>
+        /// Account orders
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Orders()
+        {
+            return View();
+        }
+
+        /// <summary>
         /// Allows creating an account
         /// </summary>
         /// <returns></returns>
@@ -78,7 +87,7 @@ namespace Web.Controllers
             if (request == null)
                 return BadRequest();
 
-            request.Id = User.Claims.First(c => c.Type == "Id").Value;
+            request.Id = User.FindFirstValue("Id");
 
             await _acctSvc.UpdateAccount(request);
             return RedirectToAction("Index");
@@ -138,6 +147,13 @@ namespace Web.Controllers
             var n = User.Identity.Name;
 
             return RedirectToAction("Index", "Account");
+        }
+
+        [Route("/api/account/orders")]
+        public async Task<IList<Order>> GetOrders()
+        {
+            var acctId = User.FindFirstValue("Id");
+            return await _acctSvc.GetOrders(acctId);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

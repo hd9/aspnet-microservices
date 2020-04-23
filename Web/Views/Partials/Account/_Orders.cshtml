@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["EditMode"] = true;
+}
+
+<div class="row" id="myOrdersApp">
+    <div class="my-3 col-sm-12">
+
+
+        <div v-if="hasOrders">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Order #</th>
+                        <th scope="col" style="min-width:50%">Items</th>
+                        <th scope="col">Created On</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="o in orders">
+                        <th scope="row">{{ o.id }}</th>
+                        <td>{{ o.lineItems.map(e => e.name).join(", ") }}</td>
+                        <td>{{ new Date(o.createdOn).toDateString() }}</td>
+                        <td>{{ o.currency }}$ {{ o.price.toFixed(2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-else class="border rounded p-5 w-100 text-center">
+            <p class="lead">No orders found for your account.</p>
+        </div>
+
+
+
+    </div>
+</div>
+
