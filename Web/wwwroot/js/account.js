@@ -1,5 +1,5 @@
-﻿// account
-var nlApp = new Vue({
+﻿// newsletter
+const nlApp = new Vue({
     el: '#nlApp',
     data: {
         submitted: false,
@@ -29,7 +29,7 @@ var nlApp = new Vue({
 });
 
 // products
-var products = new Vue({
+const productsApp = new Vue({
     el: '#prodApp',
     data: {
         products: []
@@ -44,7 +44,7 @@ var products = new Vue({
             .then(function (r) {
                 if (r && r.data) {
                     r.data.forEach(p => {
-                        products.products.push(p);
+                        productsApp.products.push(p);
                     });
                 }
             })
@@ -56,7 +56,7 @@ var products = new Vue({
 
 
 //edit account
-var editAcctApp = new Vue({
+const editAcctApp = new Vue({
     el: '#editAcctApp',
     data: {
         editMode: false
@@ -74,7 +74,7 @@ var editAcctApp = new Vue({
 });
 
 // my orders
-var myOrdersApp = new Vue({
+const myOrdersApp = new Vue({
     el: '#ordersApp',
     data: {
         hasOrders: false,

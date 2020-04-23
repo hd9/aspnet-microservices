@@ -4,7 +4,7 @@
             <div class="card" propName="abc123">
                 <div class="card-body">
                     <h5>{{ p.name }}</h5>
-                    <a v-bind:href="p.url"><partial name="~/Views/Shared/_fakeImg.cshtml" /></a>
+                    <a v-bind:href="p.url"><partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" /></a>
                     <p class="small">{{ p.description }}</p>
                     <p class="small text-dark font-weight-bolder">{{ p.currency }}$ {{ p.price}}</p>
                     <p class="small"><a v-bind:href="p.url">View</a></p>

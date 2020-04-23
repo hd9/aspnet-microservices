@@ -4,10 +4,10 @@
 }
 
 <div class="row">
-    <div class="col-md-8 col-sm-12">
+    <div class="col-md-9 col-sm-12">
         <partial name="~/Views/Partials/Catalog/_Categories.cshtml" />
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         @if (!User.Identity.IsAuthenticated)
         {
             <partial name="~/Views/Partials/Home/_SignIn.cshtml" />

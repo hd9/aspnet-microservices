@@ -1,21 +1,36 @@
 ﻿@{
     ViewData["Category"] = Model.CategoryName;
     ViewData["CategoryId"] = Model.CategoryId;
-    ViewData["ProductName"] = Model.Name;
+    ViewData["Title"] = ViewData["ProductName"] = Model.Name;
+    var p = ((float?)Model.Price);
 }
 
 <div class="mb-lg-5">
     <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
     <div class="row" id="prodApp">
-        <div class="col-sm-6 col-md-4" ref="cat" id="@Model.Id">
-            <partial name="~/Views/Shared/_fakeImg.cshtml" />
+        <div class="col-sm-6 col-md-4" ref="product" id="@Model.Id" name="@Model.Name" price="@Model.Price">
+            <partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" />
+            <partial name="~/Views/Partials/Catalog/_fakeThumbnails.cshtml" />
         </div>
         <div class="col-sm-6 col-md-8">
-            <h4 class="border-bottom">@Model.Name</h4>
-            <p class="small mb-4">@Model.Description</p>
-            <p class="small mb-4">Rating: @Model.Rating / 5</p>
-            <p class="text-danger font-weight-bold">@Model.Currency $ @Model.Price</p>
-            <p><a href="#" class="btn btn-outline-danger btn-sm" v-on:click="addToCart">Add to cart</a></p>
+            <h4>@Model.Name</h4>
+            <div class="small mb-2 border-bottom">
+                Rating: @Model.Rating / 5,  
+                Top Seller in <a asp-controller="Products" asp-action="@Model.CategoryId">@Model.CategoryName</a>
+            </div>
+            @if (p.HasValue)
+            {
+                <p>Price: <span class="text-danger font-weight-bold">@Model.Currency $ @p.Value.ToString("0.00")</span></p>
+            }
+            else
+            {
+                <p class="text-danger font-weight-bold">Information not available</p>
+            }
+            <p class="small my-3">@Model.Description</p>
+            <div>
+                <a href="#" class="btn btn-danger btn-sm" v-on:click="addToCart">Add to cart</a>
+                <a asp-controller="Products" asp-action="@Model.CategoryId" class="btn btn-outline-info btn-sm">Other items on @Model.CategoryName</a>
+            </div>
         </div>
     </div>
 </div>
