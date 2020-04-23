@@ -32,7 +32,9 @@ var prodApp = new Vue({
         id: '',
         name: '',
         description: '',
-        price: ''
+        price: '',
+        rating: 0,
+        maxRating: 5,
     },
     methods: {
         addToCart: function () {
@@ -40,9 +42,11 @@ var prodApp = new Vue({
         }
     },
     mounted() {
-        this.id = this.$refs.product.attributes["id"].value;
-        this.name = this.$refs.product.attributes["name"].value;
-        this.price = this.$refs.product.attributes["price"].value;
+        var a = this.$refs.product.attributes;
+        this.id = a["id"].value;
+        this.name = a["name"].value;
+        this.price = a["price"].value;
+        this.rating = parseInt(a["rating"].value);
     }
 });
 

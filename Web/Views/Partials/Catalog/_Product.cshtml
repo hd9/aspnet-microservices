@@ -8,14 +8,19 @@
 <div class="mb-lg-5">
     <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
     <div class="row" id="prodApp">
-        <div class="col-sm-6 col-md-4" ref="product" id="@Model.Id" name="@Model.Name" price="@Model.Price">
+        <div class="col-sm-6 col-md-4" ref="product" id="@Model.Id" name="@Model.Name" price="@Model.Price" rating="@Model.Rating">
             <partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" />
             <partial name="~/Views/Partials/Catalog/_fakeThumbnails.cshtml" />
         </div>
         <div class="col-sm-6 col-md-8">
             <h4>@Model.Name</h4>
             <div class="small mb-2 border-bottom">
-                Rating: @Model.Rating / 5,  
+                <div>
+                    Rating:
+                    <span v-for="r in 5">
+                        <span class="fa fa-star" v-bind:class="{'checked':(r <= rating)}"></span>
+                    </span>
+                </div>
                 Top Seller in <a asp-controller="Products" asp-action="@Model.CategoryId">@Model.CategoryName</a>
             </div>
             @if (p.HasValue)
