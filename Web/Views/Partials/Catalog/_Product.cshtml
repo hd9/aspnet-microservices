@@ -8,12 +8,12 @@
 <div class="mb-lg-5">
     <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
     <div class="row" id="prodApp">
-        <div class="col-sm-6 col-md-4" ref="product" id="@Model.Id" name="@Model.Name" price="@Model.Price" rating="@Model.Rating">
-            <partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" />
-            <partial name="~/Views/Partials/Catalog/_fakeThumbnails.cshtml" />
+        <div class="col-sm-6 col-md-4" ref="product" id="@Model.Id" name="@Model.Name" price="@Model.Price" rating="@Model.Rating" cat="@Model.CategoryId" catName="@Model.CategoryName">
+            <partial name="~/Views/Partials/Catalog/_FakeImg.cshtml" />
+            <partial name="~/Views/Partials/Catalog/_FakeThumbnails.cshtml" />
         </div>
         <div class="col-sm-6 col-md-8">
-            <h4>@Model.Name</h4>
+            <h3>@Model.Name</h3>
             <div class="small mb-2 border-bottom">
                 <div>
                     Rating:

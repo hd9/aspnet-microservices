@@ -38,14 +38,26 @@ var prodApp = new Vue({
     },
     methods: {
         addToCart: function () {
-            cart.addToCart({ id: this.id, name: this.name, price: this.price, qty: 1 });
+            cart.addToCart({
+                id: this.id,
+                name: this.name,
+                price: this.price,
+                cat: this.cat,
+                catName: this.catName,
+                qty: 1
+            });
         }
     },
     mounted() {
+        if (!this.$refs.product)
+            return;
+
         var a = this.$refs.product.attributes;
         this.id = a["id"].value;
         this.name = a["name"].value;
         this.price = a["price"].value;
+        this.cat = a["cat"].value;
+        this.catName = a["catName"].value;
         this.rating = parseInt(a["rating"].value);
     }
 });
@@ -60,14 +72,25 @@ const cart = new Vue({
             var el = this.products.find(x => x.id === p.id);
             if (el) el.qty++;
             else this.products.push(p);
-            localStorage.products = JSON.stringify(this.products);
+            this.save();
         },
         clear: function () {
             this.products = [];
             localStorage.removeItem("products");
         },
-        checkout: function () {
-            alert('todo');
+        remove: function (i) {
+            this.products.splice(i, 1);
+        },
+        onQtyChange: function () {
+            this.save();
+        },
+        save: function () {
+            localStorage.products = JSON.stringify(this.products);
+        }
+    },
+    computed: {
+        hasItems: function () {
+            return this.products.length > 0;
         },
         subtotal: function () {
             var t = 0;

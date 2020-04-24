@@ -1,0 +1,40 @@
+﻿
+<div id="cart">
+    <div class="bg-light p-3" style="min-height:200px">
+        <h5 class="border-bottom py-2">Your Cart</h5>
+        <div v-if="hasItems">
+            <table class="table table-borderless table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col" class="text-center">Qty</th>
+                        <th scope="col" class="text-right">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="p in products" class="small">
+                        <td>{{ p.name }}</td>
+                        <td class="text-center">{{ p.qty }}</td>
+                        <td class="text-right">{{ parseFloat(p.price).toFixed(2) }}</td>
+                    </tr>
+                    <tr class="border-top">
+                        <th scope="row" colspan="2">Subtotal:</th>
+                        <td class="text-right small">$ {{ parseFloat(subtotal).toFixed(2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
+                <a asp-controller="Order" asp-action="Index" class="btn btn-primary btn-sm">Checkout</a>
+            </div>
+            <p class="text-center small mt-3"><a asp-controller="Order" asp-action="Index">View cart</a></p>
+        </div>
+        <div v-else>
+            <p>Your cart is empty 😕</p>
+            <p class="small">
+                Adding items to your cart is simple: browse to a product
+                and click the <strong>Add to cart</strong> button.
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,40 +1,52 @@
-﻿
-<div id="cart">
-    <div class="bg-light p-3" style="min-height:200px" id="cartApp">
-        <h5 class="border-bottom py-2">Your Cart</h5>
-        <div v-if="products.length > 0">
-            <table class="table table-borderless table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col" class="text-center">Qty</th>
-                        <th scope="col" class="text-right">Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="p in products" class="small">
-                        <td>{{ p.name }}</td>
-                        <td class="text-center">{{ p.qty }}</td>
-                        <td class="text-right">{{ parseFloat(p.price).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="border-top">
-                        <th scope="row" colspan="2">Subtotal:</th>
-                        <td class="text-right small">$ {{ parseFloat(subtotal()).toFixed(2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="text-center">
-                <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
-                <button class="btn btn-primary btn-sm" v-on:click="checkout">Checkout</button>
+﻿<div id="cart">
+
+    <h2 class="display-4 border-bottom mb-3">@ViewData["Title"]</h2>
+    <div v-if="hasItems">
+        <div class="row">
+            <div class="col-sm-12 col-md-9">
+                <div class="card mb-3" v-for="(p, i) in products">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="clearfix m-3">
+                                <h5 class="float-left"><a :href="'/products/details/' + p.id">{{ p.name }}</a></></h5>
+                                <span class="float-right"><span class="text-danger font-weight-bold">$ {{ parseFloat(p.qty * p.price).toFixed(2) }}</span></span>
+                            </div>
+                            <div class="ml-3">
+                                <small>In <a :href="'/products/' + p.cat">{{ p.catName }}</a></small>
+                                <p class="card-text text-muted small">
+                                    Qty: 
+                                    <select v-model="p.qty" v-on:change="onQtyChange">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </select>
+                                    | <a href="#" v-on:click="remove(i)">Remove</a>
+                                </p>
+                                <small>Shipped and sold by <a href="https://hildenco.com">HildenCo.com</a></small><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="text-center small mt-3"><a asp-controller="Order" asp-action="Index">View cart</a></p>
+            <div class="col-sm-12 col-md-3 bg-light p-3">
+                <h3>Your Order</h3>
+                <p class="lead">Summary of your order.</p>
+                <p class="font-weight-bold">Subtotal: <span class="text-danger font-weight-bold">$ {{ parseFloat(subtotal).toFixed(2) }}</span></p>
+                <div class="text-center py-3">
+                    <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
+                    <button class="btn btn-primary btn-sm">Checkout</button>
+                </div>
+                <p class="text-center small"><a asp-controller="Home" asp-action="Index">Continue shopping</a></p>
+            </div>
         </div>
-        <div v-else>
-            <p>Your cart is empty 😕</p>
-            <p class="small">
-                Adding items to your cart is simple: browse to a product
-                and click the <strong>Add to cart</strong> button.
-            </p>
-        </div>
+    </div>
+    <div v-else>
+        <p class="lead">It seems your cart is empty 😕.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Keep shopping</a>
     </div>
 </div>
