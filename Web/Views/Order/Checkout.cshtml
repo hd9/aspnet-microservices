@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2 class="display-4">@ViewData["Title"]</h2>
+<p class="lead mb-4">Please review the information below. You'll have a chance to review your cart on the next step.</p>
+<div class="row">
+
+    <div class="col-md-6">
+        <h4 class="border-bottom">Account information</h4>
+        <partial name="~/Views/Partials/Account/_AccountForm.cshtml" />
+        <div class="pt-3 my-2 border-top small">
+            Not correct?
+            <a asp-controller="Account" asp-action="Update">Update your account information</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h4 class="border-bottom">Payment Information</h4>
+        <partial name="~/Views/Partials/Account/_PaymentForm.cshtml" />
+        <div class="pt-3 my-2 border-top small">
+            Not correct?
+            <a asp-controller="Account" asp-action="Details">Update your payment information</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 mt-3 text-right">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm">Keep Shopping</a>
+        <a asp-action="Review" class="btn btn-danger btn-sm">Review and Submit</a>
+    </div>
+</div>
+
+<script src="~/js/catalog.js"></script>

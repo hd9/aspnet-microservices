@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    var review = ViewData["Review"] != null ? (bool)ViewData["Review"] : false;
+}
 <div id="cart">
     <div class="bg-light p-3" style="min-height:200px">
         <h5 class="border-bottom py-2">Your Cart</h5>
@@ -21,13 +23,27 @@
                         <th scope="row" colspan="2">Subtotal:</th>
                         <td class="text-right small">$ {{ parseFloat(subtotal).toFixed(2) }}</td>
                     </tr>
+                    @if (review)
+                    {
+                        <tr>
+                            <th scope="row" colspan="2">Tax (5%):</th>
+                            <td class="text-right small">$ {{ parseFloat(subtotal * 0.05).toFixed(2) }}</td>
+                        </tr>
+                        <tr class="border-top table-danger text-danger">
+                            <th scope="row" colspan="2">Total:</th>
+                            <td class="text-right small">$ {{ parseFloat(subtotal * 1.05).toFixed(2) }}</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-            <div class="text-center">
-                <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
-                <a asp-controller="Order" asp-action="Index" class="btn btn-primary btn-sm">Checkout</a>
-            </div>
-            <p class="text-center small mt-3"><a asp-controller="Order" asp-action="Index">View cart</a></p>
+            @if (!review)
+            {
+                <div class="text-center">
+                    <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-primary btn-sm">Checkout</a>
+                </div>
+                <p class="text-center small mt-3"><a asp-controller="Order" asp-action="Index">View cart</a></p>
+            }
         </div>
         <div v-else>
             <p>Your cart is empty 😕</p>

@@ -1,6 +1,7 @@
 ﻿<div id="cart">
 
-    <h2 class="display-4 border-bottom mb-3">@ViewData["Title"]</h2>
+    <h4 class="display-4">@ViewData["Title"]</h4>
+    <p class="lead mb-4">Here's your shoppint cart at the moment.</p>
     <div v-if="hasItems">
         <div class="row">
             <div class="col-sm-12 col-md-9">
@@ -39,7 +40,7 @@
                 <p class="font-weight-bold">Subtotal: <span class="text-danger font-weight-bold">$ {{ parseFloat(subtotal).toFixed(2) }}</span></p>
                 <div class="text-center py-3">
                     <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
-                    <button class="btn btn-primary btn-sm">Checkout</button>
+                    <a asp-action="Checkout" class="btn btn-primary btn-sm">Checkout</a>
                 </div>
                 <p class="text-center small"><a asp-controller="Home" asp-action="Index">Continue shopping</a></p>
             </div>

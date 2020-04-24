@@ -26,6 +26,21 @@ namespace Web.Controllers
             return View();
         }
 
+        [Route("/cart/checkout")]
+        public IActionResult Checkout()
+        {
+            // todo :: load acct
+            var a = new Account { Id = "123", Email = "m@ma.com", Name = "Acct Name", Address = "addr 123 345", City = "city", Country = "Canada" };
+            return View(a);
+        }
+
+        [Route("/cart/review")]
+        public IActionResult Review()
+        {
+            // todo :: load acct
+            var a = new Account { Id = "123", Email = "m@ma.com", Name = "Acct Name", Address = "addr 123 345", City = "city", Country = "Canada" };
+            return View(a);
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -2,20 +2,34 @@
 
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
+    var createAccountMode = false;
+    var showNl = false;
 }
 
 <div class="form-group">
     <label for="inputAddress2">Name:</label>
-    <input asp-for="Name" class="form-control" placeholder="Enter your name" v-if="editMode" />
-    <div v-if="!editMode" class="font-weight-light">@Model.Name</div>
+    @if (editMode)
+    {
+        <input asp-for="Name" class="form-control" placeholder="Enter your name" />
+    }
+    else
+    {
+        <div class="font-weight-light">@Model.Name</div>
+    }
 </div>
 <div class="form-row">
     <div class="form-group col-md-@(editMode ? "12" : "6")">
         <label for="inputEmail4">Email:</label>
-        <input asp-for="Email" type="email" class="form-control" v-if="editMode">
-        <div v-if="!editMode" class="font-weight-light">@Model.Email</div>
+        @if (editMode)
+        {
+            <input asp-for="Email" type="email" class="form-control">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Email</div>
+        }
     </div>
-    @if (!editMode)
+    @if (createAccountMode)
     {
         <div class="form-group col-md-6">
             <label for="inputPassword4">Password:</label>
@@ -26,44 +40,78 @@
 <div class="form-row">
     <div class="form-group col-md-9">
         <label for="inputAddress">Address:</label>
-        <input asp-for="Address" class="form-control" placeholder="1234 Main St" v-if="editMode">
-        <div v-if="!editMode" class="font-weight-light">@Model.Address</div>
+        @if (editMode)
+        {
+            <input asp-for="Address" class="form-control" placeholder="1234 Main St">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Address</div>
+        }
     </div>
-    <div class="form-group col-md-3">
+    <div class="form-group col-md-3 text-right">
         <label for="inputZip">Postal Code:</label>
-        <input asp-for="PostalCode" class="form-control" id="inputZip" v-if="editMode">
-        <div v-if="!editMode" class="font-weight-light">@Model.PostalCode</div>
+        @if (editMode)
+        {
+            <input asp-for="PostalCode" class="form-control" id="inputZip">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.PostalCode</div>
+        }
     </div>
 </div>
 <div class="form-row">
     <div class="form-group col-md-4">
         <label for="inputCountry">Country:</label>
-        <div v-if="!editMode" class="font-weight-light">@Model.Country</div>
-        <select class="form-control" id="inputCountry" v-if="editMode">
-            <option selected>Choose...</option>
-            <option>...</option>
-        </select>
+        @if (editMode)
+        {
+            <select class="form-control" id="inputCountry">
+                <option selected>Choose...</option>
+                <option>...</option>
+            </select>
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Country</div>
+        }
     </div>
     <div class="form-group col-md-4">
         <label for="inputCity">City:</label>
-        <input asp-for="City" class="form-control" id="inputCity" v-if="editMode">
-        <div v-if="!editMode" class="font-weight-light">@Model.City</div>
+        @if (editMode)
+        {
+            <input asp-for="City" class="form-control" id="inputCity">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.City</div>
+        }
     </div>
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-4 text-right">
         <label for="inputState">State/Province:</label>
-        <div v-if="!editMode" class="font-weight-light">@Model.Region</div>
-        <select class="form-control" id="inputState" v-if="editMode">
-            <option selected>Choose...</option>
-            <option>...</option>
-        </select>
+        @if (editMode)
+        {
+            <div class="font-weight-light">@Model.Region</div>
+            <select class="form-control" id="inputState">
+                <option selected>Choose...</option>
+                <option>...</option>
+            </select>
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Region</div>
+        }
     </div>
 </div>
-<div class="form-group">
-    <div class="form-check">
-        <input asp-for="SubscribedToNewsletter" class="form-check-input" id="nlSubscribe" :disabled="!editMode">
-        <label class="form-check-label" for="nlSubscribe">
-            Subscribe to newsletter
-        </label>
+@if (showNl)
+{
+   <div class="form-group">
+        <div class="form-check">
+            <input asp-for="SubscribedToNewsletter" class="form-check-input" id="nlSubscribe" :disabled="!editMode">
+            <label class="form-check-label" for="nlSubscribe">
+                Subscribe to newsletter
+            </label>
+        </div>
     </div>
-</div>
+}
 

@@ -1,0 +1,24 @@
+﻿@{
+    var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
+}
+
+<div class="form-row">
+    <div class="form-group col-md-8">
+        <label for="inputZip">Card Holder:</label>
+        <div class="font-weight-light">@Model.Name</div>
+    </div>
+    <div class="form-group col-md-4 text-right">
+        <label for="inputAddress">Payment Method:</label>
+        <div class="font-weight-light">Master Card</div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-8">
+        <label for="inputAddress">Card Number:</label>
+        <div class="font-weight-light">54xx-xxxx-xxxx-xx33</div>
+    </div>
+    <div class="form-group col-md-4 text-right">
+        <label for="inputZip">Expires on:</label>
+        <div class="font-weight-light">@DateTime.Now.AddYears(3).AddDays(121).ToShortDateString()</div>
+    </div>
+</div>
