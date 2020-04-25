@@ -1,0 +1,12 @@
+﻿<div class="p-2">
+    <h4 class="border-bottom py-2">Email Notifications</h4>
+    <p class="mt-3 small">
+        Notifications are provided via asynchronous messages
+        exchanged via a RabbitMQ Docker container and processed by a .NET Core backend.
+        Different events such as newsletter signups, account registrations, etc.. 
+        send an async message to the
+        <span class="badge badge-success">Notification microservice</span>
+        that's sends and email to the user. The notification service also 
+        logs the data on a MySQL database.
+    </p>
+</div>

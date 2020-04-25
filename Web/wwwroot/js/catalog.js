@@ -80,6 +80,7 @@ const cart = new Vue({
         },
         remove: function (i) {
             this.products.splice(i, 1);
+            this.save();
         },
         onQtyChange: function () {
             this.save();
@@ -116,16 +117,13 @@ const cartSubmit = new Vue({
     },
     methods: {
         submit: function () {
+            var li = this.products.map(p => ({ Id: p.id, Qty: parseInt(p.qty), Name: p.name, Price: parseFloat(p.price) }));
             axios.post('/order/submit', {
-                AccountId: 'AccountId',
-                Currency: 'Currency',
-                LineItems: [
-                    { Id: "l-12", Name: "PS4", Qty: 1 }
-                ]
+                LineItems: li
             })
             .then(r => {
                 localStorage.orderNumber = r.data;
-                window.location = '/order/submitted';
+                window.location = '/order/submitted/' + encodeURI(r.data);
             })
             .catch(error => {
                 alert('Error submitting, please check your log');

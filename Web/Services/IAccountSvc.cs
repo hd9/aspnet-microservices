@@ -10,6 +10,5 @@ namespace Web.Services
         Task CreateAccount(Account acct);
         Task UpdateAccount(Account acct);
         Task<Account> GetAccount(string acctId);
-        Task<IList<Order>> GetOrders(string acctId);
     }
 }

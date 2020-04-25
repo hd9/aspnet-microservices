@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Web.Models;
 
 namespace Web.Services
@@ -6,5 +7,7 @@ namespace Web.Services
     public interface IOrderSvc
     {
         Task Submit(Order o);
+        Task <List<Order>> GetOrders(string accountId);
+        Order GetOrder(string id);
     }
 }

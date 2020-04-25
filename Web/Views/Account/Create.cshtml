@@ -1,8 +1,9 @@
 ﻿@model Account
 @{
     ViewData["Title"] = "Create Account";
+    ViewData["EditMode"] = true;
+    ViewData["ShowPassword"] = true;
 }
-
 
 <partial name="~/Views/Partials/Account/_Create.cshtml" />
 <script src="~/js/account/index.js"></script>

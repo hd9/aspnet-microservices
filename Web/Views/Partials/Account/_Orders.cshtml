@@ -13,15 +13,20 @@
                         <th scope="col">Order #</th>
                         <th scope="col" style="min-width:50%">Items</th>
                         <th scope="col">Created On</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">Total Price</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="o in orders">
                         <th scope="row">{{ o.id }}</th>
-                        <td>{{ o.lineItems.map(e => e.name).join(", ") }}</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                <li v-for="li in o.lineItems"> {{ li.name }} </li>
+                            </ul>
+                            @*{{ o.lineItems.map(e => e.name).join(", ") }}*@
+                        </td>
                         <td>{{ new Date(o.createdOn).toDateString() }}</td>
-                        <td>{{ o.currency }}$ {{ o.price.toFixed(2) }}</td>
+                        <td class="text-danger strong">{{ o.currency }}$ {{ o.totalPrice.toFixed(2) }}</td>
                     </tr>
                 </tbody>
             </table>

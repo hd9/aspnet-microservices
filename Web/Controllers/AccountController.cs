@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Web.Models;
 using Web.Services;
 using static Core.Infrastructure.Extentions.ExceptionExtensions;
+using Core.Infrastructure.Extentions;
 
 namespace Web.Controllers
 {
@@ -22,10 +23,12 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountSvc _acctSvc;
+        private readonly IOrderSvc _oSvc;
 
-        public AccountController(IAccountSvc accSvc, ILogger<HomeController> logger)
+        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, ILogger<HomeController> logger)
         {
             _acctSvc = accSvc;
+            _oSvc = oSvc;
             _logger = logger;
         }
 
@@ -98,25 +101,18 @@ namespace Web.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
-        public IActionResult SignIn()
+        public IActionResult SignIn(string returnUrl)
         {
-            return View();
-        }
+            if (returnUrl.HasValue())
+                ViewBag.ReturnUrl = returnUrl;
 
-        /// <summary>
-        /// Signs user out
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> SignOut()
-        {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return View();
         }
 
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> SignIn(SignIn request)
+        public async Task<IActionResult> SignIn(SignIn request, string returnUrl)
         {
             var acct = await _acctSvc.TrySignIn(request);
 
@@ -144,16 +140,27 @@ namespace Web.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            var n = User.Identity.Name;
+            if (returnUrl.HasValue())
+                return Redirect(returnUrl);
 
             return RedirectToAction("Index", "Account");
+        }
+
+        /// <summary>
+        /// Signs user out
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [Route("/api/account/orders")]
         public async Task<IList<Order>> GetOrders()
         {
             var acctId = User.FindFirstValue("Id");
-            return await _acctSvc.GetOrders(acctId);
+            return await _oSvc.GetOrders(acctId);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

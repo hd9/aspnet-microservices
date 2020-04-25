@@ -5,20 +5,24 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Models;
 using Web.Services;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IOrderSvc _oSvc;
+        private readonly IAccountSvc _acctSvc;
         private readonly ILogger<HomeController> _logger;
 
-        public OrderController(IOrderSvc oSvc, ILogger<HomeController> logger)
+        public OrderController(IOrderSvc oSvc, IAccountSvc acctSvc, ILogger<HomeController> logger)
         {
             _oSvc = oSvc;
+            _acctSvc = acctSvc;
             _logger = logger;
         }
 
@@ -26,6 +30,7 @@ namespace Web.Controllers
         /// My Account
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [Route("/cart/view")]
         public IActionResult Index()
         {
@@ -33,39 +38,30 @@ namespace Web.Controllers
         }
 
         [Route("/cart/checkout")]
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout()
         {
-            // todo :: load acct
-            var a = new Account { Id = "123", Email = "m@ma.com", Name = "Acct Name", Address = "addr 123 345", City = "city", Country = "Canada" };
-            return View(a);
+            var acct = await _acctSvc.GetAccount(User.FindFirstValue("Id"));
+            return View(acct);
         }
 
         [Route("/cart/review")]
-        public IActionResult Review()
+        public async Task<IActionResult> Review()
         {
-            // todo :: load acct
-            var a = new Account { Id = "123", Email = "m@ma.com", Name = "Acct Name", Address = "addr 123 345", City = "city", Country = "Canada" };
-            return View(a);
+            var acct = await _acctSvc.GetAccount(User.FindFirstValue("Id"));
+            return View(acct);
         }
 
         [HttpPost]
         public async Task<IActionResult> Submit([FromBody] Order o)
         {
-            // todo :: order svc
-            o.Id = Guid.NewGuid().ToString();
+            o.AccountId = User.FindFirstValue("Id");
             await _oSvc.Submit(o);
             return Ok(o.Id);
         }
 
-
         public IActionResult Submitted()
         {
-            // todo :: load acct
-            var o = new Order { Id = "O-123x890", CreatedOn = DateTime.UtcNow, LineItems = new List<LineItem> {
-                new LineItem { Id = "l-12", Name = "PS4", Price = 400f, Qty = 1 } }
-            };
-
-            return View(o);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

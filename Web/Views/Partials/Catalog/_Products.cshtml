@@ -6,7 +6,7 @@
                     <h5>{{ p.name }}</h5>
                     <a v-bind:href="p.url"><partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" /></a>
                     <p class="small">{{ p.description }}</p>
-                    <p class="small text-dark font-weight-bolder">{{ p.currency }}$ {{ p.price}}</p>
+                    <p class="small text-danger font-weight-bolder">{{ p.currency }}$ {{ parseFloat(p.price).toFixed(2) }}</p>
                     <p class="small"><a v-bind:href="p.url">View</a></p>
                 </div>
             </div>

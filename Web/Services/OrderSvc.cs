@@ -15,6 +15,7 @@ namespace Web.Services
         private readonly ILogger<OrderSvc> logger;
         private readonly HttpClient httpClient;
         private readonly IConfiguration cfg;
+        private static readonly List<Order> _orders = new List<Order>();
 
         public OrderSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<OrderSvc> logger)
         {
@@ -23,19 +24,26 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public async Task Submit(Order request)
+        public async Task Submit(Order o)
         {
-            // todo
+            // todo :: add rest call
+
+            o.Id = $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0,10).ToUpper()}";
+            o.Currency = "CAD";
+
+            _orders.Add(o);
         }
 
-        public void GetOrders(string accountId)
+        public async Task<List<Order>> GetOrders(string accountId)
         {
-            // todo
+            // todo :: add rest call
+            return _orders.Where(o => o.AccountId == accountId).ToList();
         }
 
-        public void GetOrder(string id)
+        public Order GetOrder(string id)
         {
-            // todo
+            // todo :: add rest call
+            return _orders.FirstOrDefault(o => o.Id == id);
         }
     }
 }

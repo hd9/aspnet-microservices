@@ -40,6 +40,9 @@ const productsApp = new Vue({
         }
     },
     mounted() {
+        if (!this.$refs.prod)
+            return;
+
         axios.get('/products')
             .then(function (r) {
                 if (r && r.data) {
@@ -84,6 +87,9 @@ const myOrdersApp = new Vue({
 
     },
     mounted() {
+        if (!this.$refs.orders)
+            return;
+
         axios.get('/api/account/orders')
             .then(function (r) {
                 if (r && r.data) {

@@ -2,7 +2,7 @@
 
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
-    var createAccountMode = false;
+    var showPwd = ViewData["ShowPassword"] != null ? (bool)ViewData["ShowPassword"] : false;
     var showNl = false;
 }
 
@@ -18,7 +18,7 @@
     }
 </div>
 <div class="form-row">
-    <div class="form-group col-md-@(editMode ? "12" : "6")">
+    <div class="form-group col-md-@(showPwd ? "6" : "12")">
         <label for="inputEmail4">Email:</label>
         @if (editMode)
         {
@@ -29,7 +29,7 @@
             <div class="font-weight-light">@Model.Email</div>
         }
     </div>
-    @if (createAccountMode)
+    @if (showPwd)
     {
         <div class="form-group col-md-6">
             <label for="inputPassword4">Password:</label>

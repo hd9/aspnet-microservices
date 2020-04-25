@@ -20,8 +20,8 @@
                         <td class="text-right">{{ parseFloat(p.price).toFixed(2) }}</td>
                     </tr>
                     <tr class="border-top">
-                        <th scope="row" colspan="2">Subtotal:</th>
-                        <td class="text-right small">$ {{ parseFloat(subtotal).toFixed(2) }}</td>
+                        <th scope="row">Subtotal:</th>
+                        <td class="text-right small" colspan="2">$ {{ parseFloat(subtotal).toFixed(2) }}</td>
                     </tr>
                     @if (review)
                     {
