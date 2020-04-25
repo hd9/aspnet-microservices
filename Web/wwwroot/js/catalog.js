@@ -101,10 +101,58 @@ const cart = new Vue({
     mounted() {
         if (localStorage.products) {
             try {
-                this.products = JSON.parse(localStorage.getItem('products'));
+                this.products = JSON.parse(localStorage.products);
             } catch (e) {
                 localStorage.removeItem('products');
             }
         }
     }
 });
+
+const cartSubmit = new Vue({
+    el: '#cartSubmit',
+    data: {
+        products: []
+    },
+    methods: {
+        submit: function () {
+            axios.post('/order/submit', {
+                AccountId: 'AccountId',
+                Currency: 'Currency',
+                LineItems: [
+                    { Id: "l-12", Name: "PS4", Qty: 1 }
+                ]
+            })
+            .then(r => {
+                localStorage.orderNumber = r.data;
+                window.location = '/order/submitted';
+            })
+            .catch(error => {
+                alert('Error submitting, please check your log');
+                console.log(error);
+            });
+        }
+    },
+    mounted() {
+        if (localStorage.products) {
+            try {
+                this.products = JSON.parse(localStorage.products);
+            } catch (e) {
+                localStorage.removeItem('products');
+            }
+        }
+    }
+});
+
+const orderSubmitted = new Vue({
+    el: '#orderInfo',
+    data: {
+        orderNumber: ''
+    },
+    mounted() {
+        this.orderNumber = localStorage.orderNumber;
+        if (this.$refs.clearCart) {
+            localStorage.clear();
+        }
+    }
+})

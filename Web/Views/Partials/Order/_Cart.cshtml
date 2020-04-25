@@ -1,7 +1,7 @@
 ﻿<div id="cart">
 
     <h4 class="display-4">@ViewData["Title"]</h4>
-    <p class="lead mb-4">Here's your shoppint cart at the moment.</p>
+    <p class="lead mb-4">Here's your shopping cart at the moment.</p>
     <div v-if="hasItems">
         <div class="row">
             <div class="col-sm-12 col-md-9">
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div v-else>
+    <div v-else class="py-3">
         <p class="lead">It seems your cart is empty 😕.</p>
         <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Keep shopping</a>
     </div>

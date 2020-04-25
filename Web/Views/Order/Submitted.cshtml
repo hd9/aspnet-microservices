@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Order Submitted";
+    ViewData["Review"] = true;
+}
+
+<div>
+    <div id="orderInfo" ref="clearCart">
+        <div v-if="orderNumber">
+            <h2 class="display-4">@ViewData["Title"]</h2>
+            <p class="lead mb-4">Congratulations, your order was submitted. Here's the summary of your order:</p>
+            <h5 class="my-4 text-danger">Order Number: {{ orderNumber }}</h5>
+        </div>
+        <div v-else>
+            <h2 class="display-4">Order not found</h2>
+            <p class="lead mb-4">Sorry but the order you requested could not be found.</p>
+        </div>
+    </div>
+    <partial name="~/Views/Partials/Order/_MiniCart.cshtml" />
+    <div class="border-top py-4 text-right">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-sm">Keep Shopping</a>
+        <a asp-controller="Account" asp-action="Index" class="btn btn-danger btn-sm">Go to my Account</a>
+    </div>
+</div>
+
+<script src="~/js/catalog.js"></script>

@@ -23,7 +23,7 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public void SubmitOrder(Order request)
+        public async Task Submit(Order request)
         {
             // todo
         }

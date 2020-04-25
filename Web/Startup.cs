@@ -35,6 +35,7 @@ namespace Web
             services.AddHttpClient<INewsletterSvc, NewsletterSvc>();
             services.AddHttpClient<ICatalogSvc, CatalogSvc>();
             services.AddHttpClient<IAccountSvc, AccountSvc>();
+            services.AddHttpClient<IOrderSvc, OrderSvc>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>

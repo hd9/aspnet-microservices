@@ -3,28 +3,30 @@
     ViewData["Review"] = true;
 }
 
-<h2 class="display-4">@ViewData["Title"]</h2>
-<p class="lead mb-4">Here's the summary of your order:</p>
-<div class="row small">
+<div>
+    <h2 class="display-4">@ViewData["Title"]</h2>
+    <p class="lead mb-4">Here's the summary of your order:</p>
+    <div class="row small">
 
-    <div class="col-md-4">
-        <h6 class="border-bottom">Account information</h6>
-        <partial name="~/Views/Partials/Account/_AccountForm.cshtml" />
+        <div class="col-md-4">
+            <h6 class="border-bottom">Account information</h6>
+            <partial name="~/Views/Partials/Account/_AccountForm.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <h6 class="border-bottom">Payment Information</h6>
+            <partial name="~/Views/Partials/Account/_PaymentForm.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Order/_MiniCart.cshtml" />
+        </div>
     </div>
-    <div class="col-md-4">
-        <h6 class="border-bottom">Payment Information</h6>
-        <partial name="~/Views/Partials/Account/_PaymentForm.cshtml" />
-    </div>
-    <div class="col-md-4">
-        <partial name="~/Views/Partials/Order/_MiniCart.cshtml" />
+    <div class="row border-top" id="cartSubmit">
+        <div class="col-sm-12 mt-3 text-right">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm">Keep Shopping</a>
+            <a asp-action="Index" class="btn btn-warning btn-sm">Change Cart</a>
+            <a href="#" class="btn btn-danger btn-sm" v-on:click="submit">Submit Order</a>
+        </div>
     </div>
 </div>
-<div class="row border-top">
-    <div class="col-sm-12 mt-3 text-right">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm">Keep Shopping</a>
-        <a asp-action="Index" class="btn btn-outline-info btn-sm">Change Cart</a>
-        <a href="#" class="btn btn-danger btn-sm">Submit Order</a>
-    </div>
-</div>
-
+    
 <script src="~/js/catalog.js"></script>
