@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Web.Models;
 
 namespace Web.Services
 {
     public interface ICatalogSvc
     {
-        List<Category> GetCategories();
-        Category GetCategory(string catId);
-        List<Product> GetProducts(string catId);
-        List<Product> GetAllProducts();
-        Product GetProduct(string pId);
+        Task<List<Category>> GetCategories();
+        Task<Category> GetCategory(string catId);
+        Task<List<Product>> GetProducts(string catId);
+        Task<Product> GetProduct(string pId);
     }
 }

@@ -11,13 +11,13 @@ namespace CatalogSvc.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class CatalogController : ControllerBase
     {
         private readonly ICatalogSvc svc;
         private readonly IConfiguration cfg;
         const string instruction = @"The service is alive! To test it, run: curl ""http://<your-url>/products/all""";
 
-        public ProductsController(ICatalogSvc svc, IConfiguration cfg)
+        public CatalogController(ICatalogSvc svc, IConfiguration cfg)
         {
             this.svc = svc;
             this.cfg = cfg;
@@ -39,17 +39,38 @@ namespace CatalogSvc.Controllers
             return Ok($"Connection String: {cs}, Db: {db}, Collection: {c}");
         }
 
-        [Route("/products")]
-        public IActionResult Index()
+        [Route("/ping")]
+        public IActionResult Ping()
+        {
+            return Ok();
+        }
+
+        [Route("/help")]
+        public IActionResult Help()
         {
             return Ok(instruction);
         }
 
         [HttpGet]
-        public IList<Product> All()
+        [Route("/product/{productId}")]
+        public async Task<Product> GetProductsById(string productId)
         {
-            return svc.GetAll();
+            return await svc.GetProduct(productId);
         }
-        
+
+        [HttpGet]
+        [Route("/products/{categoryId}")]
+        public async Task<IList<Product>> GetProductsByCategory(string categoryId)
+        {
+            return await svc.GetProducts(categoryId);
+        }
+
+        [HttpGet]
+        [Route("/categories")]
+        public async Task<IList<Category>> GetCategories()
+        {
+            return await svc.GetCategories();
+        }
+
     }
 }

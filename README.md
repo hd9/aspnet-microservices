@@ -35,11 +35,12 @@ docker pull rabbitmq:latest
 We'll need to run RabbitMQ and two instances of MongoDB.
 
 Run RabbitMQ with:
-docker run --name r1 -it -h rh -p 5672:5672 rabbitmq
+docker run --name r1 -d -p 5672:5672 rabbitmq
+docker run --name r1 -d -h rh -p 5672:5672 rabbitmq
 
 Run MongoDbs as:
-docker run -d --name m2 -p 32768:27017 mongo                                        # for NewsletterSvc
-docker run -d --name m2 -p 32769:27017 mongo                                        # for CatalogSvc
+docker run -d --name m-nl -p 32768:27017 mongo                                        # for NewsletterSvc
+docker run -d --name m-cat -p 32769:27017 mongo                                        # for CatalogSvc
 
 Run MySql:
 docker run -d --name sql1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=hilden mysql          # for NotificationsSvc
@@ -55,20 +56,60 @@ And run:
 ```js
 use catalog
 db.products.insertMany([
-    { Name: "Xbox X", Description: "The Xbox Series X is an upcoming video game console from Microsoft. Announced December 12, 2019, it is the successor to the Xbox One and the fourth console in the Xbox family of consoles.", Price: 500, Currency: "USD" },
-    { Name: "Playstation 5", Description: "The PlayStation 5 is an upcoming home video game console developed by Sony Interactive Entertainment. Announced as the successor to the PlayStation 4 in 2019, its launch is scheduled for late 2020.", Price: 500, Currency: "USD" },
-    { Name: "Nintendo Switch", Description: "The Nintendo Switch is a video game console developed by Nintendo, released worldwide in most regions on March 3, 2017. It is a hybrid console that can be used as a home console and portable device.", Price: 300, Currency: "USD" },
-    { Name: "Playstation 4", Description: "The PlayStation 4 is an eighth-generation home video game console developed by Sony Interactive Entertainment. Announced as the successor to the PlayStation 3 in February 2013, it was launched on November 15 in North America, November 29 in Europe, South America and Australia, and on February 22, 2014 in Japan.", Price: 300, Currency: "USD" },
-    { Name: "Xbox One", Description: "The Xbox One is an eighth-generation home video game console developed by Microsoft. Announced in May 2013, it is the successor to Xbox 360 and the third console in the Xbox series of video game consoles.", Price: 300, Currency: "USD" },
-    { Name: "Wii U", Description: "The Wii U is a home video game console developed by Nintendo as the successor to the Wii. Released in late 2012, it is the first eighth-generation video game console and competed with Microsoft's Xbox One and Sony's PlayStation 4. The Wii U is the first Nintendo console to support HD graphics", Price: 200, Currency: "USD" },
+    { Slug: "xbx-123", Name: "Xbox One", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "ps4-456", Name: "PS4", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "ns-789", Name: "Nintendo Switch", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "ps5-753;", Name: "PS5", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "xbxx-951", Name: "Xbox X Series", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "wiiu-789", Name: "wii U", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "fdr-951", Name: "Fender Stratocaster", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 5 } ,
+    { Slug: "gib-789", Name: "Gibson Les Paul", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 3 } ,
+    { Slug: "gljb-789", Name: "Geddy Lee's Jazz Bass", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
+    { Slug: "pb-951", Name: "Paddle Boarding", Price: 500, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    { Slug: "jjk-789", Name: "Jiu-Jitsu Kimono", Price: 150, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    { Slug: "sb-789", Name: "Soccer Ball", Price: 15, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    { Slug: "goia-789", Name: "Go in Action", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "alg-4445", Name: "Algorithms", Price: 45, Currency: "CAD", Description: " by Robert Sedgewick & Kevin Wayne TODO", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "cd-789", Name: "Continuous Delivery", Price: 45, Currency: "CAD", Description: "by Jez Humble & David Farley", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "rpi-789", Name: "Raspberry Pi", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "pppro-789", Name: "Pine Book Pro ARM", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "pppro-789", Name: "Sony Bravia 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
+    { Slug: "pppro-789", Name: "Toshiba Netflix 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
+    { Slug: "ggc-789", Name: "Grass Curter", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
+    { Slug: "bbqc-789", Name: "BBQ Coal", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
+    { Slug: "seab-789", Name: "Sony Earbuddy", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "bstd3-789", Name: "Beats Studio3 Wireless Headphones, Matte Black", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "smb-506041", Name: "Sennheiser MB Pro 1 (506041)", Price: 166, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "gcd-5041", Name: "Gaming Computer Desk with Storage for Controller, Headphone & Speaker - Black", Price: 159.71, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "iphone-753", Name: "iPhone 7", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "iphone-X11", Name: "iPhone X", Price: 999, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "iphone-X11-case1", Name: "iPhone X Case", Price: 9.99, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 2 },
+    { Slug: "sg-11", Name: "Samsung Galaxy 11", Price: 600, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "sg-20", Name: "Samsung Galaxy 20", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 }
+]);
+
+// inserts categories
+db.Categories.insertMany([
+    { Slug: "sports", Name: "Sports" } ,
+    { Slug: "games", Name: "Games" } ,
+    { Slug: "books", Name: "Books" } ,
+    { Slug: "computers", Name: "Computers" } ,
+    { Slug: "tvs", Name: "TVs" } ,
+    { Slug: "home", Name: "Home" } ,
+    { Slug: "musical-instruments", Name: "Musical Instruments" } ,
+    { Slug: "headphones-audio", Name: "Headphones & Audio" } ,
+    { Slug: "phones", Name: "Phones" }
 ]);
 
 
-### Seeding Datbase
+## Notifications
+
+### Seeding the Notification datbase
 Connect to the database with:
-mysql --protocol=tcp -u root -p
+`mysql --protocol=tcp -u root -p`
 
 Create a database and table:
+```sql
 create database hildenco;
 use hildenco;
 CREATE TABLE notifications (
@@ -78,6 +119,11 @@ CREATE TABLE notifications (
     created_at  DATETIME        NOT NULL,
     type        char(1)         NOT NULL
 );
+
+-- create our user
+create user 'svc'
+
+```
 
 ## Changing Configuration
 todo add:

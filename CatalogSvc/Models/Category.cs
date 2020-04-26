@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CatalogSvc.Models
 {
-    public class Product
+    public class Category
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -14,10 +14,6 @@ namespace CatalogSvc.Models
         public string Slug { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Price { get; set; }
-        public string Currency { get; set; }
-        public string CategoryId { get; set; }
-        public string CategoryName { get; set; }
-        public int Rating { get; set; }
+        public string Url => $"/products/{(Id ?? "").ToLower()}";
     }
 }

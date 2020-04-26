@@ -34,9 +34,9 @@ namespace Web.Controllers
         /// Provides the list of products from the Catalog microservice
         /// </summary>
         [Route("/products/details/{pid}")]
-        public IActionResult Product(string pid)
+        public async Task<IActionResult> Product(string pid)
         {
-            var p = _catSvc.GetProduct(pid);
+            var p = await _catSvc.GetProduct(pid);
             return View(p);
         }
 
@@ -44,36 +44,27 @@ namespace Web.Controllers
         /// Provides the list of products from the Catalog microservice
         /// </summary>
         [Route("/api/products/categories")]
-        public IList<Category> GetCategories()
+        public async Task<IList<Category>> GetCategories()
         {
-            return _catSvc.GetCategories();
-        }
-
-        /// <summary>
-        /// Provides the list of products from the Catalog microservice
-        /// </summary>
-        [Route("/api/products/")]
-        public IList<Product> GetAllProducts()
-        {
-            return _catSvc.GetAllProducts();
+            return await _catSvc.GetCategories();
         }
 
         /// <summary>
         /// Provides the list of products from the Catalog microservice
         /// </summary>
         [Route("/api/products/{cat}")]
-        public IList<Product> GetProducts(string cat)
+        public async Task<IList<Product>> GetProducts(string cat)
         {
-            return _catSvc.GetProducts(cat);
+            return await _catSvc.GetProducts(cat);
         }
 
         /// <summary>
         /// Provides the list of products from the Catalog microservice
         /// </summary>
         [Route("/api/products/details/{pid}")]
-        public Product GetProductById(string pid)
+        public async Task<Product> GetProductById(string pid)
         {
-            return _catSvc.GetProduct(pid);
+            return await _catSvc.GetProduct(pid);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CatalogSvc.Infrastructure
 {
@@ -10,7 +11,9 @@ namespace CatalogSvc.Infrastructure
     {
         private readonly MongoDB.Driver.MongoClient client;
         private readonly IMongoDatabase db;
-        private readonly string col;
+        private string col;
+
+        public string Collection { get => col; set => col = value; }
 
         public MongoClient(string connStr, string db, string collection)
         {
@@ -19,16 +22,23 @@ namespace CatalogSvc.Infrastructure
             this.db = client.GetDatabase(db);
         }
 
-        public IList<T> GetAll<T>()
+        public async Task<IList<T>> GetAll<T>()
         {
             var c = db.GetCollection<T>(col);
-            return c.Find(new BsonDocument()).ToList();
+            return (await c.FindAsync(new BsonDocument())).ToList();
         }
 
-        public void Insert<T>(T item)
+        public async Task<IList<T>> Find<T>(string column, string value)
         {
             var c = db.GetCollection<T>(col);
-            c.InsertOne(item);
+            var filter = Builders<T>.Filter.Eq(column, value);
+            return (await c.FindAsync<T>(filter)).ToList();
+        }
+
+        public async Task Insert<T>(T item)
+        {
+            var c = db.GetCollection<T>(col);
+            await c.InsertOneAsync(item);
         }
 
         private void Log(string msg)

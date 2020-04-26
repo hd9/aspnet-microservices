@@ -16,10 +16,27 @@ namespace CatalogSvc.Services
             this.db = db;
         }
 
-        public IList<Product> GetAll()
+        public async Task<IList<Category>> GetCategories()
         {
-            return db.GetAll<Product>();
+            db.Collection = "Categories";
+            return await db.GetAll<Category>();
         }
-        
+
+        public async Task<Category> GetCategory(string categoryId)
+        {
+            db.Collection = "Categories";
+            return (await db.Find<Category>("Slug", categoryId)).SingleOrDefault();
+        }
+
+        public async Task<Product> GetProduct(string productId)
+        {
+            return (await db.Find<Product>("Slug", productId)).SingleOrDefault();
+        }
+
+        public async Task<IList<Product>> GetProducts(string categoryId)
+        {
+            return await db.Find<Product>("CategoryId", categoryId);
+        }
+
     }
 }
