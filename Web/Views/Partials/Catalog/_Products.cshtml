@@ -1,7 +1,7 @@
 ﻿<div class="mb-lg-5" id="prodsApp">
-    <div class="row" ref="cat" id="@Model.Id">
-        <div class="col-sm-6 col-lg-4 my-3" v-for="p in products">
-            <div class="card" propName="abc123">
+    <div class="row" ref="cat" slug="@Model.Slug">
+        <div class="col-sm-6 col-lg-4 mb-3" v-for="p in products">
+            <div class="card">
                 <div class="card-body">
                     <h5>{{ p.name }}</h5>
                     <a v-bind:href="p.url"><partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" /></a>

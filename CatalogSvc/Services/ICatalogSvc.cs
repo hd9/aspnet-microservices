@@ -7,8 +7,8 @@ namespace CatalogSvc.Services
     public interface ICatalogSvc
     {
         Task<IList<Category>> GetCategories();
-        Task<Category> GetCategory(string categoryId);
-        Task<IList<Product>> GetProducts(string categoryId);
-        Task<Product> GetProduct(string productId);
+        Task<Category> GetCategory(string slug);
+        Task<IList<Product>> GetProducts(string slug);
+        Task<Product> GetProduct(string slug);
     }
 }

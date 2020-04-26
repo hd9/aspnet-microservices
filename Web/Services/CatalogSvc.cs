@@ -23,10 +23,10 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public async Task<List<Product>> GetProducts(string categoryId)
+        public async Task<List<Product>> GetProductsByCategory(string slug)
         {
-            var url = $"{cfg["Services:Catalog"]}/products/all";
-            logger.LogInformation($"[CatalogSvc] Querying product list from: ${url}");
+            var url = $"{cfg["Services:Catalog"]}/products/{slug}";
+            logger.LogInformation($"[CatalogSvc] Querying products by category: '{slug}' from: '{url}'");
 
             var resp = await httpClient.GetAsync(url);
             var data = await resp.Content.ReadAsStringAsync();
@@ -37,7 +37,7 @@ namespace Web.Services
         public async Task<List<Category>> GetCategories()
         {
             var url = $"{cfg["Services:Catalog"]}/categories";
-            logger.LogInformation($"[CatalogSvc] Querying categories from: ${url}");
+            logger.LogInformation($"[CatalogSvc] Querying categories from '{url}'");
 
             var resp = await httpClient.GetAsync(url);
             var data = await resp.Content.ReadAsStringAsync();
@@ -45,10 +45,10 @@ namespace Web.Services
             return JsonConvert.DeserializeObject<List<Category>>(data);
         }
 
-        public async Task<Product> GetProduct(string productId)
+        public async Task<Product> GetProductBySlug(string slug)
         {
-            var url = $"{cfg["Services:Catalog"]}/products/{productId}";
-            logger.LogInformation($"[CatalogSvc] Querying product '{productId}' from: ${url}");
+            var url = $"{cfg["Services:Catalog"]}/product/{slug}";
+            logger.LogInformation($"[CatalogSvc] Querying product '{slug}' from: '{url}'");
 
             var resp = await httpClient.GetAsync(url);
             var data = await resp.Content.ReadAsStringAsync();
@@ -56,10 +56,10 @@ namespace Web.Services
             return JsonConvert.DeserializeObject<Product>(data);
         }
 
-        public async Task<Category> GetCategory(string categoryId)
+        public async Task<Category> GetCategory(string slug)
         {
-            var url = $"{cfg["Services:Catalog"]}/categories/{categoryId}";
-            logger.LogInformation($"[CatalogSvc] Querying category '{categoryId}' from: ${url}");
+            var url = $"{cfg["Services:Catalog"]}/categories/{slug}";
+            logger.LogInformation($"[CatalogSvc] Querying category '{slug}' from: '{url}'");
 
             var resp = await httpClient.GetAsync(url);
             var data = await resp.Content.ReadAsStringAsync();

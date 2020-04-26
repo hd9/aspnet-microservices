@@ -31,7 +31,10 @@
             {
                 <p class="text-danger font-weight-bold">Information not available</p>
             }
-            <p class="small my-3">@Model.Description</p>
+            <div class="small">
+                <strong class="d-block">Description:</strong>
+                <p>@Model.Description</p>
+            </div>
             <div>
                 <a href="#" class="btn btn-danger btn-sm" v-on:click="addToCart">Add to cart</a>
                 <a asp-controller="Products" asp-action="@Model.CategoryId" class="btn btn-outline-info btn-sm">Other items on @Model.CategoryName</a>

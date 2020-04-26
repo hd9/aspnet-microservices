@@ -52,17 +52,17 @@ namespace CatalogSvc.Controllers
         }
 
         [HttpGet]
-        [Route("/product/{productId}")]
-        public async Task<Product> GetProductsById(string productId)
+        [Route("/product/{slug}")]
+        public async Task<Product> GetProductBySlug(string slug)
         {
-            return await svc.GetProduct(productId);
+            return await svc.GetProduct(slug);
         }
 
         [HttpGet]
-        [Route("/products/{categoryId}")]
-        public async Task<IList<Product>> GetProductsByCategory(string categoryId)
+        [Route("/products/{slug}")]
+        public async Task<IList<Product>> GetProductsByCategory(string slug)
         {
-            return await svc.GetProducts(categoryId);
+            return await svc.GetProducts(slug);
         }
 
         [HttpGet]
@@ -72,5 +72,11 @@ namespace CatalogSvc.Controllers
             return await svc.GetCategories();
         }
 
+        [HttpGet]
+        [Route("/categories/{slug}")]
+        public async Task<Category> GetCategory(string slug)
+        {
+            return await svc.GetCategory(slug);
+        }
     }
 }

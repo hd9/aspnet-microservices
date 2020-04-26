@@ -22,20 +22,22 @@ namespace CatalogSvc.Services
             return await db.GetAll<Category>();
         }
 
-        public async Task<Category> GetCategory(string categoryId)
+        public async Task<Category> GetCategory(string slug)
         {
             db.Collection = "Categories";
-            return (await db.Find<Category>("Slug", categoryId)).SingleOrDefault();
+            return (await db.Find<Category>("Slug", slug)).SingleOrDefault();
         }
 
-        public async Task<Product> GetProduct(string productId)
+        public async Task<Product> GetProduct(string slug)
         {
-            return (await db.Find<Product>("Slug", productId)).SingleOrDefault();
+            db.Collection = "products";
+            return (await db.Find<Product>("Slug", slug)).SingleOrDefault();
         }
 
-        public async Task<IList<Product>> GetProducts(string categoryId)
+        public async Task<IList<Product>> GetProducts(string slug)
         {
-            return await db.Find<Product>("CategoryId", categoryId);
+            db.Collection = "products";
+            return await db.Find<Product>("CategoryId", slug);
         }
 
     }

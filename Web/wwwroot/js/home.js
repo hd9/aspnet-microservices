@@ -29,29 +29,3 @@ var nlApp = new Vue({
         }
     }
 });
-
-// categories
-var catApp = new Vue({
-    el: '#catApp',
-    data: {
-        categories: []
-    },
-    methods: {
-        view: function () {
-            alert('todo');
-        }
-    },
-    mounted() {
-        axios.get('/api/products/categories')
-            .then(function (r) {
-                if (r && r.data) {  
-                    r.data.forEach(p => {
-                        catApp.categories.push(p);
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-});

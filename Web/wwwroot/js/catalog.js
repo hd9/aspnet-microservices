@@ -1,21 +1,43 @@
-﻿// products
+﻿// categories
+var catApp = new Vue({
+    el: '#catApp',
+    data: {
+        categories: []
+    },
+    mounted() {
+        axios.get('/api/categories')
+            .then(function (r) {
+                if (r && r.data) {
+                    r.data.forEach(c => {
+                        catApp.categories.push(c);
+                        c.url = '/products/' + c.slug;
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+});
+
+// products
 const prodsApp = new Vue({
     el: '#prodsApp',
     data: {
         products: [],
-        catId: ''
+        slug: ''
     },
     mounted() {
         if (!this.$refs.cat)
             return;
 
-        this.catId = this.$refs.cat.attributes["id"].value;
-        axios.get('/api/products/' + this.catId)
+        this.slug = this.$refs.cat.attributes["slug"].value;
+        axios.get('/api/products/' + this.slug)
             .then(function (r) {
                 if (r && r.data) {
                     r.data.forEach(p => {
                         prodsApp.products.push(p);
-                        p.url = '/products/details/' + p.id;
+                        p.url = '/product/' + p.slug;
                     });
                 }
             })
