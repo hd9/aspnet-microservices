@@ -2,6 +2,13 @@
     ViewData["Title"] = "Account SignIn";
 }
 
+@if (TempData["Msg"] != null)
+{
+    <div class="alert alert-primary" role="alert">
+        @TempData["Msg"]
+    </div>
+}
+
 <div class="row my-lg-5">
     <div class="col-md-4">
         <partial name="~/Views/Partials/Account/_SignIn.cshtml" />

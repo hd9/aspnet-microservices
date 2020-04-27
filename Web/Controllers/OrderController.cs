@@ -40,14 +40,14 @@ namespace Web.Controllers
         [Route("/cart/checkout")]
         public async Task<IActionResult> Checkout()
         {
-            var acct = await _acctSvc.GetAccount(User.FindFirstValue("Id"));
+            var acct = await _acctSvc.GetAccountById(User.FindFirstValue("Id"));
             return View(acct);
         }
 
         [Route("/cart/review")]
         public async Task<IActionResult> Review()
         {
-            var acct = await _acctSvc.GetAccount(User.FindFirstValue("Id"));
+            var acct = await _acctSvc.GetAccountById(User.FindFirstValue("Id"));
             return View(acct);
         }
 

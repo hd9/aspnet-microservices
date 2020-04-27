@@ -15,7 +15,7 @@ namespace AccountSvc.Controllers
     {
         private readonly IAccountSvc svc;
         private readonly IConfiguration cfg;
-        const string instruction = @"The service is alive!";
+        const string help = @"The service is alive!";
 
         public AccountController(IAccountSvc svc, IConfiguration cfg)
         {
@@ -32,8 +32,42 @@ namespace AccountSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            return Ok(instruction);
+            return Ok(help);
         }
 
+        [Route("/test")]
+        public async Task<IActionResult> Test()
+        {
+            var a = await svc.GetAccountById("1");
+            return Ok(a);
+        }
+
+        [HttpPost]
+        [Route("/account/")]
+        public async Task<IActionResult> CreateAccount([FromBody] Account account)
+        {
+            await svc.CreateAccount(account);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("/account/")]
+        public async Task<IActionResult> UpdateAccount([FromBody] Account account)
+        {
+            await svc.UpdateAccount(account);
+            return Ok();
+        }
+
+        [Route("/account/{id}")]
+        public async Task<Account> GetAccount(string id)
+        {
+            return await svc.GetAccountById(id);
+        }
+
+        [Route("/account/search")]
+        public async Task<Account> GetAccountByEmail(string email)
+        {
+            return await svc.GetAccountByEmail(email);
+        }
     }
 }

@@ -48,7 +48,7 @@ namespace Web.Controllers
         public async Task<IActionResult> Details()
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-            var acct = await _acctSvc.GetAccount(id);
+            var acct = await _acctSvc.GetAccountById(id);
 
             Throw<UnauthorizedAccessException>.If(acct == null);
 
@@ -77,22 +77,29 @@ namespace Web.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Create(Account request)
+        public async Task<IActionResult> Create(Account account)
         {
-            throw new NotImplementedException();
+            if (account == null)
+                return BadRequest();
+
+            await _acctSvc.CreateAccount(account);
+
+            TempData["Msg"] = "Account created successfully! Please login with your information below.";
+
+            return RedirectToAction("SignIn");
         }
 
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Update(Account request)
+        public async Task<IActionResult> Update(Account account)
         {
-            if (request == null)
+            if (account == null)
                 return BadRequest();
 
-            request.Id = User.FindFirstValue("Id");
+            account.Id = User.FindFirstValue("Id");
 
-            await _acctSvc.UpdateAccount(request);
+            await _acctSvc.UpdateAccount(account);
             return RedirectToAction("Index");
         }
 

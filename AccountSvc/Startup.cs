@@ -23,6 +23,7 @@ namespace AccountSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
+            services.AddTransient<IAccountSvc>(x => new Svc.AccountSvc(Configuration["ConnectionString"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

@@ -24,29 +24,69 @@ To run this application, you'll need the following Docker images:
     * Mongo:latest
     * ASP.NET Core SDK
     * ASP.NET Core runtime
-    * RabbitMQ
+    * RabbitMQ:latest
+    * MySQL:latest
 
 Start by pulling the images with:
 docker pull mongo:latest
 docker pull rabbitmq:latest
+docker pull mysql:latest
 
 
-## Running the dependencies
-We'll need to run RabbitMQ and two instances of MongoDB.
 
+# Running the microservices
+
+## RabbitMQ
 Run RabbitMQ with:
-docker run --name r1 -d -p 5672:5672 rabbitmq
+docker run --name r1 -d       -p 5672:5672 rabbitmq
 docker run --name r1 -d -h rh -p 5672:5672 rabbitmq
 
-Run MongoDbs as:
-docker run -d --name m-nl -p 32768:27017 mongo                                        # for NewsletterSvc
+## CatalogSvc
 docker run -d --name m-cat -p 32769:27017 mongo                                        # for CatalogSvc
 
-Run MySql:
-docker run -d --name sql1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=hilden mysql          # for NotificationsSvc
+## OrderSvc
+-- todo --
+
+## RecommendationSvc
+-- todo --
+
+## AccountSvc
+docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -p -P 3307`
+
+And run the script:
+```sql
+create database accountdb;
+use accountdb;
+
+CREATE TABLE account (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name                  VARCHAR(1000)   NOT NULL,
+    email                 VARCHAR(300)    NOT NULL,
+    password              VARCHAR(1000)   NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    address               VARCHAR(1000),
+    city                  VARCHAR(300),
+    region                VARCHAR(100),
+    country               VARCHAR(100),
+    subscribe_newsletter  BIT
+);
+
+```
 
 
-## Seeding the databases
+## NewsletterSvc
+docker run -d --name mongo-nlsvc -p 32768:27017 mongo
+
+## NotificationSvc
+docker run -d --name mysql-notificationsvc -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
+
+
+# Seeding the databases
 
 ### Seeding Product data
 Connect to the catalot mongodb  instance with:
@@ -55,7 +95,7 @@ mongo mongodb://localhost:32769
 And run:
 ```js
 use catalog
-db.products.insertMany([
+db.Products.insertMany([
     { Slug: "xbx-123", Name: "Xbox One", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
     { Slug: "ps4-456", Name: "PS4", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
     { Slug: "ns-789", Name: "Nintendo Switch", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
@@ -100,9 +140,7 @@ db.Categories.insertMany([
     { Slug: "headphones-audio", Name: "Headphones & Audio" } ,
     { Slug: "phones", Name: "Phones" }
 ]);
-
-
-## Notifications
+```
 
 ### Seeding the Notification datbase
 Connect to the database with:
@@ -110,9 +148,9 @@ Connect to the database with:
 
 Create a database and table:
 ```sql
-create database hildenco;
-use hildenco;
-CREATE TABLE notifications (
+create database notificationdb;
+use notificationdb;
+CREATE TABLE Notifications (
     id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(1000)   NOT NULL,
     email       VARCHAR(300)    NOT NULL,
