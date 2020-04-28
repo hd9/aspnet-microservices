@@ -23,6 +23,7 @@ namespace OrderSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
+            services.AddTransient<IOrderSvc>(x => new Svc.OrderSvc(Configuration["ConnectionString"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -44,7 +45,7 @@ namespace OrderSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
+            logger.LogInformation($"Connection String: {Configuration["ConnectionString"]}");
         }
     }
 }

@@ -77,6 +77,40 @@ CREATE TABLE account (
 
 ```
 
+## OrderSvc
+docker run -d --name mysql-ordersvc -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -p -P 3308`
+
+Create db with:
+`create database orderdb;`
+
+And run the script to create `order` and `orderline` tables:
+```sql
+create table lineitem (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id            INT             NOT NULL,
+    name                VARCHAR(1000)   NOT NULL,
+    price               DECIMAL(10,2)   NOT NULL,
+    qty                 INT             NOT NULL,
+    FOREIGN KEY (order_id)
+        REFERENCES orders(id)
+); 
+
+create table orders (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    last_modified       DATETIME        NOT NULL,
+    currency            varchar(3)      NOT NULL,
+    price               DECIMAL(10,2)   NOT NULL,
+    tax                 DECIMAL(10,2)   NOT NULL,
+    shipping            DECIMAL(10,2)   NOT NULL,
+    total_price         DECIMAL(10,2)   NOT NULL,
+    status              TINYINT         NOT NULL
+);
+```
 
 ## NewsletterSvc
 docker run -d --name mongo-nlsvc -p 32768:27017 mongo

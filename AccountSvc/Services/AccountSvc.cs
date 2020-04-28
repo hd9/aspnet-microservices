@@ -18,6 +18,7 @@ namespace AccountSvc.Services
 
         public AccountSvc(string connStr)
         {
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
             _connStr = connStr;
         }
 

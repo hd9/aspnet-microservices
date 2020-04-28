@@ -35,5 +35,12 @@ namespace OrderSvc.Controllers
             return Ok(instruction);
         }
 
+        [Route("/test")]
+        public async Task<IActionResult> Test()
+        {
+            var orders = await svc.GetOrdersByAccountId(12345);
+            return Ok(orders);
+        }
+
     }
 }

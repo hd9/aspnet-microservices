@@ -45,7 +45,7 @@ namespace AccountSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
+            logger.LogInformation($"Connection String: {Configuration["ConnectionString"]}");
         }
     }
 }

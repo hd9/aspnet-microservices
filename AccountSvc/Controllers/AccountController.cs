@@ -35,13 +35,6 @@ namespace AccountSvc.Controllers
             return Ok(help);
         }
 
-        [Route("/test")]
-        public async Task<IActionResult> Test()
-        {
-            var a = await svc.GetAccountById("1");
-            return Ok(a);
-        }
-
         [HttpPost]
         [Route("/account/")]
         public async Task<IActionResult> CreateAccount([FromBody] Account account)
