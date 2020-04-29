@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
+using Web.Infrastructure.Settings;
+using Web.Infrastructure.Global;
 
 namespace Web.Services
 {
@@ -16,18 +18,20 @@ namespace Web.Services
         private readonly ILogger<OrderSvc> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _cfg;
-        private readonly string _currency = "USD";
+        private readonly StoreSettings _storeSettings;
 
         public OrderSvc(HttpClient httpClient, IConfiguration cfg, ILogger<OrderSvc> logger)
         {
             _logger = logger;
             _httpClient = httpClient;
             _cfg = cfg;
+            _storeSettings = Site.StoreSettings;
         }
 
         public async Task Submit(Order order)
         {
-            order.Currency = _currency;
+            order.Currency = _storeSettings.Currency;
+            order.Tax = _storeSettings.Tax;
 
             var url = $"{_cfg["Services:Order"]}/orders/submit";
             _logger.LogInformation($"Submitting order at '{url}':");

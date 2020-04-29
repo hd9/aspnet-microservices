@@ -15,6 +15,7 @@ using Web.Services;
 using static Core.Infrastructure.Extentions.ExceptionExtensions;
 using Core.Infrastructure.Extentions;
 using Web.Infrastructure.Settings;
+using Web.Infrastructure.Global;
 
 namespace Web.Controllers
 {
@@ -24,14 +25,12 @@ namespace Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountSvc _acctSvc;
         private readonly IOrderSvc _orderSvc;
-        private readonly StoreSettings _settings;
 
-        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, StoreSettings settings, ILogger<HomeController> logger)
+        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, ILogger<HomeController> logger)
         {
             _acctSvc = accSvc;
             _orderSvc = oSvc;
             _logger = logger;
-            _settings = settings;
         }
 
         /// <summary>
@@ -51,7 +50,6 @@ namespace Web.Controllers
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             var acct = await _acctSvc.GetAccountById(id);
-            ViewBag.StoreSettings = _settings;
 
             if (acct == null)
                 return NotFound();
@@ -75,7 +73,6 @@ namespace Web.Controllers
         [AllowAnonymous]
         public IActionResult Create()
         {
-            ViewBag.StoreSettings = _settings;
             return View(new Account());
         }
 
@@ -87,7 +84,6 @@ namespace Web.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
-                ViewBag.StoreSettings = _settings;
                 return View(account);
             }
 
@@ -106,7 +102,6 @@ namespace Web.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
-                ViewBag.StoreSettings = _settings;
                 return View(account);
             }
 

@@ -1,11 +1,11 @@
 ﻿@model Account
-@using Web.Infrastructure.Settings;
+@using Web.Infrastructure.Global;
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
     var showPwd = ViewData["ShowPassword"] != null ? (bool)ViewData["ShowPassword"] : false;
-    var settings = ViewBag.StoreSettings as StoreSettings;
     var showNl = false;
 
+    var settings = Site.StoreSettings;
     var regionListItems = settings.Regions.Select(x => new SelectListItem { Text = x, Value = x });
 }
 

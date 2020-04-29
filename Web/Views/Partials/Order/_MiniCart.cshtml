@@ -1,5 +1,8 @@
-﻿@{
+﻿@using Web.Infrastructure.Global; 
+@{
     var review = ViewData["Review"] != null ? (bool)ViewData["Review"] : false;
+    var tax = Site.StoreSettings.Tax;
+    var curr = Site.StoreSettings.Currency;
 }
 <div id="cart">
     <div class="bg-light p-3" style="min-height:200px">
@@ -21,17 +24,17 @@
                     </tr>
                     <tr class="border-top">
                         <th scope="row">Subtotal:</th>
-                        <td class="text-right small" colspan="2">$ {{ parseFloat(subtotal).toFixed(2) }}</td>
+                        <td class="text-right small" colspan="2">@curr$ {{ parseFloat(subtotal).toFixed(2) }}</td>
                     </tr>
                     @if (review)
                     {
                         <tr>
-                            <th scope="row" colspan="2">Tax (5%):</th>
-                            <td class="text-right small">$ {{ parseFloat(subtotal * 0.05).toFixed(2) }}</td>
+                            <th scope="row" colspan="2">Tax (@(tax * 100)%):</th>
+                            <td class="text-right small">$ {{ parseFloat(subtotal * @tax).toFixed(2) }}</td>
                         </tr>
                         <tr class="border-top table-danger text-danger">
                             <th scope="row" colspan="2">Total:</th>
-                            <td class="text-right small">$ {{ parseFloat(subtotal * 1.05).toFixed(2) }}</td>
+                            <td class="text-right small">@curr$ {{ parseFloat(subtotal * 1 + @tax).toFixed(2) }}</td>
                         </tr>
                     }
                 </tbody>

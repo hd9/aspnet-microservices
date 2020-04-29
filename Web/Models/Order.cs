@@ -15,7 +15,7 @@ namespace Web.Models
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
         public string Currency { get; set; }
         public decimal Price => (LineItems.HasAny() ? LineItems.Sum(li => li.Qty * li.Price) : 0);
-        public decimal Tax => 0.05M;
+        public decimal Tax { get; set; }
         public decimal Discount { get; set; }
         public decimal Shipping { get; set; }
         public decimal TotalPrice => Math.Round(Price * (1 + Tax) + Shipping - Discount, 2);
