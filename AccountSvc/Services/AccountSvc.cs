@@ -11,8 +11,8 @@ namespace AccountSvc.Services
     public class AccountSvc : IAccountSvc
     {
         private readonly string _connStr;
-        private readonly string insert = "INSERT INTO account (name, email, password, created_at, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @address, @city, @region, @country, @subscribe_newsletter)";
-        private readonly string update = "UPDATE account (name, email, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, sysdate(), @address, @city, @region, @country, @subscribe_newsletter) WHERE id = @id";
+        private readonly string insert = "INSERT INTO account (name, email, password, created_at, last_updated, address, city, region, postal_code, country, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter)";
+        private readonly string update = "UPDATE account (name, email, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter) WHERE id = @id";
         private readonly string queryAcctById = "SELECT * FROM account WHERE id = @id";
         private readonly string queryAcctByEmail = "SELECT * FROM account WHERE email = @email";
 
@@ -34,6 +34,7 @@ namespace AccountSvc.Services
                     address = account.Address,
                     city = account.City,
                     region = account.Region,
+                    postal_code = account.PostalCode,
                     country = account.Country,
                     subscribe_newsletter = account.SubscribedToNewsletter
                 });
@@ -52,6 +53,7 @@ namespace AccountSvc.Services
                     address = account.Address,
                     city = account.City,
                     region = account.Region,
+                    postal_code = account.PostalCode,
                     country = account.Country,
                     subscribe_newsletter = account.SubscribedToNewsletter
                 });
