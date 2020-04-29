@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Web.Models;
 using Web.Services;
 using static Core.Infrastructure.Extentions.ExceptionExtensions;
 using Core.Infrastructure.Extentions;
+using Web.Infrastructure.Settings;
 
 namespace Web.Controllers
 {
@@ -24,12 +24,14 @@ namespace Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountSvc _acctSvc;
         private readonly IOrderSvc _orderSvc;
+        private readonly StoreSettings _settings;
 
-        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, ILogger<HomeController> logger)
+        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, StoreSettings settings, ILogger<HomeController> logger)
         {
             _acctSvc = accSvc;
             _orderSvc = oSvc;
             _logger = logger;
+            _settings = settings;
         }
 
         /// <summary>
@@ -49,8 +51,10 @@ namespace Web.Controllers
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             var acct = await _acctSvc.GetAccountById(id);
+            ViewBag.StoreSettings = _settings;
 
-            Throw<UnauthorizedAccessException>.If(acct == null);
+            if (acct == null)
+                return NotFound();
 
             return View(acct);
         }
@@ -71,6 +75,7 @@ namespace Web.Controllers
         [AllowAnonymous]
         public IActionResult Create()
         {
+            ViewBag.StoreSettings = _settings;
             return View(new Account());
         }
 
@@ -79,8 +84,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Account account)
         {
-            if (account == null)
-                return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
+                ViewBag.StoreSettings = _settings;
+                return View(account);
+            }
 
             await _acctSvc.CreateAccount(account);
 
@@ -94,8 +103,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(Account account)
         {
-            if (account == null)
-                return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
+                ViewBag.StoreSettings = _settings;
+                return View(account);
+            }
 
             account.Id = User.FindFirstValue("Id");
 

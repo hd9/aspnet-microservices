@@ -1,9 +1,12 @@
 ﻿@model Account
-
+@using Web.Infrastructure.Settings;
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
     var showPwd = ViewData["ShowPassword"] != null ? (bool)ViewData["ShowPassword"] : false;
+    var settings = ViewBag.StoreSettings as StoreSettings;
     var showNl = false;
+
+    var regionListItems = settings.Regions.Select(x => new SelectListItem { Text = x, Value = x });
 }
 
 <div class="form-group">
@@ -66,9 +69,9 @@
         <label for="inputCountry">Country:</label>
         @if (editMode)
         {
-            <select class="form-control" id="inputCountry">
+            <select asp-for="Country" class="form-control" id="inputCountry">
                 <option selected>Choose...</option>
-                <option>...</option>
+                <option>@settings.Country</option>
             </select>
         }
         else
@@ -76,7 +79,20 @@
             <div class="font-weight-light">@Model.Country</div>
         }
     </div>
-    <div class="form-group col-md-4">
+    <div class="form-group col-md-3">
+        <label for="inputState">State/Province:</label>
+        @if (editMode)
+        {
+            <select asp-for="Region" asp-items="regionListItems" class="form-control" id="inputState">
+                <option selected>Choose...</option>
+            </select>
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Region</div>
+        }
+    </div>
+    <div class="form-group col-md-5">
         <label for="inputCity">City:</label>
         @if (editMode)
         {
@@ -87,25 +103,10 @@
             <div class="font-weight-light">@Model.City</div>
         }
     </div>
-    <div class="form-group col-md-4 text-right">
-        <label for="inputState">State/Province:</label>
-        @if (editMode)
-        {
-            <div class="font-weight-light">@Model.Region</div>
-            <select class="form-control" id="inputState">
-                <option selected>Choose...</option>
-                <option>...</option>
-            </select>
-        }
-        else
-        {
-            <div class="font-weight-light">@Model.Region</div>
-        }
-    </div>
 </div>
 @if (showNl)
 {
-   <div class="form-group">
+    <div class="form-group">
         <div class="form-check">
             <input asp-for="SubscribedToNewsletter" class="form-check-input" id="nlSubscribe" :disabled="!editMode">
             <label class="form-check-label" for="nlSubscribe">

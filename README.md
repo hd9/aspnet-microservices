@@ -71,6 +71,7 @@ CREATE TABLE account (
     address               VARCHAR(1000),
     city                  VARCHAR(300),
     region                VARCHAR(100),
+    postal_code           VARCHAR(10),
     country               VARCHAR(100),
     subscribe_newsletter  BIT
 );

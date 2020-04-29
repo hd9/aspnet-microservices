@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Web.Infrastructure.Settings;
 using Web.Models;
 using Web.Services;
 
@@ -37,6 +38,9 @@ namespace Web
             services.AddHttpClient<IAccountSvc, AccountSvc>();
             services.AddHttpClient<IOrderSvc, OrderSvc>();
 
+            var storeSettings = ParseSetting<StoreSettings>();
+            services.AddSingleton(storeSettings);
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
                 {
@@ -44,7 +48,7 @@ namespace Web
                     o.AccessDeniedPath = "/Account/Forbidden";
                     o.Cookie.Name = ".hildenco.session";
                 });
-
+            
             //services.AddDistributedMemoryCache();
 
             //services.AddIdentity<User, IdentityRole>();
@@ -94,6 +98,15 @@ namespace Web
             });
 
             logger.LogInformation($"NewsletterSvc: {Configuration["Services:Newsletter"]}, CatalogSvc: {Configuration["Services:Catalog"]}");
+        }
+            
+        private T ParseSetting<T>()
+            where T : new()
+        {
+            var settings = new T();
+            Configuration.GetSection("StoreSettings").Bind(settings);
+
+            return settings;
         }
     }
 }

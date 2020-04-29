@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Web.Infrastructure.Settings;
 using Web.Models;
 using Web.Services;
 
@@ -18,12 +19,14 @@ namespace Web.Controllers
         private readonly IOrderSvc _oSvc;
         private readonly IAccountSvc _acctSvc;
         private readonly ILogger<HomeController> _logger;
+        private readonly StoreSettings _settings;
 
-        public OrderController(IOrderSvc oSvc, IAccountSvc acctSvc, ILogger<HomeController> logger)
+        public OrderController(IOrderSvc oSvc, IAccountSvc acctSvc, StoreSettings storeSettings, ILogger<HomeController> logger)
         {
             _oSvc = oSvc;
             _acctSvc = acctSvc;
             _logger = logger;
+            _settings = storeSettings;
         }
 
         /// <summary>

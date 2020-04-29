@@ -5,5 +5,10 @@
     ViewData["ShowPassword"] = true;
 }
 
+@if(TempData["ErrorMsg"] != null)
+{
+    <div class="p-3 my-3 alert-danger">@TempData["ErrorMsg"]</div>
+}
+
 <partial name="~/Views/Partials/Account/_Create.cshtml" />
 <script src="~/js/account/index.js"></script>
