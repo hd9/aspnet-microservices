@@ -6,8 +6,7 @@ namespace Web.Services
 {
     public interface IOrderSvc
     {
-        Task Submit(Order o);
-        Task <List<Order>> GetOrders(string accountId);
-        Order GetOrder(string id);
+        Task Submit(Order order);
+        Task <List<Order>> GetOrdersByAccountId(string accountId);
     }
 }

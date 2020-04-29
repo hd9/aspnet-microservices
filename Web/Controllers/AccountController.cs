@@ -23,12 +23,12 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAccountSvc _acctSvc;
-        private readonly IOrderSvc _oSvc;
+        private readonly IOrderSvc _orderSvc;
 
         public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, ILogger<HomeController> logger)
         {
             _acctSvc = accSvc;
-            _oSvc = oSvc;
+            _orderSvc = oSvc;
             _logger = logger;
         }
 
@@ -167,7 +167,7 @@ namespace Web.Controllers
         public async Task<IList<Order>> GetOrders()
         {
             var acctId = User.FindFirstValue("Id");
-            return await _oSvc.GetOrders(acctId);
+            return await _orderSvc.GetOrdersByAccountId(acctId);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -84,7 +84,9 @@ const myOrdersApp = new Vue({
         orders: []
     },
     methods: {
-
+        statusName: function (status) {
+            return status === 0 ? 'New' : 'Submitted';
+        }
     },
     mounted() {
         if (!this.$refs.orders)
@@ -95,6 +97,7 @@ const myOrdersApp = new Vue({
                 if (r && r.data) {
                     r.data.forEach(o => {
                         myOrdersApp.hasOrders = true;
+                        o.statusName = myOrdersApp.statusName(o.status);
                         myOrdersApp.orders.push(o);
                     });
                 }

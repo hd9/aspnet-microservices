@@ -52,6 +52,9 @@ namespace OrderSvc.Services
         {
             int orderId;
 
+            // todo :: order number
+            // var orderNumber = $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper()}";
+
             using (var conn = new MySqlConnection(_connStr))
             {
                 await conn.OpenAsync();
@@ -65,7 +68,7 @@ namespace OrderSvc.Services
                         @tax = order.Tax,
                         @shipping = order.Shipping,
                         @totalPrice = order.TotalPrice,
-                        @status = (int)order.Status
+                        @status = (int)OrderStatus.Submitted
                     });
 
                     orderId = (await conn.QueryAsync<int>("select LAST_INSERT_ID();")).Single();

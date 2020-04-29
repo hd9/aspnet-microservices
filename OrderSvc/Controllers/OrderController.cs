@@ -35,12 +35,19 @@ namespace OrderSvc.Controllers
             return Ok(instruction);
         }
 
-        [Route("/test")]
-        public async Task<IActionResult> Test()
+        [Route("/orders/{accountId}")]
+        public async Task<IActionResult> GetOrdersByAccountId(int accountId)
         {
-            var orders = await svc.GetOrdersByAccountId(12345);
+            var orders = await svc.GetOrdersByAccountId(accountId);
             return Ok(orders);
         }
 
+        [HttpPost]
+        [Route("/orders/submit")]
+        public async Task<IActionResult> SubmitOrder([FromBody] Order order)
+        {
+            var orderId = await svc.SubmitOrder(order);
+            return Ok(orderId);
+        }
     }
 }

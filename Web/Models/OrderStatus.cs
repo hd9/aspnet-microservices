@@ -1,4 +1,4 @@
-﻿namespace OrderSvc.Models
+﻿namespace Web.Models
 {
     public enum OrderStatus
     {

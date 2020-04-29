@@ -54,7 +54,8 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Submit([FromBody] Order o)
         {
-            o.AccountId = User.FindFirstValue("Id");
+            int.TryParse(User.FindFirstValue("Id"), out var accId);
+            o.AccountId = accId;
             await _oSvc.Submit(o);
             return Ok(o.Id);
         }

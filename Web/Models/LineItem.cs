@@ -15,7 +15,7 @@ namespace Web.Models
         
         [Range(0,100000)]
         [Required]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
 
         [Range(1, 999)]
         [Required]

@@ -10,15 +10,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Order #</th>
-                        <th scope="col" style="min-width:50%">Items</th>
-                        <th scope="col">Created On</th>
+                        <th scope="col" class="text-center">Order #</th>
+                        <th scope="col" style="min-width:50%">Item(s)</th>
+                        <th scope="col">Submitted On</th>
+                        <th scope="col">Last Update</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Total Price</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="o in orders">
-                        <th scope="row">{{ o.id }}</th>
+                        <th scope="row" class="text-center">{{ o.id }}</th>
                         <td>
                             <ul class="list-unstyled">
                                 <li v-for="li in o.lineItems"> {{ li.name }} </li>
@@ -26,6 +28,8 @@
                             @*{{ o.lineItems.map(e => e.name).join(", ") }}*@
                         </td>
                         <td>{{ new Date(o.createdOn).toDateString() }}</td>
+                        <td>{{ new Date(o.lastUpdated).toDateString() }}</td>
+                        <td>{{ o.statusName }}</td>
                         <td class="text-danger strong">{{ o.currency }}$ {{ o.totalPrice.toFixed(2) }}</td>
                     </tr>
                 </tbody>

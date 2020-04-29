@@ -7,43 +7,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace Web.Services
 {
     public class OrderSvc : IOrderSvc
     {
-        private readonly ILogger<OrderSvc> logger;
-        private readonly HttpClient httpClient;
-        private readonly IConfiguration cfg;
-        private static readonly List<Order> _orders = new List<Order>();
+        private readonly ILogger<OrderSvc> _logger;
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _cfg;
+        private readonly string _currency = "USD";
 
-        public OrderSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<OrderSvc> logger)
+        public OrderSvc(HttpClient httpClient, IConfiguration cfg, ILogger<OrderSvc> logger)
         {
-            this.logger = logger;
-            this.httpClient = httpClient;
-            this.cfg = cfg;
+            _logger = logger;
+            _httpClient = httpClient;
+            _cfg = cfg;
         }
 
-        public async Task Submit(Order o)
+        public async Task Submit(Order order)
         {
-            // todo :: add rest call
+            order.Currency = _currency;
 
-            o.Id = $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0,10).ToUpper()}";
-            o.Currency = "CAD";
+            var url = $"{_cfg["Services:Order"]}/orders/submit";
+            _logger.LogInformation($"Submitting order at '{url}':");
 
-            _orders.Add(o);
+            var resp = await _httpClient.PostAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(order),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            // get order number
+            order.Id = JsonConvert.DeserializeObject<int>(
+                await resp.Content.ReadAsStringAsync());
         }
 
-        public async Task<List<Order>> GetOrders(string accountId)
+        public async Task<List<Order>> GetOrdersByAccountId(string accountId)
         {
-            // todo :: add rest call
-            return _orders.Where(o => o.AccountId == accountId).ToList();
-        }
+            var url = $"{_cfg["Services:Order"]}/orders/{accountId}";
+            _logger.LogInformation($"Querying orders by accountId at: '{url}'");
 
-        public Order GetOrder(string id)
-        {
-            // todo :: add rest call
-            return _orders.FirstOrDefault(o => o.Id == id);
+            var resp = await _httpClient.GetAsync(url);
+
+            return JsonConvert.DeserializeObject<List<Order>>(
+                await resp.Content.ReadAsStringAsync());
         }
     }
 }
