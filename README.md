@@ -44,11 +44,6 @@ docker run --name r1 -d -h rh -p 5672:5672 rabbitmq
 ## CatalogSvc
 docker run -d --name m-cat -p 32769:27017 mongo                                        # for CatalogSvc
 
-## OrderSvc
--- todo --
-
-## RecommendationSvc
--- todo --
 
 ## AccountSvc
 docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
@@ -119,7 +114,6 @@ docker run -d --name mongo-nlsvc -p 32768:27017 mongo
 ## NotificationSvc
 docker run -d --name mysql-notificationsvc -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 
-
 ## PaymentSvc
 docker run -d --name mysql-paymentsvc -p 3309:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 
@@ -150,9 +144,38 @@ create table log (
     FOREIGN KEY (pmt_id)
         REFERENCES payment(id)
 ); 
+```
+
+## RecommendationSvc
+docker run -d --name mysql-recommendationsvc -p 3310:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -p -P 3310`
+
+Create db with:
+`create database recommendationdb;`
+
+And run the script to create the `recommendation` and `log` tables:
+```sql
+use recommendationdb;
+
+create table recommendation (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    order_id            INT             NOT NULL,
+    created_at          DATETIME        NOT NULL
+);
+
+create table log (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    recomm_id           INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    FOREIGN KEY (recomm_id)
+        REFERENCES recommendation(id)
+); 
+```
 
 
-``
 
 
 # Seeding the databases
