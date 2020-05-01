@@ -120,6 +120,40 @@ docker run -d --name mongo-nlsvc -p 32768:27017 mongo
 docker run -d --name mysql-notificationsvc -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 
 
+## PaymentSvc
+docker run -d --name mysql-paymentsvc -p 3309:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -p -P 3309`
+
+Create db with:
+`create database paymentdb;`
+
+And run the script to create the `payment` and `log` tables:
+```sql
+use paymentdb;
+
+create table payment (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    last_modified       DATETIME        NOT NULL,
+    currency            VARCHAR(3)      NOT NULL,
+    amount              DECIMAL(10,2)   NOT NULL,
+    status              TINYINT         NOT NULL
+);
+
+create table log (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pmt_id              INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    FOREIGN KEY (pmt_id)
+        REFERENCES payment(id)
+); 
+
+
+``
+
 
 # Seeding the databases
 
