@@ -1,6 +1,6 @@
 ﻿namespace Web.Services
 {
-    public interface ITaxSvc
+    public interface ITaxProxy
     {
     }
 }

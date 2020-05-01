@@ -4,7 +4,7 @@ using Web.Models;
 
 namespace Web.Services
 {
-    public interface ICatalogSvc
+    public interface ICatalogProxy
     {
         Task<List<Category>> GetCategories();
         Task<Category> GetCategory(string slug);

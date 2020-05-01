@@ -34,10 +34,10 @@ namespace Web
         {
             services.AddControllersWithViews();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddHttpClient<INewsletterSvc, NewsletterSvc>();
-            services.AddHttpClient<ICatalogSvc, CatalogSvc>();
-            services.AddHttpClient<IAccountSvc, AccountSvc>();
-            services.AddHttpClient<IOrderSvc, OrderSvc>();
+            services.AddHttpClient<INewsletterProxy, NewsletterProxy>();
+            services.AddHttpClient<ICatalogProxy, CatalogProxy>();
+            services.AddHttpClient<IAccountProxy, AccountProxy>();
+            services.AddHttpClient<IOrderProxy, OrderProxy>();
 
             Site.StoreSettings = ParseSetting<StoreSettings>();
 

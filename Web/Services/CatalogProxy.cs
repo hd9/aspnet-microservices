@@ -10,13 +10,13 @@ using Web.Models;
 
 namespace Web.Services
 {
-    public class CatalogSvc : ICatalogSvc
+    public class CatalogProxy : ICatalogProxy
     {
-        private readonly ILogger<CatalogSvc> logger;
+        private readonly ILogger<CatalogProxy> logger;
         private readonly HttpClient httpClient;
         private readonly IConfiguration cfg;
 
-        public CatalogSvc(HttpClient httpClient, IConfiguration cfg, ILogger<CatalogSvc> logger)
+        public CatalogProxy(HttpClient httpClient, IConfiguration cfg, ILogger<CatalogProxy> logger)
         {
             this.logger = logger;
             this.httpClient = httpClient;

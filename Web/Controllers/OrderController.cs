@@ -17,11 +17,11 @@ namespace Web.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly IOrderSvc _oSvc;
-        private readonly IAccountSvc _acctSvc;
+        private readonly IOrderProxy _oSvc;
+        private readonly IAccountProxy _acctSvc;
         private readonly ILogger<HomeController> _logger;
 
-        public OrderController(IOrderSvc oSvc, IAccountSvc acctSvc, ILogger<HomeController> logger)
+        public OrderController(IOrderProxy oSvc, IAccountProxy acctSvc, ILogger<HomeController> logger)
         {
             _oSvc = oSvc;
             _acctSvc = acctSvc;

@@ -1,6 +1,6 @@
 ﻿namespace Web.Services
 {
-    public interface IRecommendationSvc
+    public interface IRecommendationProxy
     {
     }
 }

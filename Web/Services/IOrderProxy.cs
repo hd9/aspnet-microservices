@@ -4,7 +4,7 @@ using Web.Models;
 
 namespace Web.Services
 {
-    public interface IOrderSvc
+    public interface IOrderProxy
     {
         Task Submit(Order order);
         Task <List<Order>> GetOrdersByAccountId(string accountId);

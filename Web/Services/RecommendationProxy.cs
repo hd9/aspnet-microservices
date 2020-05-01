@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace Web.Services
 {
-    public class TaxSvc : ITaxSvc
+    public class RecommendationProxy : IRecommendationProxy
     {
-        private readonly ILogger<TaxSvc> logger;
+        private readonly ILogger<TaxProxy> logger;
         private readonly HttpClient httpClient;
         private readonly IConfiguration cfg;
 
-        public TaxSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<TaxSvc> logger)
+        public RecommendationProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<TaxProxy> logger)
         {
             this.logger = logger;
             this.httpClient = httpClient;
             this.cfg = cfg;
         }
 
-        public float CacTax(Order request, Account account)
+        public void GetRecommendedProducts(string productId)
         {
             // todo
-            return 0;
+            
         }
     }
 }

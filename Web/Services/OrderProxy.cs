@@ -13,14 +13,14 @@ using Web.Infrastructure.Global;
 
 namespace Web.Services
 {
-    public class OrderSvc : IOrderSvc
+    public class OrderProxy : IOrderProxy
     {
-        private readonly ILogger<OrderSvc> _logger;
+        private readonly ILogger<OrderProxy> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _cfg;
         private readonly StoreSettings _storeSettings;
 
-        public OrderSvc(HttpClient httpClient, IConfiguration cfg, ILogger<OrderSvc> logger)
+        public OrderProxy(HttpClient httpClient, IConfiguration cfg, ILogger<OrderProxy> logger)
         {
             _logger = logger;
             _httpClient = httpClient;

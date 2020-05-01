@@ -13,13 +13,13 @@ using System.Text;
 
 namespace Web.Services
 {
-    public class AccountSvc : IAccountSvc
+    public class AccountProxy : IAccountProxy
     {
-        private readonly ILogger<NewsletterSvc> _logger;
+        private readonly ILogger<NewsletterProxy> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _cfg;
 
-        public AccountSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterSvc> logger)
+        public AccountProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterProxy> logger)
         {
             _logger = logger;
             _httpClient = httpClient;

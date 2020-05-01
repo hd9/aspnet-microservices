@@ -4,7 +4,7 @@ using Web.Models;
 
 namespace Web.Services
 {
-    public interface IAccountSvc
+    public interface IAccountProxy
     {
         Task<Account> TrySignIn(SignIn request);
         Task CreateAccount(Account acct);

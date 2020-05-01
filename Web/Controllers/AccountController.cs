@@ -23,10 +23,10 @@ namespace Web.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IAccountSvc _acctSvc;
-        private readonly IOrderSvc _orderSvc;
+        private readonly IAccountProxy _acctSvc;
+        private readonly IOrderProxy _orderSvc;
 
-        public AccountController(IAccountSvc accSvc, IOrderSvc oSvc, ILogger<HomeController> logger)
+        public AccountController(IAccountProxy accSvc, IOrderProxy oSvc, ILogger<HomeController> logger)
         {
             _acctSvc = accSvc;
             _orderSvc = oSvc;

@@ -13,8 +13,8 @@ namespace Web.Controllers
     public class ApiController : Controller
     {
         private readonly ILogger<ApiController> _logger;
-        private readonly INewsletterSvc _nlSvc;
-        public ApiController(INewsletterSvc nlSvc, ILogger<ApiController> logger)
+        private readonly INewsletterProxy _nlSvc;
+        public ApiController(INewsletterProxy nlSvc, ILogger<ApiController> logger)
         {
             _nlSvc = nlSvc;
             _logger = logger;

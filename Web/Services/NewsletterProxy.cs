@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Web.Services
 {
-    public class NewsletterSvc : INewsletterSvc
+    public class NewsletterProxy : INewsletterProxy
     {
-        private readonly ILogger<NewsletterSvc> logger;
+        private readonly ILogger<NewsletterProxy> logger;
         private readonly HttpClient httpClient;
         private readonly IConfiguration cfg;
 
-        public NewsletterSvc(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterSvc> logger)
+        public NewsletterProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterProxy> logger)
         {
             this.logger = logger;
             this.httpClient = httpClient;

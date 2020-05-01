@@ -2,7 +2,7 @@
 
 namespace Web.Services
 {
-    public interface INewsletterSvc
+    public interface INewsletterProxy
     {
         void Signup(NewsletterSignUp signup);
     }
