@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Svc = OrderSvc.Services;
+using OrderSvc.Repositories;
 
 namespace OrderSvc
 {
@@ -23,7 +24,8 @@ namespace OrderSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IOrderSvc>(x => new Svc.OrderSvc(Configuration["ConnectionString"]));
+            services.AddTransient<IOrderSvc, Svc.OrderSvc>();
+            services.AddTransient<IOrderRepository>(x => new OrderRepository(Configuration["ConnectionString"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

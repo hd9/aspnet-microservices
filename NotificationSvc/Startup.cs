@@ -9,6 +9,7 @@ using NotificationSvc.Consumers;
 using NotificationSvc.Infrastructure;
 using NotificationSvc.Models;
 using NotificationSvc.Services;
+using NotificationSvc.Repositories;
 
 namespace NotificationSvc
 {
@@ -26,15 +27,14 @@ namespace NotificationSvc
 
         private async static Task InitMassTransit(AppConfig cfg)
         {
-            var dbLogger = new DbLogger(cfg.ConnectionString);
-
+            var repo = new NotificationRepository(cfg.ConnectionString);
             var bus = Bus.Factory.CreateUsingRabbitMq(sbc =>
             {
                 sbc.Host(cfg.MassTransit.Host);
                 sbc.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                 {
                     e.Consumer<NewsletterSubscribedConsumer>();
-                    e.Consumer<MailSender>(() => new MailSender(cfg.Mail, dbLogger));
+                    e.Consumer<MailSenderConsumer>(() => new MailSenderConsumer(cfg.Mail, repo));
                 });
             });
 

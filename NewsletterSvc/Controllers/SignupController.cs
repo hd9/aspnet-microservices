@@ -23,21 +23,13 @@ namespace NewsletterSvc.Controllers
             this.cfg = cfg;
         }
 
-        [Route("/signup")]
-        public IActionResult Index()
+        [Route("/help")]
+        public IActionResult Help()
         {
             var instruction = @"The service is alive! To test it, run:\ncurl -X POST ""http://<your-url>/signup"" -H 'Content-Type: application/json' -d' { ""Name"": ""tst01"", ""Email"": ""tst01 @mail.com"" }'";
             return Ok(instruction);
         }
 
-        /// <summary>
-        /// GetAll: Returns all users in the signup table. Use for debugging purposes
-        /// </summary>
-        /// <returns></returns>
-        public IList<Signup> All()
-        {
-            return svc.GetAll();
-        }
         /// <summary>
         /// Creates a new signup request
         /// </summary>

@@ -1,3 +1,4 @@
+using AccountSvc.Repositories;
 using AccountSvc.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +24,8 @@ namespace AccountSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IAccountSvc>(x => new Svc.AccountSvc(Configuration["ConnectionString"]));
+            services.AddTransient<IAccountSvc, Svc.AccountSvc>();
+            services.AddTransient<IAccountRepository>(x => new AccountRepository(Configuration["ConnectionString"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

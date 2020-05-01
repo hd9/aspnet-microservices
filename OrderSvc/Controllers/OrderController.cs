@@ -13,14 +13,14 @@ namespace OrderSvc.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderSvc svc;
-        private readonly IConfiguration cfg;
+        private readonly IOrderSvc _svc;
+        private readonly IConfiguration _cfg;
         const string instruction = @"The service is alive!";
 
         public OrderController(IOrderSvc svc, IConfiguration cfg)
         {
-            this.svc = svc;
-            this.cfg = cfg;
+            _svc = svc;
+            _cfg = cfg;
         }
 
         [Route("/ping")]
@@ -38,7 +38,7 @@ namespace OrderSvc.Controllers
         [Route("/orders/{accountId}")]
         public async Task<IActionResult> GetOrdersByAccountId(int accountId)
         {
-            var orders = await svc.GetOrdersByAccountId(accountId);
+            var orders = await _svc.GetOrdersByAccountId(accountId);
             return Ok(orders);
         }
 
@@ -46,7 +46,7 @@ namespace OrderSvc.Controllers
         [Route("/orders/submit")]
         public async Task<IActionResult> SubmitOrder([FromBody] Order order)
         {
-            var orderId = await svc.SubmitOrder(order);
+            var orderId = await _svc.SubmitOrder(order);
             return Ok(orderId);
         }
     }

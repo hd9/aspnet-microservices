@@ -6,6 +6,6 @@ namespace NewsletterSvc.Infrastructure
     public interface IMongoClient
     {
         Task Insert<T>(T item);
-        IList<T> GetAll<T>();
+        Task<IList<T>> GetAll<T>();
     }
 }

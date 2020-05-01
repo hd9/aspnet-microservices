@@ -1,4 +1,5 @@
 using CatalogSvc.Infrastructure;
+using CatalogSvc.Repositories;
 using CatalogSvc.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +28,8 @@ namespace CatalogSvc
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddSingleton<IMongoClient>(x => db);
-            services.AddSingleton<ICatalogSvc>(x => new Svc.CatalogSvc(db));
+            services.AddTransient<ICatalogRepository, CatalogRepository>();
+            services.AddTransient<ICatalogSvc, Svc.CatalogSvc>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

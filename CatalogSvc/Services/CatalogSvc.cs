@@ -1,44 +1,37 @@
-﻿using CatalogSvc.Infrastructure;
-using CatalogSvc.Models;
-using System;
+﻿using CatalogSvc.Models;
+using CatalogSvc.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CatalogSvc.Services
 {
     public class CatalogSvc : ICatalogSvc
     {
-        private readonly IMongoClient db;
+        private readonly ICatalogRepository _repo;
 
-        public CatalogSvc(IMongoClient db)
+        public CatalogSvc(ICatalogRepository repo)
         {
-            this.db = db;
+            _repo = repo;
         }
 
         public async Task<IList<Category>> GetCategories()
         {
-            db.Collection = "Categories";
-            return await db.GetAll<Category>();
+            return await _repo.GetCategories();
         }
 
         public async Task<Category> GetCategory(string slug)
         {
-            db.Collection = "Categories";
-            return (await db.Find<Category>("Slug", slug)).SingleOrDefault();
+            return await _repo.GetCategory(slug);
         }
 
         public async Task<Product> GetProduct(string slug)
         {
-            db.Collection = "products";
-            return (await db.Find<Product>("Slug", slug)).SingleOrDefault();
+            return await _repo.GetProduct(slug);
         }
 
         public async Task<IList<Product>> GetProducts(string slug)
         {
-            db.Collection = "products";
-            return await db.Find<Product>("CategoryId", slug);
+            return await _repo.GetProducts(slug);
         }
-
     }
 }

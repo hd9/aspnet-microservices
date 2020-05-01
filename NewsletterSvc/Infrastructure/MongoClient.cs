@@ -20,10 +20,10 @@ namespace NewsletterSvc.Infrastructure
             this.db = client.GetDatabase(db);
         }
 
-        public IList<T> GetAll<T>()
+        public async Task<IList<T>> GetAll<T>()
         {
             var c = db.GetCollection<T>(col);
-            return c.Find(new BsonDocument()).ToList();
+            return (await c.FindAsync(new BsonDocument())).ToList();
         }
 
         public async Task Insert<T>(T item)
@@ -32,9 +32,5 @@ namespace NewsletterSvc.Infrastructure
             await c.InsertOneAsync(item);
         }
 
-        private void Log(string msg)
-        {
-            Console.WriteLine(msg);
-        }
     }
 }

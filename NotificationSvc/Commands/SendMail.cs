@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NotificationSvc.Models
+namespace NotificationSvc.Commands
 {
     public class SendMail
     {

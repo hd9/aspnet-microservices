@@ -3,36 +3,39 @@ using MassTransit;
 using NotificationSvc.Infrastructure;
 using NotificationSvc.Infrastructure.Options;
 using NotificationSvc.Models;
+using Svc = NotificationSvc.Services;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using NotificationSvc.Commands;
+using NotificationSvc.Repositories;
 
-namespace NotificationSvc.Services
+namespace NotificationSvc.Consumers
 {
-    public class MailSender : IConsumer<SendMail>
+    public class MailSenderConsumer : IConsumer<SendMail>
     {
 
         #region Attributes
-        private readonly MailOptions cfg;
-        private readonly DbLogger dbLogger;
+        private readonly MailOptions _cfg;
+        private readonly INotificationRepository _repo;
         #endregion
 
-        public MailSender(MailOptions cfg, DbLogger dbLogger)
+        public MailSenderConsumer(MailOptions cfg, INotificationRepository repo)
         {
-            this.cfg = cfg;
-            this.dbLogger = dbLogger;
+            _cfg = cfg;
+            _repo = repo;
         }
 
         public async Task Consume(ConsumeContext<SendMail> context)
         {
-            var smtp = new SmtpClient
+            var smtpClient = new SmtpClient
             {
-                Host = cfg.Host,
-                Port = cfg.Port,
+                Host = _cfg.Host,
+                Port = _cfg.Port,
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(cfg.Username, cfg.Password)
+                Credentials = new NetworkCredential(_cfg.Username, _cfg.Password)
             };
 
             var name = context.Message.Name;
@@ -40,20 +43,20 @@ namespace NotificationSvc.Services
 
             var msg = new MailMessage
             {
-                From = new MailAddress(cfg.Username, cfg.FromName),
-                Subject = cfg.Subject,
+                From = new MailAddress(_cfg.Username, _cfg.FromName),
+                Subject = _cfg.Subject,
                 Body = FormatBody(name, email)
             };
 
-            msg.To.Add(cfg.To);
+            msg.To.Add(_cfg.To);
 
-            await smtp.SendMailAsync(msg);
-            await dbLogger.Log(name, email, 'E');
+            await smtpClient.SendMailAsync(msg);
+            await _repo.LogNotification(name, email, 'E');
         }
 
         private string FormatBody(string name, string email)
         {
-            var tpl = cfg.Template;
+            var tpl = _cfg.Template;
             return tpl.Replace("{Name}", name).Replace("{Email}", email);
         }
 

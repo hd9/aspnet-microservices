@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NewsletterSvc.Infrastructure;
 using NewsletterSvc.Infrastructure.Options;
+using NewsletterSvc.Repositories;
 using NewsletterSvc.Services;
 using System.Threading.Tasks;
 using Svc = NewsletterSvc.Services;
@@ -35,7 +36,8 @@ namespace NewsletterSvc
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddSingleton<IMongoClient>(x => db);
             services.AddSingleton<IBusControl>(x => bus);
-            services.AddSingleton<INewsletterSvc>(x => new Svc.NewsletterSvc(db, bus));
+            services.AddTransient<INewsletterRepository, NewsletterRepository>();
+            services.AddTransient<INewsletterSvc, Svc.NewsletterSvc>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

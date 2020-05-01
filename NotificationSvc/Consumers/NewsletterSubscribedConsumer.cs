@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Models.Events;
 using MassTransit;
+using NotificationSvc.Commands;
 using NotificationSvc.Models;
 using System;
 using System.Text;

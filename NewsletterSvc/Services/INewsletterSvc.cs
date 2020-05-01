@@ -7,6 +7,6 @@ namespace NewsletterSvc.Services
     public interface INewsletterSvc
     {
         Task RegistrerSignup(Signup s);
-        IList<Signup> GetAll();
+        Task<IList<Signup>> GetAll();
     }
 }
