@@ -1,4 +1,9 @@
-﻿<div class="mb-lg-5" id="prodsApp">
+﻿@using Web.Infrastructure.Global;
+@{
+    var cur = Site.StoreSettings.CurrencyDisplay;
+}
+
+<div class="mb-lg-5" id="prodsApp">
     <div class="row" ref="cat" slug="@Model.Slug">
         <div class="col-sm-6 col-lg-4 mb-3" v-for="p in products">
             <div class="card">
@@ -6,7 +11,7 @@
                     <h5>{{ p.name }}</h5>
                     <a v-bind:href="p.url"><partial name="~/Views/Partials/Catalog/_fakeImg.cshtml" /></a>
                     <p class="small">{{ p.description }}</p>
-                    <p class="small text-danger font-weight-bolder">{{ p.currency }}$ {{ parseFloat(p.price).toFixed(2) }}</p>
+                    <p class="small text-danger font-weight-bolder">@cur {{ parseFloat(p.price).toFixed(2) }}</p>
                     <p class="small"><a v-bind:href="p.url">View</a></p>
                 </div>
             </div>

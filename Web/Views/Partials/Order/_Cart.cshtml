@@ -1,5 +1,11 @@
-﻿<div id="cart">
+﻿@using Web.Infrastructure.Global;
+@{
+    var cur = Site.StoreSettings.CurrencyDisplay;
+    var storeUrl = Site.StoreSettings.StoreUrl;
+    var storeName = Site.StoreSettings.StoreName;
+}
 
+<div id="cart">
     <h4 class="display-4">@ViewData["Title"]</h4>
     <p class="lead mb-4">Here's your shopping cart at the moment.</p>
     <div v-if="hasItems">
@@ -13,12 +19,12 @@
                         <div class="col-md-8">
                             <div class="clearfix m-3">
                                 <h5 class="float-left"><a :href="'/products/details/' + p.id">{{ p.name }}</a></></h5>
-                                <span class="float-right"><span class="text-danger font-weight-bold">$ {{ parseFloat(p.qty * p.price).toFixed(2) }}</span></span>
+                                <span class="float-right"><span class="text-danger font-weight-bold">@cur {{ parseFloat(p.qty * p.price).toFixed(2) }}</span></span>
                             </div>
                             <div class="ml-3">
                                 <small>In <a :href="'/products/' + p.cat">{{ p.catName }}</a></small>
                                 <p class="card-text text-muted small">
-                                    Qty: 
+                                    Qty:
                                     <select v-model="p.qty" v-on:change="onQtyChange">
                                         <option>1</option>
                                         <option>2</option>
@@ -28,7 +34,7 @@
                                     </select>
                                     | <a href="#" v-on:click="remove(i)">Remove</a>
                                 </p>
-                                <small>Shipped and sold by <a href="https://hildenco.com">HildenCo.com</a></small><br />
+                                <small>Shipped and sold by <a href="@storeUrl">@storeName</a></small><br />
                             </div>
                         </div>
                     </div>
@@ -37,7 +43,7 @@
             <div class="col-sm-12 col-md-3 bg-light p-3">
                 <h3>Your Order</h3>
                 <p class="lead">Summary of your order.</p>
-                <p class="font-weight-bold">Subtotal: <span class="text-danger font-weight-bold">$ {{ parseFloat(subtotal).toFixed(2) }}</span></p>
+                <p class="font-weight-bold">Subtotal: <span class="text-danger font-weight-bold">@cur {{ parseFloat(subtotal).toFixed(2) }}</span></p>
                 <div class="text-center py-3">
                     <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
                     <a asp-action="Checkout" class="btn btn-primary btn-sm">Checkout</a>

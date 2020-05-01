@@ -1,9 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using Web.Infrastructure.Global;
+@{
+    var storeName = Site.StoreSettings.StoreName;
+    var storeUrl = Site.StoreSettings.StoreUrl;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HildenCo</title>
+    <title>@ViewData["Title"] - @storeName</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/lib/vue/vue.min.js"></script>
@@ -43,7 +49,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - HildenCo | <a href="https://choosealicense.com/licenses/mit/" target="_blank">MIT Licensed</a></a>
+            &copy; 2020 - <a href="@storeUrl">@storeName</a> | <a href="https://choosealicense.com/licenses/mit/" target="_blank">MIT Licensed</a></a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

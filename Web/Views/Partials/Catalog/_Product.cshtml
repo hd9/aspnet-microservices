@@ -1,9 +1,12 @@
-﻿@{
+﻿@using Web.Infrastructure.Global;
+@{
     ViewData["Category"] = Model.CategoryName;
     ViewData["CategoryId"] = Model.CategoryId;
     ViewData["Title"] = ViewData["ProductName"] = Model.Name;
     var p = ((float?)Model.Price);
+    var cur = Site.StoreSettings.CurrencyDisplay;
 }
+
 
 <div class="mb-lg-5">
     <partial name="~/Views/Shared/_breadcrumbs.cshtml" />
@@ -25,7 +28,7 @@
             </div>
             @if (p.HasValue)
             {
-                <p>Price: <span class="text-danger font-weight-bold">@Model.Currency $ @p.Value.ToString("0.00")</span></p>
+                <p>Price: <span class="text-danger font-weight-bold">@cur $ @p.Value.ToString("0.00")</span></p>
             }
             else
             {

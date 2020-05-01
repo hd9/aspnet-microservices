@@ -1,5 +1,7 @@
-﻿@{
+﻿@using Web.Infrastructure.Global;
+@{
     ViewData["EditMode"] = true;
+    var cur = Site.StoreSettings.CurrencyDisplay;
 }
 
 <div class="row" id="myOrdersApp">
@@ -30,7 +32,7 @@
                         <td>{{ new Date(o.createdOn).toDateString() }}</td>
                         <td>{{ new Date(o.lastUpdated).toDateString() }}</td>
                         <td>{{ o.statusName }}</td>
-                        <td class="text-danger strong">{{ o.currency }}$ {{ o.totalPrice.toFixed(2) }}</td>
+                        <td class="text-danger strong">@cur {{ o.totalPrice.toFixed(2) }}</td>
                     </tr>
                 </tbody>
             </table>
