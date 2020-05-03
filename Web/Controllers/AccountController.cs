@@ -46,7 +46,7 @@ namespace Web.Controllers
         /// Account Details
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Info()
+        public async Task<IActionResult> Details()
         {
             var id = User.FindFirstValue("Id");
             var acct = await _acctSvc.GetAccountById(id);
@@ -54,7 +54,7 @@ namespace Web.Controllers
             if (acct == null)
                 return NotFound();
 
-            return View(acct);
+            return View(new AccountDetails { Name = acct.Name, Email = acct.Email });
         }
 
         public IActionResult Addresses()
@@ -67,7 +67,7 @@ namespace Web.Controllers
             return View();
         }
 
-        public IActionResult ChangePassword()
+        public IActionResult UpdatePassword()
         {
             return View();
         }
@@ -133,7 +133,7 @@ namespace Web.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePassword changePassword)
+        public async Task<IActionResult> UpdatePassword(UpdatePassword updPassword)
         {
             if (!ModelState.IsValid)
             {
@@ -141,7 +141,9 @@ namespace Web.Controllers
                 return View();
             }
 
-            // todo :: call _acctSvc
+            updPassword.AccountId = User.FindFirstValue("Id");
+
+            await _acctSvc.UpdatePassword(updPassword);
 
             return RedirectToAction("Index");
         }

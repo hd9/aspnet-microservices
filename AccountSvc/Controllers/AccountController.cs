@@ -13,13 +13,13 @@ namespace AccountSvc.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountSvc svc;
+        private readonly IAccountSvc _svc;
         private readonly IConfiguration cfg;
         const string help = @"The service is alive!";
 
         public AccountController(IAccountSvc svc, IConfiguration cfg)
         {
-            this.svc = svc;
+            this._svc = svc;
             this.cfg = cfg;
         }
 
@@ -39,7 +39,7 @@ namespace AccountSvc.Controllers
         [Route("/account/")]
         public async Task<IActionResult> CreateAccount([FromBody] Account account)
         {
-            await svc.CreateAccount(account);
+            await _svc.CreateAccount(account);
             return Ok();
         }
 
@@ -47,20 +47,29 @@ namespace AccountSvc.Controllers
         [Route("/account/")]
         public async Task<IActionResult> UpdateAccount([FromBody] Account account)
         {
-            await svc.UpdateAccount(account);
+            await _svc.UpdateAccount(account);
+            return Ok();
+        }
+
+
+        [HttpPost]
+        [Route("/account/update-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePassword updPassword)
+        {
+            await _svc.UpdatePassword(updPassword);
             return Ok();
         }
 
         [Route("/account/{id}")]
         public async Task<Account> GetAccount(string id)
         {
-            return await svc.GetAccountById(id);
+            return await _svc.GetAccountById(id);
         }
 
         [Route("/account/search")]
         public async Task<Account> GetAccountByEmail(string email)
         {
-            return await svc.GetAccountByEmail(email);
+            return await _svc.GetAccountByEmail(email);
         }
     }
 }

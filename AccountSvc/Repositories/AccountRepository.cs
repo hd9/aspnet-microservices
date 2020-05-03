@@ -12,7 +12,8 @@ namespace AccountSvc.Repositories
     {
         private readonly string _connStr;
         private readonly string insert = "INSERT INTO account (name, email, password, created_at, last_updated, address, city, region, postal_code, country, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter)";
-        private readonly string update = "UPDATE account (name, email, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter) WHERE id = @id";
+        private readonly string updateAccount = "UPDATE account (name, email, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter) WHERE id = @id";
+        private readonly string updatePwd = "UPDATE account set password = @password WHERE id = @id";
         private readonly string queryAcctById = "SELECT * FROM account WHERE id = @id";
         private readonly string queryAcctByEmail = "SELECT * FROM account WHERE email = @email";
 
@@ -46,7 +47,7 @@ namespace AccountSvc.Repositories
         {
             using (var conn = new MySqlConnection(_connStr))
             {
-                await conn.ExecuteAsync(update, new
+                await conn.ExecuteAsync(updateAccount, new
                 {
                     id = account.Id,
                     name = account.Name,
@@ -77,5 +78,15 @@ namespace AccountSvc.Repositories
             }
         }
 
+        public async Task UpdatePassword(UpdatePassword updPassword)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                await conn.QuerySingleOrDefaultAsync<Account>(updatePwd, new {
+                    password = updPassword.NewPassword,
+                    id = updPassword.AccountId
+                });
+            }
+        }
     }
 }

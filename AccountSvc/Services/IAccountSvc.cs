@@ -8,6 +8,7 @@ namespace AccountSvc.Services
     {
         Task CreateAccount(Account account);
         Task UpdateAccount(Account account);
+        Task UpdatePassword(UpdatePassword updPassword);
         Task<Account> GetAccountById(string id);
         Task<Account> GetAccountByEmail(string email);
     }

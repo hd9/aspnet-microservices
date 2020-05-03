@@ -1,15 +1,10 @@
-﻿using Web.Models;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Net;
-using Core.Infrastructure.Extentions;
 using System.Text;
+using System.Threading.Tasks;
+using Web.Models;
 
 namespace Web.Services
 {
@@ -82,6 +77,18 @@ namespace Web.Services
 
             // todo :: salt + hash pwd
             return acct != null && acct.Password == request.Password ? acct : null;
+        }
+
+        public async Task UpdatePassword(UpdatePassword changePassword)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/update-password";
+            _logger.LogInformation($"Updating account password at: '{url}'");
+
+            var resp = await _httpClient.PostAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(changePassword),
+                    Encoding.UTF8,
+                    "application/json"));
         }
     }
 }

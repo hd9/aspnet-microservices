@@ -1,10 +1,5 @@
 ﻿using AccountSvc.Models;
 using AccountSvc.Repositories;
-using Dapper;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccountSvc.Services
@@ -21,14 +16,25 @@ namespace AccountSvc.Services
 
         public async Task CreateAccount(Account account)
         {
-            // todo :: hash pwd
             await _repo.CreateAccount(account);
         }
 
         public async Task UpdateAccount(Account account)
         {
-            // todo :: acctRepo
             await _repo.UpdateAccount(account);
+        }
+
+        public async Task UpdatePassword(UpdatePassword updPassword)
+        {
+            var acc = await _repo.GetAccountById(updPassword.AccountId);
+
+            if (acc.Password != updPassword.CurrentPassword)
+            {
+                // todo :: log
+                return;
+            }
+
+            await _repo.UpdatePassword(updPassword);
         }
 
         public async Task<Account> GetAccountById(string id)

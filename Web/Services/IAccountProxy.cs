@@ -9,6 +9,7 @@ namespace Web.Services
         Task<Account> TrySignIn(SignIn request);
         Task CreateAccount(Account acct);
         Task UpdateAccount(Account acct);
+        Task UpdatePassword(UpdatePassword changePassword);
         Task<Account> GetAccountById(string acctId);
     }
 }
