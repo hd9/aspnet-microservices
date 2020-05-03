@@ -67,7 +67,7 @@ namespace Web.Controllers
             return View();
         }
 
-        public IActionResult Password()
+        public IActionResult ChangePassword()
         {
             return View();
         }
@@ -130,6 +130,22 @@ namespace Web.Controllers
             await _acctSvc.UpdateAccount(account);
             return RedirectToAction("Index");
         }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePassword changePassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "All fields are required. Please make sure that the new confirm password field matches the new field.";
+                return View();
+            }
+
+            // todo :: call _acctSvc
+
+            return RedirectToAction("Index");
+        }
+
 
         /// <summary>
         /// Renders the sign in page
