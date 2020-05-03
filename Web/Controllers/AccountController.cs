@@ -46,15 +46,35 @@ namespace Web.Controllers
         /// Account Details
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Info()
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var id = User.FindFirstValue("Id");
             var acct = await _acctSvc.GetAccountById(id);
 
             if (acct == null)
                 return NotFound();
 
             return View(acct);
+        }
+
+        public IActionResult Addresses()
+        {
+            return View();
+        }
+
+        public IActionResult Payments()
+        {
+            return View();
+        }
+
+        public IActionResult Password()
+        {
+            return View();
+        }
+
+        public IActionResult History()
+        {
+            return View();
         }
 
         /// <summary>

@@ -5,13 +5,13 @@
                 <h5 class="card-title">My Account</h5>
                 <p class="card-text">
                     <ul>
-                        <li><a asp-action="Details">My information</a></li>
-                        <li>Change Password</li>
-                        <li>Log history</li>
-                        <li>etc...</li>
+                        <li><a asp-action="Info">My information</a></li>
+                        <li><a asp-action="Password">Change Password</a></li>
+                        <li><a asp-action="Addresses">My Addresses</a></li>
+                        <li><a asp-action="Payments">Payment Methods</a></li>
+                        <li><a asp-action="History">Account history</a></li>
                     </ul>
                 </p>
-
             </div>
         </div>
     </div>
@@ -22,7 +22,6 @@
                 <p class="card-text">
                     <ul>
                         <li><a asp-action="Orders">My orders</a></li>
-                        <li>etc...</li>
                     </ul>
                 </p>
             </div>
@@ -31,11 +30,12 @@
     <div class="col-sm-6 col-md-4">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Recommended for me</h5>
+                <h5 class="card-title">Other</h5>
                 <p class="card-text">
                     <ul>
-                        <li>My recommendations</li>
-                        <li>etc...</li>
+                        <li>Product Recommendations</li>
+                        <li>Newsletters</li>
+                        <li>etc..</li>
                     </ul>
                 </p>
             </div>
