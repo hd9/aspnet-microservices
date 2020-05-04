@@ -42,14 +42,14 @@
 </div>
 <div class="form-row">
     <div class="form-group col-md-9">
-        <label for="inputAddress">Address:</label>
+        <label for="inputAddress">Street:</label>
         @if (editMode)
         {
-            <input asp-for="Address" class="form-control" placeholder="1234 Main St">
+            <input asp-for="Street" class="form-control" placeholder="1234 Main St">
         }
         else
         {
-            <div class="font-weight-light">@Model.Address</div>
+            <div class="font-weight-light">@Model.Street</div>
         }
     </div>
     <div class="form-group col-md-3 text-right">

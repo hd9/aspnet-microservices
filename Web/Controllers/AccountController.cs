@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Core.Infrastructure.Extentions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Web.Models;
 using Web.Services;
-using static Core.Infrastructure.Extentions.ExceptionExtensions;
-using Core.Infrastructure.Extentions;
-using Web.Infrastructure.Settings;
-using Web.Infrastructure.Global;
-using System.Net;
 
 namespace Web.Controllers
 {
@@ -43,10 +38,6 @@ namespace Web.Controllers
             return View();
         }
 
-        /// <summary>
-        /// Account Details
-        /// </summary>
-        /// <returns></returns>
         public async Task<IActionResult> Details()
         {
             var id = User.FindFirstValue("Id");
@@ -69,21 +60,59 @@ namespace Web.Controllers
             return View(new AccountDetails { Name = acct.Name, Email = acct.Email });
         }
 
-        public IActionResult Addresses()
+        /// <summary>
+        /// Displays all addresses under account
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Address()
         {
             return View();
         }
 
+        /// <summary>
+        /// Adds a new address to the account
+        /// </summary>
+        /// <returns></returns>
+        [Route("/account/address/add")]
+        public IActionResult AddAddress()
+        {
+            return View(new Address());
+        }
+
+        /// <summary>
+        /// Allows editing an address
+        /// </summary>
+        /// <param name="addrId"></param>
+        /// <returns></returns>
+        [Route("/account/address/edit/{addrId}")]
+        public async Task<IActionResult> EditAddress(string addrId)
+        {
+            var addr = await _acctSvc.GetAddressById(addrId);
+            return View(addr);
+        }
+
+        /// <summary>
+        /// Manage payment methods
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Payments()
         {
             return View();
         }
 
+        /// <summary>
+        /// Update password
+        /// </summary>
+        /// <returns></returns>
         public IActionResult UpdatePassword()
         {
             return View();
         }
 
+        /// <summary>
+        /// Account history
+        /// </summary>
+        /// <returns></returns>
         public IActionResult History()
         {
             return View();
@@ -108,6 +137,11 @@ namespace Web.Controllers
             return View(new Account());
         }
 
+        /// <summary>
+        /// Creates a new account. Public endpoint
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [HttpPost]
@@ -126,6 +160,11 @@ namespace Web.Controllers
             return RedirectToAction("SignIn");
         }
 
+        /// <summary>
+        /// Update account information
+        /// </summary>
+        /// <param name="acctDetails"></param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Update(AccountDetails acctDetails)
@@ -153,6 +192,11 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Updates the account's password
+        /// </summary>
+        /// <param name="updPassword"></param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> UpdatePassword(UpdatePassword updPassword)
@@ -170,7 +214,60 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Adds a new address to the account
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Route("/account/address/add")]
+        public async Task<IActionResult> AddAddress(Address addr)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
+                return View(addr);
+            }
 
+            addr.AccountId = int.Parse(User.FindFirstValue("Id"));
+            var resp = await _acctSvc.AddAddress(addr);
+
+            if (resp != HttpStatusCode.OK)
+            {
+                TempData["ErrorMsg"] = "Error adding your address, please try again later.";
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Updates an existing address
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAddress(Address addr)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "Please make sure you filled all fields.";
+                return View();
+            }
+
+            addr.AccountId = int.Parse(User.FindFirstValue("Id"));
+            var resp = await _acctSvc.UpdateAddress(addr);
+
+            if (resp != HttpStatusCode.OK)
+            {
+                TempData["ErrorMsg"] = "Error updating your address, please try again later.";
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
         /// <summary>
         /// Renders the sign in page
         /// </summary>
@@ -236,6 +333,38 @@ namespace Web.Controllers
         {
             var acctId = User.FindFirstValue("Id");
             return await _orderSvc.GetOrdersByAccountId(acctId);
+        }
+
+        [Route("/api/account/addresses")]
+        public async Task<IList<Address>> GetAddresses()
+        {
+            var acctId = User.FindFirstValue("Id");
+            return await _acctSvc.GetAddressesByAccountId(acctId);
+        }
+
+        [HttpDelete]
+        [Route("/api/account/address/{addressId}")]
+        public async Task<IActionResult> RemoveAddress(string addressId)
+        {
+            var resp = await _acctSvc.RemoveAddress(addressId);
+
+            if (resp == HttpStatusCode.OK)
+                return Ok();
+                    
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("/api/account/address/{addressId}")]
+        public async Task<IActionResult> SetDefaultAddress(int addressId)
+        {
+            var acctId = User.FindFirstValue("Id");
+            var resp = await _acctSvc.SetDefaultAddress(acctId, addressId);
+
+            if (resp == HttpStatusCode.OK)
+                return Ok();
+
+            return BadRequest();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

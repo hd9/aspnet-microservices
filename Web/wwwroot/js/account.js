@@ -107,3 +107,56 @@ const myOrdersApp = new Vue({
             });
     }
 })
+
+var addresses = new Vue({
+    el: '#addresses',
+    data: {
+        addresses: []
+    },
+    methods: {
+        remove: function (i) {
+            if (confirm('Are you sure you want to remove this address?')) {
+                var id = this.addresses[i].id;
+                axios.delete('/api/account/address/' + id)
+                    .then(function (r) {
+                        addresses.addresses.splice(i, 1);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        makeDefault: function (i) {
+            if (confirm('Are you sure you want to make this address primary?')) {
+                var id = this.addresses[i].id;
+                axios.put('/api/account/address/' + id)
+                    .then(function (r) {
+                        var arr = addresses.addresses;
+                        arr.forEach(a => a.isDefault = false);
+                        arr[i].isDefault = true;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        url: function (i) {
+            var id = this.addresses[i].id;
+            return '/account/address/edit/' + id;
+        }
+    },
+    mounted() {
+        if (!this.$refs.addresses)
+            return;
+
+        axios.get('/api/account/addresses')
+            .then(function (r) {
+                if (r && r.data) {
+                    addresses.addresses = r.data.map(r => r);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+});

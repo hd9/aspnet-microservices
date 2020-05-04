@@ -63,14 +63,24 @@ CREATE TABLE account (
     password              VARCHAR(1000)   NOT NULL,
     created_at            DATETIME        NOT NULL,
     last_updated          DATETIME        NOT NULL,
-    address               VARCHAR(1000),
-    city                  VARCHAR(300),
-    region                VARCHAR(100),
-    postal_code           VARCHAR(10),
-    country               VARCHAR(100),
     subscribe_newsletter  BIT
 );
 
+CREATE TABLE address (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id            INT             NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    is_default            BIT             NOT NULL,
+    street                VARCHAR(1000)   NOT NULL,
+    city                  VARCHAR(300)    NOT NULL,
+    region                VARCHAR(100)    NOT NULL,
+    postal_code           VARCHAR(10)     NOT NULL,
+    country               VARCHAR(100)    NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (account_id)
+       REFERENCES account(id)
+);
 ```
 
 ## OrderSvc
@@ -172,7 +182,7 @@ create table log (
     created_at          DATETIME        NOT NULL,
     FOREIGN KEY (recomm_id)
         REFERENCES recommendation(id)
-); 
+);
 ```
 
 

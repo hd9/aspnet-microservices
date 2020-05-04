@@ -1,5 +1,6 @@
 ﻿using AccountSvc.Models;
 using AccountSvc.Repositories;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccountSvc.Services
@@ -14,7 +15,7 @@ namespace AccountSvc.Services
             _repo = acctRepo;
         }
 
-        public async Task CreateAccount(Account account)
+        public async Task CreateAccount(CreateAccount account)
         {
             await _repo.CreateAccount(account);
         }
@@ -45,6 +46,36 @@ namespace AccountSvc.Services
         public async Task<Account> GetAccountByEmail(string email)
         {
             return await _repo.GetAccountByEmail(email);
+        }
+
+        public async Task<Address> GetAddressById(string addrId)
+        {
+            return await _repo.GetAddressById(addrId);
+        }
+
+        public async Task AddAddress(Address addr)
+        {
+            await _repo.AddAddress(addr);
+        }
+
+        public async Task UpdateAddress(Address addr)
+        {
+            await _repo.UpdateAddress(addr);
+        }
+
+        public async Task RemoveAddress(string addressId)
+        {
+            await _repo.RemoveAddress(addressId);
+        }
+
+        public async Task<IList<Address>> GetAddressesByAccountId(string acctId)
+        {
+            return await _repo.GetAddressesByAccountId(acctId);
+        }
+
+        public async Task SetDefultAddress(string acctId, int addressId)
+        {
+            await _repo.SetDefaultAddress(acctId, addressId);
         }
     }
 }

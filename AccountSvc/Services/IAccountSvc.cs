@@ -6,10 +6,16 @@ namespace AccountSvc.Services
 {
     public interface IAccountSvc
     {
-        Task CreateAccount(Account account);
+        Task CreateAccount(CreateAccount account);
         Task UpdateAccount(UpdateAccount updAccount);
         Task UpdatePassword(UpdatePassword updPassword);
         Task<Account> GetAccountById(string id);
         Task<Account> GetAccountByEmail(string email);
+        Task<Address> GetAddressById(string addrId);
+        Task AddAddress(Address addr);
+        Task UpdateAddress(Address addr);
+        Task RemoveAddress(string addressId);
+        Task<IList<Address>> GetAddressesByAccountId(string acctId);
+        Task SetDefultAddress(string acctId, int addressId);
     }
 }

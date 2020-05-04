@@ -5,17 +5,21 @@ using System.Text;
 
 namespace Web.Models
 {
-    public class Account
+    public class Address
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        public int AccountId { get; set; }
+
+        public bool IsDefault { get; set; }
+
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+
+        public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -29,7 +33,6 @@ namespace Web.Models
         [StringLength(50)]
         public string City { get; set; }
 
-
         [Required]
         [StringLength(2)]
         public string Region { get; set; }
@@ -38,10 +41,5 @@ namespace Web.Models
         [StringLength(20)]
         public string Country { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Password { get; set; }
-
-        public bool SubscribedToNewsletter { get; set; }
     }
 }

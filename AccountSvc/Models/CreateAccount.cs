@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AccountSvc.Models
 {
-    public class Account
+    public class CreateAccount
     {
         public string Id { get; set; }
 
@@ -20,7 +20,15 @@ namespace AccountSvc.Models
 
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 
-        //public Address Address { get; set; }
+        public string Street { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string City { get; set; }
+
+        public string Region { get; set; }
+
+        public string Country { get; set; }
 
     }
 }

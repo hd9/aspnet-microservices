@@ -37,7 +37,7 @@ namespace AccountSvc.Controllers
 
         [HttpPost]
         [Route("/account/")]
-        public async Task<IActionResult> CreateAccount([FromBody] Account account)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccount account)
         {
             await _svc.CreateAccount(account);
             return Ok();
@@ -70,6 +70,45 @@ namespace AccountSvc.Controllers
         public async Task<Account> GetAccountByEmail(string email)
         {
             return await _svc.GetAccountByEmail(email);
+        }
+
+        [Route("/account/address/{addrId}")]
+        public async Task<Address> GetAddressById(string addrId)
+        {
+            return await _svc.GetAddressById(addrId);
+        }
+
+        [Route("/account/address/")]
+        [HttpPost]
+        public async Task AddAddress([FromBody]Address addr)
+        {
+            await _svc.AddAddress(addr);
+        }
+
+        [Route("/account/address/")]
+        [HttpPut]
+        public async Task UpdateAddress([FromBody]Address addr)
+        {
+            await _svc.UpdateAddress(addr);
+        }
+
+        [Route("/account/address/{addressId}")]
+        [HttpDelete]
+        public async Task RemoveAddress(string addressId)
+        {
+            await _svc.RemoveAddress(addressId);
+        }
+
+        [Route("/account/address/search")]
+        public async Task<IList<Address>> GetAddressesByAccountId(string accountId)
+        {
+            return await _svc.GetAddressesByAccountId(accountId);
+        }
+
+        [Route("/account/address/default")]
+        public async Task SetDefaultAddress(string accountId, int addressId)
+        {
+            await _svc.SetDefultAddress(accountId, addressId);
         }
     }
 }

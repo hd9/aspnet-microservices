@@ -12,5 +12,11 @@ namespace Web.Services
         Task<HttpStatusCode> UpdateAccount(AccountDetails acct);
         Task<HttpStatusCode> UpdatePassword(UpdatePassword changePassword);
         Task<Account> GetAccountById(string acctId);
+        Task<Address> GetAddressById(string addrId);
+        Task<HttpStatusCode> AddAddress(Address addr);
+        Task<HttpStatusCode> UpdateAddress(Address addr);
+        Task<HttpStatusCode> RemoveAddress(string addressId);
+        Task<IList<Address>> GetAddressesByAccountId(string acctId);
+        Task<HttpStatusCode> SetDefaultAddress(string acctId, int addressId);
     }
 }
