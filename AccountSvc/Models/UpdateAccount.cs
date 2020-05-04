@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.Models
+namespace AccountSvc.Models
 {
-    public class AccountDetails
+    public class UpdateAccount
     {
         public string Id { get; set; }
 

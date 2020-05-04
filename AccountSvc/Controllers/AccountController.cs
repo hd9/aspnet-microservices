@@ -45,7 +45,7 @@ namespace AccountSvc.Controllers
 
         [HttpPut]
         [Route("/account/")]
-        public async Task<IActionResult> UpdateAccount([FromBody] Account account)
+        public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccount account)
         {
             await _svc.UpdateAccount(account);
             return Ok();

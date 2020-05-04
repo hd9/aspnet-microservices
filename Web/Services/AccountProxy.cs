@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace Web.Services
                 await resp.Content.ReadAsStringAsync());
         }
 
-        public async Task CreateAccount(Account acct)
+        public async Task<HttpStatusCode> CreateAccount(Account acct)
         {
             var url = $"{_cfg["Services:Account"]}/account/";
             _logger.LogInformation($"Creating account from: '{url}'");
@@ -54,10 +55,10 @@ namespace Web.Services
                     Encoding.UTF8,
                     "application/json"));
 
-            // todo :: handle cases when resp.StatusCode != 200
+            return resp.StatusCode;
         }
 
-        public async Task UpdateAccount(Account acct)
+        public async Task<HttpStatusCode> UpdateAccount(AccountDetails acct)
         {
             var url = $"{_cfg["Services:Account"]}/account/";
             _logger.LogInformation($"Creating account from: '{url}'");
@@ -68,7 +69,7 @@ namespace Web.Services
                     Encoding.UTF8,
                     "application/json"));
 
-            // todo :: handle cases when resp.StatusCode != 200
+            return resp.StatusCode;
         }
 
         public async Task<Account> TrySignIn(SignIn request)
@@ -79,7 +80,7 @@ namespace Web.Services
             return acct != null && acct.Password == request.Password ? acct : null;
         }
 
-        public async Task UpdatePassword(UpdatePassword changePassword)
+        public async Task<HttpStatusCode> UpdatePassword(UpdatePassword changePassword)
         {
             var url = $"{_cfg["Services:Account"]}/account/update-password";
             _logger.LogInformation($"Updating account password at: '{url}'");
@@ -89,6 +90,8 @@ namespace Web.Services
                     JsonConvert.SerializeObject(changePassword),
                     Encoding.UTF8,
                     "application/json"));
+
+            return resp.StatusCode;
         }
     }
 }

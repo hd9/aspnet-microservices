@@ -19,9 +19,9 @@ namespace AccountSvc.Services
             await _repo.CreateAccount(account);
         }
 
-        public async Task UpdateAccount(Account account)
+        public async Task UpdateAccount(UpdateAccount updAccount)
         {
-            await _repo.UpdateAccount(account);
+            await _repo.UpdateAccount(updAccount);
         }
 
         public async Task UpdatePassword(UpdatePassword updPassword)

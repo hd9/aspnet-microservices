@@ -1,11 +1,10 @@
 ﻿@model AccountDetails
 @{
-    var editMode = false;
+    var editMode = (ViewData["EditMode"] ?? "").ToString() == "True";
 }
 
-<form asp-action="Update">
-
-    <div class="form-group">
+<div class="form-row">
+    <div class="form-group col-md-6">
         <label for="inputAddress2">Name:</label>
         @if (editMode)
         {
@@ -16,22 +15,18 @@
             <div class="font-weight-light">@Model.Name</div>
         }
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputEmail4">Email:</label>
-            @if (editMode)
-            {
-                <input asp-for="Email" type="email" class="form-control">
-            }
-            else
-            {
-                <div class="font-weight-light">@Model.Email</div>
-            }
-        </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputEmail4">Email:</label>
+        @if (editMode)
+        {
+            <input asp-for="Email" type="email" class="form-control">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Email</div>
+        }
     </div>
-    <div class="form-row">
-        <a asp-action="Index" class="btn btn-primary">Back to account</a>
-        <button class="btn btn-danger">Edit</button>
-    </div>
+</div>
 
-</form>

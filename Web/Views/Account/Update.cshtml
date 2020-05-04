@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Update Account";
+    ViewData["EditMode"] = "True";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Update">
+
+    <partial name="~/Views/Partials/Account/_Details.cshtml" />
+    <div class="my-2">
+        <a asp-action="Index" class="btn btn-primary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Update</button>
+    </div>
+
+</form>
+
+<script src="~/js/account.js"></script>

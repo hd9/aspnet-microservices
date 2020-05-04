@@ -16,6 +16,7 @@ using static Core.Infrastructure.Extentions.ExceptionExtensions;
 using Core.Infrastructure.Extentions;
 using Web.Infrastructure.Settings;
 using Web.Infrastructure.Global;
+using System.Net;
 
 namespace Web.Controllers
 {
@@ -47,6 +48,17 @@ namespace Web.Controllers
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> Details()
+        {
+            var id = User.FindFirstValue("Id");
+            var acct = await _acctSvc.GetAccountById(id);
+
+            if (acct == null)
+                return NotFound();
+
+            return View(new AccountDetails { Name = acct.Name, Email = acct.Email });
+        }
+
+        public async Task<IActionResult> Update()
         {
             var id = User.FindFirstValue("Id");
             var acct = await _acctSvc.GetAccountById(id);
@@ -114,20 +126,30 @@ namespace Web.Controllers
             return RedirectToAction("SignIn");
         }
 
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Update(Account account)
+        public async Task<IActionResult> Update(AccountDetails acctDetails)
         {
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
-                return View(account);
+                return View(acctDetails);
             }
 
-            account.Id = User.FindFirstValue("Id");
+            acctDetails.Id = User.FindFirstValue("Id");
 
-            await _acctSvc.UpdateAccount(account);
+            var status = await _acctSvc.UpdateAccount(acctDetails);
+
+            if (status != HttpStatusCode.OK)
+            {
+                TempData["ErrorMsg"] = "Error updating your account. Please try again later.";
+                return View(acctDetails);
+            }
+
+            //var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            //claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("Name"));
+            //claimsIdentity.AddClaim(new Claim("Name", acctDetails.Name));
+
             return RedirectToAction("Index");
         }
 

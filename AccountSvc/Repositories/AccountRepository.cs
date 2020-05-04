@@ -12,7 +12,7 @@ namespace AccountSvc.Repositories
     {
         private readonly string _connStr;
         private readonly string insert = "INSERT INTO account (name, email, password, created_at, last_updated, address, city, region, postal_code, country, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter)";
-        private readonly string updateAccount = "UPDATE account (name, email, last_updated, address, city, region, country, subscribe_newsletter) values (@name, @email, sysdate(), @address, @city, @region, @postal_code, @country, @subscribe_newsletter) WHERE id = @id";
+        private readonly string updateAccount = "UPDATE account set name = @name, email = @email, last_updated = sysdate() WHERE id = @id";
         private readonly string updatePwd = "UPDATE account set password = @password WHERE id = @id";
         private readonly string queryAcctById = "SELECT * FROM account WHERE id = @id";
         private readonly string queryAcctByEmail = "SELECT * FROM account WHERE email = @email";
@@ -26,6 +26,7 @@ namespace AccountSvc.Repositories
         public async Task CreateAccount(Account account)
         {
             // todo :: salt + hash pwd
+            // todo :: add Address VO
             using (var conn = new MySqlConnection(_connStr))
             {
                 await conn.ExecuteAsync(insert, new
@@ -43,21 +44,23 @@ namespace AccountSvc.Repositories
             }
         }
 
-        public async Task UpdateAccount(Account account)
+        public async Task UpdateAccount(UpdateAccount updAccount)
         {
             using (var conn = new MySqlConnection(_connStr))
             {
+                // todo :: add Address VO
+                // todo :: log account history
                 await conn.ExecuteAsync(updateAccount, new
                 {
-                    id = account.Id,
-                    name = account.Name,
-                    email = account.Email,
-                    address = account.Address,
-                    city = account.City,
-                    region = account.Region,
-                    postal_code = account.PostalCode,
-                    country = account.Country,
-                    subscribe_newsletter = account.SubscribedToNewsletter
+                    id = updAccount.Id,
+                    name = updAccount.Name,
+                    email = updAccount.Email
+                    //address = account.Address,
+                    //city = account.City,
+                    //region = account.Region,
+                    //postal_code = account.PostalCode,
+                    //country = account.Country,
+                    //subscribe_newsletter = account.SubscribedToNewsletter
                 });
             }
         }
@@ -82,6 +85,7 @@ namespace AccountSvc.Repositories
         {
             using (var conn = new MySqlConnection(_connStr))
             {
+                // todo :: log account history
                 await conn.QuerySingleOrDefaultAsync<Account>(updatePwd, new {
                     password = updPassword.NewPassword,
                     id = updPassword.AccountId
