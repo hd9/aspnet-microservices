@@ -77,5 +77,35 @@ namespace AccountSvc.Services
         {
             await _repo.SetDefaultAddress(acctId, addressId);
         }
+
+        public async Task<PaymentInfo> GetPaymentInfoById(string pmtId)
+        {
+            return await _repo.GetPaymentInfoById(pmtId);
+        }
+
+        public async Task AddPaymentInfo(PaymentInfo pmtId)
+        {
+            await _repo.AddPaymentInfo(pmtId);
+        }
+
+        public async Task UpdatePaymentInfo(PaymentInfo pmtId)
+        {
+            await _repo.UpdatePaymentInfo(pmtId);
+        }
+
+        public async Task RemovePaymentInfo(string pmtId)
+        {
+            await _repo.RemovePaymentInfo(pmtId);
+        }
+
+        public async Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId)
+        {
+            return await _repo.GetPaymentInfosByAccountId(accountId);
+        }
+
+        public async Task SetDefaultPaymentInfo(string accountId, int pmtId)
+        {
+            await _repo.SetDefaultPaymentInfo(accountId, pmtId);
+        }
     }
 }

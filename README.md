@@ -81,6 +81,21 @@ CREATE TABLE address (
     FOREIGN KEY (account_id)
        REFERENCES account(id)
 );
+
+CREATE TABLE payment_info (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id            INT             NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    is_default            BIT             NOT NULL,
+    number                VARCHAR(20)     NOT NULL,
+    cvv                   INT             NOT NULL,
+    exp_date              DATETIME        NOT NULL,
+    method                TINYINT         NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (account_id)
+       REFERENCES account(id)
+);
 ```
 
 ## OrderSvc

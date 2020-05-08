@@ -1,24 +1,78 @@
-﻿@{
+﻿@model PaymentInfo
+@using System.Linq;
+@using System.Linq.Expressions;
+@{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
+
+    // todo :: get from enum PaymentMethod
+    //var pmtMethods = Enum.GetValues(typeof(PaymentMethod)).
+    var pmtMethods = new List<SelectListItem>
+    {
+        new SelectListItem("MasterCard", "0"),
+        new SelectListItem("Visa", "1"),
+        new SelectListItem("AMEX", "2")
+    };
 }
 
 <div class="form-row">
     <div class="form-group col-md-8">
         <label for="inputZip">Card Holder:</label>
-        <div class="font-weight-light">@Model.Name</div>
+        @if (editMode)
+        {
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="Name" class="form-control" placeholder="Name on card">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Name</div>
+        }
     </div>
     <div class="form-group col-md-4 text-right">
-        <label for="inputAddress">Payment Method:</label>
-        <div class="font-weight-light">Master Card</div>
+        <label for="inputPmtMethod">Payment Method:</label>
+        @if (editMode)
+        {
+            <select asp-for="Method" asp-items="pmtMethods" class="form-control" id="inputPmtMethod">
+                <option selected>Choose...</option>
+            </select>
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Method</div>
+        }
     </div>
 </div>
 <div class="form-row">
-    <div class="form-group col-md-8">
-        <label for="inputAddress">Card Number:</label>
-        <div class="font-weight-light">54xx-xxxx-xxxx-xx33</div>
+    <div class="form-group col-md-5">
+        <label for="inputNumber">Card Number:</label>
+        @if (editMode)
+        {
+            <input asp-for="Number" class="form-control" placeholder="Name on card" id="inputNumber">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.Number</div>
+        }
+    </div>
+    <div class="form-group col-md-3">
+        <label for="inputCVV">CVV:</label>
+        @if (editMode)
+        {
+            <input asp-for="CVV" class="form-control" placeholder="CVV" id="inputCVV">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.CVV</div>
+        }
     </div>
     <div class="form-group col-md-4 text-right">
-        <label for="inputZip">Expires on:</label>
-        <div class="font-weight-light">@DateTime.Now.AddYears(3).AddDays(121).ToShortDateString()</div>
+        <label for="inputExpires">Expires on:</label>
+        @if (editMode)
+        {
+            <input asp-for="ExpDate" class="form-control" placeholder="Exp Date" id="inputExpires">
+        }
+        else
+        {
+            <div class="font-weight-light">@Model.ExpDate.ToShortDateString()</div>
+        }
     </div>
 </div>

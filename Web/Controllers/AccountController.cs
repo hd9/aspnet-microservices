@@ -101,6 +101,78 @@ namespace Web.Controllers
         }
 
         /// <summary>
+        /// Adds a new payment method to the account
+        /// </summary>
+        /// <returns></returns>
+        [Route("/account/payment/add")]
+        public IActionResult AddPayment()
+        {
+            return View(new PaymentInfo());
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Route("/account/payment/add")]
+        public async Task<IActionResult> AddPayment(PaymentInfo pmtInfo)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "All fields are required. Please fill them and resubmit.";
+                return View(pmtInfo);
+            }
+
+            pmtInfo.AccountId = User.FindFirstValue("Id");
+            var resp = await _acctSvc.AddPayment(pmtInfo);
+
+            if (resp != HttpStatusCode.OK)
+            {
+                TempData["ErrorMsg"] = "Error adding your payment, please try again later.";
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Updates an existing address
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePayment(PaymentInfo pmtInfo)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMsg"] = "Please make sure you filled all fields.";
+                return View();
+            }
+
+            pmtInfo.AccountId = User.FindFirstValue("Id");
+            var resp = await _acctSvc.UpdatePayment(pmtInfo);
+
+            if (resp != HttpStatusCode.OK)
+            {
+                TempData["ErrorMsg"] = "Error updating your payment information, please try again later.";
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Allows editing a payment method
+        /// </summary>
+        /// <param name="addrId"></param>
+        /// <returns></returns>
+        [Route("/account/payment/edit/{pmtId}")]
+        public async Task<IActionResult> EditPayment(string pmtId)
+        {
+            var pmtInfo = await _acctSvc.GetPaymentInfoById(pmtId);
+            return View(pmtInfo);
+        }
+
+        /// <summary>
         /// Update password
         /// </summary>
         /// <returns></returns>
@@ -360,6 +432,38 @@ namespace Web.Controllers
         {
             var acctId = User.FindFirstValue("Id");
             var resp = await _acctSvc.SetDefaultAddress(acctId, addressId);
+
+            if (resp == HttpStatusCode.OK)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [Route("/api/account/payments")]
+        public async Task<IList<PaymentInfo>> GetPayments()
+        {
+            var acctId = User.FindFirstValue("Id");
+            return await _acctSvc.GetPaymentInfosByAccountId(acctId);
+        }
+
+        [HttpDelete]
+        [Route("/api/account/payment/{pmtId}")]
+        public async Task<IActionResult> RemovePayment(string pmtId)
+        {
+            var resp = await _acctSvc.RemovePayment(pmtId);
+
+            if (resp == HttpStatusCode.OK)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("/api/account/payment/{pmtId}")]
+        public async Task<IActionResult> SetDefaultPayment(int pmtId)
+        {
+            var acctId = User.FindFirstValue("Id");
+            var resp = await _acctSvc.SetDefaultPayment(acctId, pmtId);
 
             if (resp == HttpStatusCode.OK)
                 return Ok();

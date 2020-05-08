@@ -4,8 +4,11 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+<p class="lead mb-3">Here's your account info.</p>
 
-<partial name="~/Views/Partials/Account/_Details.cshtml" />
+<div class="border rounded p-3">
+    <partial name="~/Views/Partials/Account/_Details.cshtml" />
+</div>
 <div class="my-2">
     <a asp-action="Index" class="btn btn-primary">Back to account</a>
     <a asp-action="Update" class="btn btn-danger">Edit</a>

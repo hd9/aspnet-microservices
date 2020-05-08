@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -137,7 +139,7 @@ namespace Web.Services
         public async Task<HttpStatusCode> RemoveAddress(string addressId)
         {
             var url = $"{_cfg["Services:Account"]}/account/address/{addressId}";
-            _logger.LogInformation($"Updating address at: '{url}'");
+            _logger.LogInformation($"Removing address at: '{url}'");
 
             var resp = await _httpClient.DeleteAsync(url);
 
@@ -168,5 +170,79 @@ namespace Web.Services
 
             return resp.StatusCode;
         }
+
+        public async Task<PaymentInfo> GetPaymentInfoById(string pmtId)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment/{pmtId}";
+            _logger.LogInformation($"Getting pmtInfo at: '{url}'");
+
+            var resp = await _httpClient.GetAsync(url);
+
+            return JsonConvert.DeserializeObject<PaymentInfo>(
+                await resp.Content.ReadAsStringAsync());
+        }
+
+        public async Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment/search?accountId={accountId}";
+            _logger.LogInformation($"Getting pmtInfo by Id: '{url}'");
+
+            var resp = await _httpClient.GetAsync(url);
+
+            return JsonConvert.DeserializeObject<IList<PaymentInfo>>(
+                await resp.Content.ReadAsStringAsync());
+        }
+
+        public async Task<HttpStatusCode> AddPayment(PaymentInfo pmtInfo)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment";
+            _logger.LogInformation($"Creating pmtInfo at: '{url}'");
+
+            var resp = await _httpClient.PostAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(pmtInfo),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            return resp.StatusCode;
+        }
+        public async Task<HttpStatusCode> RemovePayment(string pmtId)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment/{pmtId}";
+            _logger.LogInformation($"Removing pmtInfo at: '{url}'");
+
+            var resp = await _httpClient.DeleteAsync(url);
+
+            return resp.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> SetDefaultPayment(string acctId, int pmtId)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment/default?accountId={acctId}&pmtId={pmtId}";
+            _logger.LogInformation($"Setting pmtInfo {pmtId} as default at: '{url}'");
+
+            var resp = await _httpClient.PostAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(new { acctId, pmtId }),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            return resp.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> UpdatePayment(PaymentInfo pmtInfo)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/payment";
+            _logger.LogInformation($"Updating address at: '{url}'");
+
+            var resp = await _httpClient.PutAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(pmtInfo),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            return resp.StatusCode;
+        }
+
     }
 }

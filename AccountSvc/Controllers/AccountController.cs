@@ -110,5 +110,44 @@ namespace AccountSvc.Controllers
         {
             await _svc.SetDefultAddress(accountId, addressId);
         }
+
+        [Route("/account/payment/{pmtId}")]
+        public async Task<PaymentInfo> GetPaymentInfoById(string pmtId)
+        {
+            return await _svc.GetPaymentInfoById(pmtId);
+        }
+
+        [Route("/account/payment/")]
+        [HttpPost]
+        public async Task AddPaymentInfo([FromBody]PaymentInfo pmtInfo)
+        {
+            await _svc.AddPaymentInfo(pmtInfo);
+        }
+
+        [Route("/account/payment/")]
+        [HttpPut]
+        public async Task UpdatePaymentInfo([FromBody]PaymentInfo pmtInfo)
+        {
+            await _svc.UpdatePaymentInfo(pmtInfo);
+        }
+
+        [Route("/account/payment/{pmtId}")]
+        [HttpDelete]
+        public async Task RemovePaymentInfo(string pmtId)
+        {
+            await _svc.RemovePaymentInfo(pmtId);
+        }
+
+        [Route("/account/payment/search")]
+        public async Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId)
+        {
+            return await _svc.GetPaymentInfosByAccountId(accountId);
+        }
+
+        [Route("/account/payment/default")]
+        public async Task SetDefaultPaymentInfo(string accountId, int pmtId)
+        {
+            await _svc.SetDefaultPaymentInfo(accountId, pmtId);
+        }
     }
 }

@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Edit Payment";
+    ViewData["EditMode"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["ErrorMsg"] != null)
+{
+    <div class="p-3 my-3 alert-danger">@TempData["ErrorMsg"]</div>
+}
+
+<div class="row">
+    <div class="col-md-8 col-sm-12 col-lg-6">
+        <form method="post" asp-action="UpdatePayment">
+            <partial name="~/Views/Partials/Account/_PaymentForm.cshtml" />
+            <div class="my-2">
+                <a asp-action="Payments" class="btn btn-primary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/account.js"></script>

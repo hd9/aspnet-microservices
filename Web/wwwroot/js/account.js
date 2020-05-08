@@ -160,3 +160,71 @@ var addresses = new Vue({
             });
     }
 });
+
+
+var pmtsApp = new Vue({
+    el: '#pmts',
+    data: {
+        pmtInfos: []
+    },
+    methods: {
+        remove: function (i) {
+            if (confirm('Are you sure you want to remove this payment method?')) {
+                var id = this.pmtInfos[i].id;
+                axios.delete('/api/account/payment/' + id)
+                    .then(function (r) {
+                        pmtsApp.pmtInfos.splice(i, 1);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        makeDefault: function (i) {
+            if (confirm('Are you sure you want to make this payment method primary?')) {
+                var id = this.pmtInfos[i].id;
+                axios.put('/api/account/payment/' + id)
+                    .then(function (r) {
+                        var arr = pmtsApp.pmtInfos;
+                        arr.forEach(a => a.isDefault = false);
+                        arr[i].isDefault = true;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        },
+        url: function (i) {
+            var id = this.pmtInfos[i].id;
+            return '/account/payment/edit/' + id;
+        },
+        expDate: function (dt) {
+            var d = new Date(dt);
+            return ("0" + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear();
+        },
+        method: function (m) {
+            switch (m) {
+                case 2:
+                    return 'AMEX';
+                case 1:
+                    return 'Visa';
+                default:
+                    return 'MasterCard';
+            }
+        }
+    },
+    mounted() {
+        if (!this.$refs.pmts)
+            return;
+
+        axios.get('/api/account/payments')
+            .then(function (r) {
+                if (r && r.data) {
+                    pmtsApp.pmtInfos = r.data.map(r => r);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+});

@@ -17,5 +17,11 @@ namespace AccountSvc.Services
         Task RemoveAddress(string addressId);
         Task<IList<Address>> GetAddressesByAccountId(string acctId);
         Task SetDefultAddress(string acctId, int addressId);
+        Task<PaymentInfo> GetPaymentInfoById(string pmtId);
+        Task AddPaymentInfo(PaymentInfo pmtId);
+        Task UpdatePaymentInfo(PaymentInfo pmtId);
+        Task RemovePaymentInfo(string pmtId);
+        Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId);
+        Task SetDefaultPaymentInfo(string accountId, int pmtId);
     }
 }

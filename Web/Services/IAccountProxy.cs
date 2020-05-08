@@ -18,5 +18,11 @@ namespace Web.Services
         Task<HttpStatusCode> RemoveAddress(string addressId);
         Task<IList<Address>> GetAddressesByAccountId(string acctId);
         Task<HttpStatusCode> SetDefaultAddress(string acctId, int addressId);
+        Task<PaymentInfo> GetPaymentInfoById(string pmtId);
+        Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string acctId);
+        Task<HttpStatusCode> RemovePayment(string pmtId);
+        Task<HttpStatusCode> SetDefaultPayment(string acctId, int pmtId);
+        Task<HttpStatusCode> UpdatePayment(PaymentInfo pmtInfo);
+        Task<HttpStatusCode> AddPayment(PaymentInfo pmtInfo);
     }
 }
