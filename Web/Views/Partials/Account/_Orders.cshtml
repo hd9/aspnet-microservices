@@ -25,9 +25,8 @@
                         <th scope="row" class="text-center">{{ o.id }}</th>
                         <td>
                             <ul class="list-unstyled">
-                                <li v-for="li in o.lineItems"> {{ li.name }} </li>
+                                <li v-for="li in o.lineItems">{{ li.qty }} x {{ li.name }} </li>
                             </ul>
-                            @*{{ o.lineItems.map(e => e.name).join(", ") }}*@
                         </td>
                         <td>{{ new Date(o.createdOn).toDateString() }}</td>
                         <td>{{ new Date(o.lastUpdated).toDateString() }}</td>

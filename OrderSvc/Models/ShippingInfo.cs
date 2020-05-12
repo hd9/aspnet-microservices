@@ -1,18 +1,17 @@
-﻿using Core.Infrastructure.Extentions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Web.Models
+namespace OrderSvc.Models
 {
-    public class Address
+    public class ShippingInfo
     {
         public int Id { get; set; }
 
         public int AccountId { get; set; }
 
-        public bool IsDefault { get; set; }
+        public ShippingStatus Status { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
@@ -42,12 +41,5 @@ namespace Web.Models
         [StringLength(20)]
         public string Country { get; set; }
 
-        // simple validation
-        public bool IsValid() =>
-            Name.HasValue(3) &&
-            PostalCode.HasValue(3) &&
-            City.HasValue(3) &&
-            Region.HasValue(2) &&
-            Country.HasValue(2);
     }
 }

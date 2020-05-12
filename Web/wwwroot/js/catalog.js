@@ -135,12 +135,22 @@ const cart = new Vue({
 const cartSubmit = new Vue({
     el: '#cartSubmit',
     data: {
-        products: []
+        products: [],
+        pmtId: '',
+        addrId: ''
     },
     methods: {
         submit: function () {
-            var li = this.products.map(p => ({ Id: p.id, Qty: parseInt(p.qty), Name: p.name, Price: parseFloat(p.price) }));
+            var li = this.products.map(p => ({
+                Id: p.id,
+                Qty: parseInt(p.qty),
+                Name: p.name,
+                Price: parseFloat(p.price)
+            }));
+
             axios.post('/order/submit', {
+                AddressId: this.addrId,
+                PaymentId: this.pmtId,
                 LineItems: li
             })
             .then(r => {
@@ -159,6 +169,11 @@ const cartSubmit = new Vue({
                 this.products = JSON.parse(localStorage.products);
             } catch (e) {
                 localStorage.removeItem('products');
+            }
+
+            if (this.$refs.data) {
+                this.addrId = this.$refs.data.attributes["addrId"].value
+                this.pmtId = this.$refs.data.attributes["pmtId"].value
             }
         }
     }

@@ -1,44 +1,14 @@
 ﻿@model List<Address>
 @{
     ViewData["Title"] = "My Addresses";
+    ViewData["ShowOptions"] = "True";
 }
+
 <h2>@ViewData["Title"]</h2>
 <p class="lead mb-3">Here's your list of addresses.</p>
 
-<div class="row" id="addresses" ref="addresses">
+<partial name="~/Views/Partials/Account/_AddressOptions.cshtml" />
 
-    <div class="col-sm-6 col-md-4" v-for="(a,i) in addresses" v-if="addresses.length > 0">
-        <div class="card">
-            <div class="card-body" v-bind:class="{ 'bg-light' : a.isDefault}">
-                <h5 class="card-title">Address #{{i + 1 }}</h5>
-                <p class="card-text">
-                <p>
-                    <ul class="list-unstyled">
-                        <li><strong>{{ a.name }}</strong> </li>
-                        <li>{{ a.street }}</li>
-                        <li>{{a.city}} - {{a.region}} - {{a.country}}</li>
-                        <li>{{ a.postalCode }}</li>
-                    </ul>
-                </p>
-                <small>
-                    <span v-if="a.isDefault">
-                        <i>Default address</i> @("|")
-                        <a href="#" v-bind:href="url(i)">Edit</a>
-                    </span>
-                    <span v-else>
-                        <a href="#" v-bind:href="url(i)">Edit</a> @("|")
-                        <a href="#" v-on:click="remove(i)">Remove</a> @("|")
-                        <a href="#" v-on:click="makeDefault(i)">Make Default</a>
-                    </span>
-                </small>
-            </div>
-        </div>
-    </div>
-
-    <div v-else class="p-3">
-        <p class="lead">No addresses registered so far.</p>
-    </div>
-</div>
 <div class="my-2">
     <a asp-action="Index" class="btn btn-primary">Back to account</a>
     <a asp-action="AddAddress" class="btn btn-danger">Add Address</a>

@@ -11,6 +11,8 @@ namespace OrderSvc.Models
         public int Id { get; set; }
         public int AccountId { get; set; }
         public OrderStatus Status { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
+        public ShippingStatus ShippingStatus { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
         public string Currency { get; set; }
@@ -20,5 +22,7 @@ namespace OrderSvc.Models
         public decimal Shipping { get; set; }
         public decimal TotalPrice => Math.Round(Price * (1 + Tax) + Shipping - Discount, 2);
         public List<LineItem> LineItems { get; set; }
+        public PaymentInfo PaymentInfo { get; set; }
+        public ShippingInfo ShippingInfo { get; set; }
     }
 }

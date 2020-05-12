@@ -121,7 +121,8 @@ namespace Web.Controllers
                 return View(pmtInfo);
             }
 
-            pmtInfo.AccountId = User.FindFirstValue("Id");
+            int.TryParse(User.FindFirstValue("Id"), out var accId);
+            pmtInfo.AccountId = accId;
             var resp = await _acctSvc.AddPayment(pmtInfo);
 
             if (resp != HttpStatusCode.OK)
@@ -148,7 +149,8 @@ namespace Web.Controllers
                 return View();
             }
 
-            pmtInfo.AccountId = User.FindFirstValue("Id");
+            int.TryParse(User.FindFirstValue("Id"), out var accId);
+            pmtInfo.AccountId = accId;
             var resp = await _acctSvc.UpdatePayment(pmtInfo);
 
             if (resp != HttpStatusCode.OK)

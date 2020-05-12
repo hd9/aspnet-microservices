@@ -34,7 +34,7 @@ docker pull mysql:latest
 
 
 
-# Running the microservices
+# Configuring the microservices
 
 ## RabbitMQ
 Run RabbitMQ with:
@@ -42,172 +42,14 @@ docker run --name r1 -d       -p 5672:5672 rabbitmq
 docker run --name r1 -d -h rh -p 5672:5672 rabbitmq
 
 ## CatalogSvc
-docker run -d --name m-cat -p 32769:27017 mongo                                        # for CatalogSvc
+Holds catalog and product information.
 
+### Running CatalogSvc docker image:
+`docker run -d --name m-cat -p 32769:27017 mongo`
 
-## AccountSvc
-docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -p -P 3307`
-
-And run the script:
-```sql
-create database accountdb;
-use accountdb;
-
-CREATE TABLE account (
-    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name                  VARCHAR(1000)   NOT NULL,
-    email                 VARCHAR(300)    NOT NULL,
-    password              VARCHAR(1000)   NOT NULL,
-    created_at            DATETIME        NOT NULL,
-    last_updated          DATETIME        NOT NULL,
-    subscribe_newsletter  BIT
-);
-
-CREATE TABLE address (
-    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id            INT             NOT NULL,
-    name                  VARCHAR(1000)   NOT NULL,
-    is_default            BIT             NOT NULL,
-    street                VARCHAR(1000)   NOT NULL,
-    city                  VARCHAR(300)    NOT NULL,
-    region                VARCHAR(100)    NOT NULL,
-    postal_code           VARCHAR(10)     NOT NULL,
-    country               VARCHAR(100)    NOT NULL,
-    created_at            DATETIME        NOT NULL,
-    last_updated          DATETIME        NOT NULL,
-    FOREIGN KEY (account_id)
-       REFERENCES account(id)
-);
-
-CREATE TABLE payment_info (
-    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id            INT             NOT NULL,
-    name                  VARCHAR(1000)   NOT NULL,
-    is_default            BIT             NOT NULL,
-    number                VARCHAR(20)     NOT NULL,
-    cvv                   INT             NOT NULL,
-    exp_date              DATETIME        NOT NULL,
-    method                TINYINT         NOT NULL,
-    created_at            DATETIME        NOT NULL,
-    last_updated          DATETIME        NOT NULL,
-    FOREIGN KEY (account_id)
-       REFERENCES account(id)
-);
-```
-
-## OrderSvc
-docker run -d --name mysql-ordersvc -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -p -P 3308`
-
-Create db with:
-`create database orderdb;`
-
-And run the script to create `order` and `orderline` tables:
-```sql
-create table lineitem (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id            INT             NOT NULL,
-    name                VARCHAR(1000)   NOT NULL,
-    price               DECIMAL(10,2)   NOT NULL,
-    qty                 INT             NOT NULL,
-    FOREIGN KEY (order_id)
-        REFERENCES orders(id)
-); 
-
-create table orders (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id          INT             NOT NULL,
-    created_at          DATETIME        NOT NULL,
-    last_modified       DATETIME        NOT NULL,
-    currency            varchar(3)      NOT NULL,
-    price               DECIMAL(10,2)   NOT NULL,
-    tax                 DECIMAL(10,2)   NOT NULL,
-    shipping            DECIMAL(10,2)   NOT NULL,
-    total_price         DECIMAL(10,2)   NOT NULL,
-    status              TINYINT         NOT NULL
-);
-```
-
-## NewsletterSvc
-docker run -d --name mongo-nlsvc -p 32768:27017 mongo
-
-## NotificationSvc
-docker run -d --name mysql-notificationsvc -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
-
-## PaymentSvc
-docker run -d --name mysql-paymentsvc -p 3309:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -p -P 3309`
-
-Create db with:
-`create database paymentdb;`
-
-And run the script to create the `payment` and `log` tables:
-```sql
-use paymentdb;
-
-create table payment (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id          INT             NOT NULL,
-    created_at          DATETIME        NOT NULL,
-    last_modified       DATETIME        NOT NULL,
-    currency            VARCHAR(3)      NOT NULL,
-    amount              DECIMAL(10,2)   NOT NULL,
-    status              TINYINT         NOT NULL
-);
-
-create table log (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    pmt_id              INT             NOT NULL,
-    created_at          DATETIME        NOT NULL,
-    FOREIGN KEY (pmt_id)
-        REFERENCES payment(id)
-); 
-```
-
-## RecommendationSvc
-docker run -d --name mysql-recommendationsvc -p 3310:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -p -P 3310`
-
-Create db with:
-`create database recommendationdb;`
-
-And run the script to create the `recommendation` and `log` tables:
-```sql
-use recommendationdb;
-
-create table recommendation (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id          INT             NOT NULL,
-    order_id            INT             NOT NULL,
-    created_at          DATETIME        NOT NULL
-);
-
-create table log (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    recomm_id           INT             NOT NULL,
-    created_at          DATETIME        NOT NULL,
-    FOREIGN KEY (recomm_id)
-        REFERENCES recommendation(id)
-);
-```
-
-
-
-
-# Seeding the databases
-
-### Seeding Product data
-Connect to the catalot mongodb  instance with:
-mongo mongodb://localhost:32769
+### Seeding Product data:
+Connect to the catalog / mongodb instance with:
+`mongo mongodb://localhost:32769`
 
 And run:
 ```js
@@ -270,26 +112,219 @@ db.Categories.insertMany([
 ]);
 ```
 
-### Seeding the Notification datbase
+## AccountSvc
+docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+
 Connect to the database with:
-`mysql --protocol=tcp -u root -p`
+`mysql --protocol=tcp -u root -p -P 3307`
+
+And run the script:
+```sql
+create database accountdb;
+use accountdb;
+
+CREATE TABLE account (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name                  VARCHAR(1000)   NOT NULL,
+    email                 VARCHAR(300)    NOT NULL,
+    password              VARCHAR(1000)   NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    subscribe_newsletter  BIT
+);
+
+CREATE TABLE address (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id            INT             NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    is_default            BIT             NOT NULL,
+    street                VARCHAR(1000)   NOT NULL,
+    city                  VARCHAR(300)    NOT NULL,
+    region                VARCHAR(100)    NOT NULL,
+    postal_code           VARCHAR(10)     NOT NULL,
+    country               VARCHAR(100)    NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (account_id)
+       REFERENCES account(id)
+);
+
+CREATE TABLE payment_info (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id            INT             NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    is_default            BIT             NOT NULL,
+    number                VARCHAR(20)     NOT NULL,
+    cvv                   INT             NOT NULL,
+    exp_date              DATETIME        NOT NULL,
+    method                TINYINT         NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (account_id)
+       REFERENCES account(id)
+);
+```
+
+## OrderSvc
+Run the order database with:
+`docker run -d --name mysql-ordersvc -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3308`
+
+Create db with:
+`create database orderdb;`
+
+And run the script to create the tables:
+```sql
+create table orders (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    last_modified       DATETIME        NOT NULL,
+    currency            varchar(3)      NOT NULL,
+    price               DECIMAL(10,2)   NOT NULL,
+    tax                 DECIMAL(10,2)   NOT NULL,
+    shipping            DECIMAL(10,2)   NOT NULL,
+    total_price         DECIMAL(10,2)   NOT NULL,
+    status              TINYINT         NOT NULL
+);
+
+create table lineitem (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id            INT             NOT NULL,
+    name                VARCHAR(1000)   NOT NULL,
+    price               DECIMAL(10,2)   NOT NULL,
+    qty                 INT             NOT NULL,
+    FOREIGN KEY (order_id)
+        REFERENCES orders(id)
+); 
+
+CREATE TABLE payment_info (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id              INT             NOT NULL,
+    status                TINYINT         NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    number                VARCHAR(20)     NOT NULL,
+    cvv                   SMALLINT        NOT NULL,
+    exp_date              DATETIME        NOT NULL,
+    method                TINYINT         NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (order_id)
+       REFERENCES orders(id)
+);
+
+CREATE TABLE shipping_info (
+    id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id              INT             NOT NULL,
+    payment_info_id       INT             NOT NULL,
+    status                TINYINT         NOT NULL,
+    name                  VARCHAR(1000)   NOT NULL,
+    street                VARCHAR(1000)   NOT NULL,
+    city                  VARCHAR(300)    NOT NULL,
+    region                VARCHAR(100)    NOT NULL,
+    postal_code           VARCHAR(10)     NOT NULL,
+    country               VARCHAR(100)    NOT NULL,
+    created_at            DATETIME        NOT NULL,
+    last_updated          DATETIME        NOT NULL,
+    FOREIGN KEY (order_id)
+       REFERENCES orders(id),
+    FOREIGN KEY (payment_info_id)
+       REFERENCES payment_info(id)
+);
+```
+
+## NewsletterSvc
+Run the Newsletter db with:
+`docker run -d --name mongo-nlsvc -p 32768:27017 mongo`
+
+## NotificationSvc
+Run the Notification db with:
+`docker run -d --name mysql-notificationsvc -p 3311:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3311`
+
 
 Create a database and table:
 ```sql
 create database notificationdb;
 use notificationdb;
-CREATE TABLE Notifications (
+
+CREATE TABLE notifications (
     id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(1000)   NOT NULL,
     email       VARCHAR(300)    NOT NULL,
     created_at  DATETIME        NOT NULL,
     type        char(1)         NOT NULL
 );
-
--- create our user
-create user 'svc'
-
 ```
+
+## PaymentSvc
+Run the payment db with:
+`docker run -d --name mysql-paymentsvc -p 3309:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3309`
+
+Create the db with:
+`create database paymentdb;`
+
+And run the script to create the tables:
+```sql
+use paymentdb;
+
+create table payment (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    last_modified       DATETIME        NOT NULL,
+    currency            VARCHAR(3)      NOT NULL,
+    amount              DECIMAL(10,2)   NOT NULL,
+    status              TINYINT         NOT NULL
+);
+
+create table log (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pmt_id              INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    FOREIGN KEY (pmt_id)
+        REFERENCES payment(id)
+); 
+```
+
+## RecommendationSvc
+Run the recommendation db with:
+`docker run -d --name mysql-recommendationsvc -p 3310:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3310`
+
+Create the db with:
+`create database recommendationdb;`
+
+And run the script to create the tables:
+```sql
+use recommendationdb;
+
+create table recommendation (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id          INT             NOT NULL,
+    order_id            INT             NOT NULL,
+    created_at          DATETIME        NOT NULL
+);
+
+create table log (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    recomm_id           INT             NOT NULL,
+    created_at          DATETIME        NOT NULL,
+    FOREIGN KEY (recomm_id)
+        REFERENCES recommendation(id)
+);
+```
+
+
 
 ## Changing Configuration
 todo add:

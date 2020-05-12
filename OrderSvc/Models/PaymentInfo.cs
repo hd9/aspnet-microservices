@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AccountSvc.Models
+namespace OrderSvc.Models
 {
     public enum PaymentMethod
     {
@@ -15,9 +15,9 @@ namespace AccountSvc.Models
         public int Id { get; set; }
 
         public int AccountId { get; set; }
-
-        public bool IsDefault { get; set; }
         
+        public PaymentStatus Status { get; set; }
+
         [Required]
         public PaymentMethod Method { get; set; }
 

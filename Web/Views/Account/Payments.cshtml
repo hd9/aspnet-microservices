@@ -1,44 +1,16 @@
 ﻿@{
     ViewData["Title"] = "My Payments";
+    ViewData["ShowOptions"] = "True";
 }
+
 <h2>@ViewData["Title"]</h2>
 <p class="lead mb-3">Here's your list of payment types.</p>
 
-<div class="row" id="pmts" ref="pmts">
+<partial name="~/Views/Partials/Account/_PaymentOptions.cshtml" />
 
-    <div class="col-sm-6 col-md-4" v-for="(p,i) in pmtInfos" v-if="pmtInfos.length > 0">
-        <div class="card">
-            <div class="card-body" v-bind:class="{ 'bg-light' : p.isDefault}">
-                <h5 class="card-title">Payment Method #{{i + 1 }}</h5>
-                <p class="card-text">
-                <p>
-                    <ul class="list-unstyled">
-                        <li><strong>{{ p.name }}</strong> </li>
-                        <li>{{ method(p.method) }} {{ p.number }}</li>
-                        <li>Exp: {{ expDate(p.expDate) }} </li>
-                    </ul>
-                </p>
-                <small>
-                    <span v-if="p.isDefault">
-                        <i>Default Payment Method</i> @("|")
-                        <a href="#" v-bind:href="url(i)">Edit</a>
-                    </span>
-                    <span v-else>
-                        <a href="#" v-bind:href="url(i)">Edit</a> @("|")
-                        <a href="#" v-on:click="remove(i)">Remove</a> @("|")
-                        <a href="#" v-on:click="makeDefault(i)">Make Default</a>
-                    </span>
-                </small>
-            </div>
-        </div>
-    </div>
-    <div v-else class="p-3">
-        <p class="lead">No payment methods registered so far.</p>
-    </div>
-
-</div>
 <div class="my-2">
     <a asp-action="Index" class="btn btn-primary">Back to account</a>
     <a asp-action="AddPayment" class="btn btn-danger">Add Payment</a>
 </div>
+
 <script src="~/js/account.js"></script>

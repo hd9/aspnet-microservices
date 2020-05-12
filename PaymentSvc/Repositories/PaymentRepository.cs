@@ -12,7 +12,7 @@ namespace PaymentSvc.Repositories
     {
         private readonly string _connStr;
         private readonly string insPmt = "INSERT INTO payment (account_id, created_at, last_modified, currency, amount, status) values (@account_id, sysdate(), sysdate(), @currency, @amount, @status)";
-        private readonly string insLog = "INSERT INTO log (pmt_id, created_at) values (@pmt_id, sysdate())";
+        //private readonly string insLog = "INSERT INTO log (pmt_id, created_at) values (@pmt_id, sysdate())";
         private readonly string updPmt = "UPDATE payment (account_id, created_at, last_modified, currency, amount, status) values (@account_id, sysdate(), sysdate(), @currency, @amount, @status)";
         private readonly string queryPmtById = "SELECT * FROM payment WHERE id = @id";
         private readonly string queryPmtByAcctId = "SELECT * FROM payment WHERE account_id = @id";

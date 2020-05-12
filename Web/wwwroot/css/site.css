@@ -78,3 +78,7 @@ body {
 .checked {
     color: orange;
 }
+
+.clickeable {
+    cursor: pointer;
+}

@@ -47,17 +47,36 @@ namespace Web.Controllers
         }
 
         [Route("/cart/review")]
-        public async Task<IActionResult> Review()
+        public async Task<IActionResult> Review(string addrId, string pmtId)
         {
             var acct = await _acctSvc.GetAccountById(User.FindFirstValue("Id"));
-            return View(acct);
+            var addr = await _acctSvc.GetAddressById(addrId);
+            var pmt = await _acctSvc.GetPaymentInfoById(pmtId);
+            
+            var m = new CartReview
+            {
+                Account = acct,
+                Address = addr,
+                PaymentInfo = pmt
+            };
+
+            return View(m);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Submit([FromBody] Order o)
+        public async Task<IActionResult> Submit([FromBody] SubmitOrder o)
         {
             int.TryParse(User.FindFirstValue("Id"), out var accId);
             o.AccountId = accId;
+
+            o.ShippingInfo = await _acctSvc.GetAddressById(o.AddressId);
+            o.PaymentInfo = await _acctSvc.GetPaymentInfoById(o.PaymentId);
+            o.Currency = Site.StoreSettings.Currency;
+            o.Tax = Site.StoreSettings.Tax;
+
+            if (!o.IsValidForSubmit())
+                return BadRequest();
+
             await _oSvc.Submit(o);
             return Ok(o.Id);
         }

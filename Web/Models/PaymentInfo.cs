@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Core.Infrastructure.Extentions;
 
 namespace Web.Models
 {
@@ -12,9 +13,9 @@ namespace Web.Models
 
     public class PaymentInfo
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
-        public string AccountId { get; set; }
+        public int AccountId { get; set; }
 
         public bool IsDefault { get; set; }
         
@@ -37,5 +38,14 @@ namespace Web.Models
         [Required]
         [Range(1, 999)]
         public int CVV { get; set; }
+
+        // simple validation
+        public bool IsValid() =>
+            Id > 0 &&
+            AccountId > 0 &&
+            Name.HasValue(3) &&
+            Number.HasValue(10) &&
+            (CVV > 0 && CVV < 999) &&
+            ExpDate > DateTime.UtcNow.AddDays(1);
     }
 }

@@ -1,34 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Checkout";
+    ViewData["SmWidth"] = "12";
 }
 
 <h2 class="display-4">@ViewData["Title"]</h2>
 <p class="lead mb-4">Please review the information below. You'll have a chance to review your cart on the next step.</p>
-<div class="row">
+<div class="row small">
 
     <div class="col-md-6">
-        <h4 class="border-bottom">Account information</h4>
-        <partial name="~/Views/Partials/Account/_AccountForm.cshtml" />
-        <div class="pt-3 my-2 border-top small">
-            Not correct?
-            <a asp-controller="Account" asp-action="Details">Update your account information</a>
-        </div>
+        <partial name="~/Views/Partials/Account/_AddressOptions.cshtml" />
     </div>
     <div class="col-md-6">
-        <h4 class="border-bottom">Payment Information</h4>
-        <partial name="~/Views/Partials/Account/_PaymentForm.cshtml" />
-        <div class="pt-3 my-2 border-top small">
-            Not correct?
-            <a asp-controller="Account" asp-action="Details">Update your payment information</a>
-        </div>
+        <partial name="~/Views/Partials/Account/_PaymentOptions.cshtml" />
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-12 mt-3 text-right">
-        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm">Continue Shopping</a>
-        <a asp-action="Index" class="btn btn-warning btn-sm">Change Cart</a>
-        <a asp-action="Review" class="btn btn-danger btn-sm">Review and Submit</a>
+    <div class="col-sm-12 mt-3 text-right pt-2" id="checkoutCart">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Continue Shopping</a>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Change Cart</a>
+        <button v-on:click="submit" class="btn btn-danger btn-sm">Review and Submit</button>
     </div>
 </div>
 
 <script src="~/js/catalog.js"></script>
+<script src="~/js/account.js"></script>

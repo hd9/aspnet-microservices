@@ -1,0 +1,54 @@
+﻿@{
+    var showOptions = (ViewData["ShowOptions"] ?? "").ToString() == "True";
+    var smWidth = ViewData["SmWidth"] ?? "6";
+}
+
+<div id="addrOptions" ref="addrOptions">
+    @if (!showOptions)
+    {
+        <h4>Address information</h4>
+        <div>
+            Please, choose one of your address below.<br />
+            <small>
+                Any of the below?
+                <a asp-controller="Account" asp-action="Address" target="_blank">Update your address information</a>
+            </small>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-@smWidth clickeable" v-for="(a,i) in addresses" v-if="addresses.length > 0">
+            <div class="card m-1">
+                <div class="card-body" v-bind:class="{ 'bg-light' : a.isDefault}" v-on:click="useThis(i)">
+                    <h6 class="card-title">Address #{{i + 1 }}</h6>
+                    <p class="card-text">
+                    <p>
+                        <ul class="list-unstyled">
+                            <li><strong>{{ a.name.toUpperCase() }}</strong> </li>
+                            <li>{{ a.street }}</li>
+                            <li>{{a.city}}, {{a.region}} - {{ a.postalCode }}, {{a.country}}</li>
+                        </ul>
+                    </p>
+                    @if (showOptions)
+                    {
+                        <small>
+                            <span v-if="a.isDefault">
+                                <i>Default address</i> @("|")
+                                <a href="#" v-bind:href="url(i)">Edit</a>
+                            </span>
+                            <span v-else>
+                                <a href="#" v-bind:href="url(i)">Edit</a> @("|")
+                                <a href="#" v-on:click="remove(i)">Remove</a> @("|")
+                                <a href="#" v-on:click="makeDefault(i)" v-on:click.prevent.self>Make Default</a>
+                            </span>
+                        </small>
+                    }
+                </div>
+            </div>
+        </div>
+        <div v-else class="p-3">
+            <p class="lead">No addresses registered so far.</p>
+        </div>
+    </div>
+</div>
+
+

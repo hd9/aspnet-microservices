@@ -22,7 +22,7 @@ namespace AccountSvc.Repositories
         // address
         private readonly string insAddress = "INSERT INTO address (account_id, name, is_default, street, city, region, country, postal_code, created_at, last_updated) values (@account_id, @name, @is_default, @street, @city, @region, @country, @postal_code, sysdate(), sysdate());";
         private readonly string updAddress = "UPDATE address set name = @name, street = @street, city = @city, region = @region, postal_code = @postal_code, country = @country, last_updated = sysdate() WHERE id = @id";
-        private readonly string updDefaultAddress = "UPDATE address set is_default = true where id = @id and account_id = @account_id";
+        private readonly string updDefaultAddress = "UPDATE address set is_default = false where account_id = @account_id; UPDATE address set is_default = true where id = @id and account_id = @account_id";
         private readonly string delAddress = "DELETE FROM address WHERE id = @id";
         private readonly string queryAddressById = "SELECT * FROM address WHERE id = @id";
         private readonly string queryGetAddressesByAccountId = "SELECT * FROM address WHERE account_id = @account_id";

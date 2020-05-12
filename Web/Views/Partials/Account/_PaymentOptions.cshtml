@@ -1,0 +1,66 @@
+﻿@{
+    var showOptions = (ViewData["ShowOptions"] ?? "").ToString() == "True";
+    var smWidth = ViewData["SmWidth"] ?? "4";
+    var clickeable = showOptions ? "" : "clickeable";
+    var useThis = showOptions ? "" : "v-on:click=\"useThis(i)\"";
+}
+
+<div id="pmtOptions" ref="pmtOptions">
+
+    @if (!showOptions)
+    {
+        <h4>Payment Information</h4>
+        <div v-if="hasData">
+            Please, choose a payment from the options below.<br />
+            <small>
+                Any of the below?
+                <a asp-controller="Account" asp-action="Payments" target="_blank">Update your payment information</a>
+            </small>
+        </div>
+        <div v-else>
+            No payments registered so far.<br />
+            <small>
+                Please <a asp-controller="Account" asp-action="Payments" target="_blank">update your payment information </a>
+                to proceed with checkout.
+            </small>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-@smWidth @clickeable" v-for="(p,i) in pmtInfos" v-if="pmtInfos.length > 0" @Html.Raw(useThis)>
+            <div class="card m-1">
+                <div class="card-body" v-bind:class="{ 'bg-light' : p.isDefault}">
+                    <h6 class="card-title">Payment Method #{{i + 1 }}</h6>
+                    <p class="card-text">
+                    <p>
+                        <ul class="list-unstyled">
+                            <li><strong>{{ p.name }}</strong> </li>
+                            <li>{{ method(p.method) }} {{ p.number }}</li>
+                            <li>Exp: {{ expDate(p.expDate) }} </li>
+                        </ul>
+                    </p>
+                    @if (showOptions)
+                    {
+                        <small>
+                            <span v-if="p.isDefault">
+                                <i>Default Payment Method</i> @("|")
+                                <a href="#" v-bind:href="url(i)">Edit</a>
+                            </span>
+                            <span v-else>
+                                <a href="#" v-bind:href="url(i)">Edit</a> @("|")
+                                <a href="#" v-on:click="remove(i)">Remove</a> @("|")
+                                <a href="#" v-on:click="makeDefault(i)">Make Default</a>
+                            </span>
+                        </small>
+                    }
+                </div>
+            </div>
+        </div>
+        <div v-else class="p-3">
+            <p class="lead">No payment methods registered so far.</p>
+        </div>
+    </div>
+
+</div>
+
+
+

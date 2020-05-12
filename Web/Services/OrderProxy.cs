@@ -18,21 +18,16 @@ namespace Web.Services
         private readonly ILogger<OrderProxy> _logger;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _cfg;
-        private readonly StoreSettings _storeSettings;
 
         public OrderProxy(HttpClient httpClient, IConfiguration cfg, ILogger<OrderProxy> logger)
         {
             _logger = logger;
             _httpClient = httpClient;
             _cfg = cfg;
-            _storeSettings = Site.StoreSettings;
         }
 
         public async Task Submit(Order order)
         {
-            order.Currency = _storeSettings.Currency;
-            order.Tax = _storeSettings.Tax;
-
             var url = $"{_cfg["Services:Order"]}/orders/submit";
             _logger.LogInformation($"Submitting order at '{url}':");
 

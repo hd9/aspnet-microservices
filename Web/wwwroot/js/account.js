@@ -108,8 +108,8 @@ const myOrdersApp = new Vue({
     }
 })
 
-var addresses = new Vue({
-    el: '#addresses',
+var addrOptionsApp = new Vue({
+    el: '#addrOptions',
     data: {
         addresses: []
     },
@@ -119,19 +119,19 @@ var addresses = new Vue({
                 var id = this.addresses[i].id;
                 axios.delete('/api/account/address/' + id)
                     .then(function (r) {
-                        addresses.addresses.splice(i, 1);
+                        addrOptionsApp.addresses.splice(i, 1);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             }
         },
-        makeDefault: function (i) {
+        makeDefault: function (i, e) {
             if (confirm('Are you sure you want to make this address primary?')) {
                 var id = this.addresses[i].id;
                 axios.put('/api/account/address/' + id)
                     .then(function (r) {
-                        var arr = addresses.addresses;
+                        var arr = addrOptionsApp.addresses;
                         arr.forEach(a => a.isDefault = false);
                         arr[i].isDefault = true;
                     })
@@ -139,20 +139,31 @@ var addresses = new Vue({
                         console.log(error);
                     });
             }
+
+            e.preventDefault();
         },
         url: function (i) {
             var id = this.addresses[i].id;
             return '/account/address/edit/' + id;
+        },
+        useThis: function (i) {
+            this.addresses.forEach(el => el.isDefault = false);
+            this.addresses[i].isDefault = true;
+        }
+    },
+    computed: {
+        selectedId: function () {
+            return this.addresses.find(el => el.isDefault).id;
         }
     },
     mounted() {
-        if (!this.$refs.addresses)
+        if (!this.$refs.addrOptions)
             return;
 
         axios.get('/api/account/addresses')
             .then(function (r) {
                 if (r && r.data) {
-                    addresses.addresses = r.data.map(r => r);
+                    addrOptionsApp.addresses = r.data.map(r => r);
                 }
             })
             .catch(function (error) {
@@ -162,10 +173,11 @@ var addresses = new Vue({
 });
 
 
-var pmtsApp = new Vue({
-    el: '#pmts',
+var pmtOptionsApp = new Vue({
+    el: '#pmtOptions',
     data: {
-        pmtInfos: []
+        pmtInfos: [],
+        hasData: false
     },
     methods: {
         remove: function (i) {
@@ -173,19 +185,19 @@ var pmtsApp = new Vue({
                 var id = this.pmtInfos[i].id;
                 axios.delete('/api/account/payment/' + id)
                     .then(function (r) {
-                        pmtsApp.pmtInfos.splice(i, 1);
+                        pmtOptionsApp.pmtInfos.splice(i, 1);
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             }
         },
-        makeDefault: function (i) {
-            if (confirm('Are you sure you want to make this payment method primary?')) {
+        makeDefault: function (i, e) {
+            if (confirm('Are you sure you want to make this payment method default?')) {
                 var id = this.pmtInfos[i].id;
                 axios.put('/api/account/payment/' + id)
                     .then(function (r) {
-                        var arr = pmtsApp.pmtInfos;
+                        var arr = pmtOptionsApp.pmtInfos;
                         arr.forEach(a => a.isDefault = false);
                         arr[i].isDefault = true;
                     })
@@ -211,16 +223,27 @@ var pmtsApp = new Vue({
                 default:
                     return 'MasterCard';
             }
+        },
+        useThis: function (i) {
+            this.pmtInfos.forEach(el => el.isDefault = false);
+            this.pmtInfos[i].isDefault = true;
+        }
+    },
+    computed: {
+        selectedId: function () {
+            var pmtInfo = this.pmtInfos.find(el => el.isDefault);
+            return pmtInfo ? pmtInfo.id : null;
         }
     },
     mounted() {
-        if (!this.$refs.pmts)
+        if (!this.$refs.pmtOptions)
             return;
 
         axios.get('/api/account/payments')
             .then(function (r) {
                 if (r && r.data) {
-                    pmtsApp.pmtInfos = r.data.map(r => r);
+                    pmtOptionsApp.pmtInfos = r.data.map(r => r);
+                    pmtOptionsApp.hasData = r.data.length > 0;
                 }
             })
             .catch(function (error) {
@@ -228,3 +251,20 @@ var pmtsApp = new Vue({
             });
     }
 });
+
+var checkoutCartApp = new Vue({
+    el: '#checkoutCart',
+    methods: {
+        submit: function () {
+            var addrId = addrOptionsApp.selectedId;
+            var pmtId = pmtOptionsApp.selectedId;
+
+            if (!addrId || !pmtId) {
+                alert('Please, select an address and a payment method');
+                return;
+            }
+
+            window.location = `/cart/review?addrId=${encodeURI(addrId)}&pmtId=${encodeURI(pmtId)}`;
+        }
+    }
+})
