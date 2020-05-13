@@ -18,17 +18,23 @@ namespace NewsletterSvc.Services
             _bus = bus;
         }
 
-        public async Task<IList<Signup>> GetAll()
+        public async Task<IList<Signup>> GetSignups(int recs = 10)
         {
-            return await _repo.GetAll();
+            return await _repo.GetSignups(recs);
         }
 
         public async Task RegistrerSignup(Signup s)
         {
-            if (s == null) return;
+            if (s == null)
+                return;
 
-            await _repo.RegistrerSignup(s);
-            await _bus.Publish(new NewsletterSubscribed { Name = s.Name, Email = s.Email });
+            await _repo.Insert(s);
+
+            await _bus.Publish(
+                new NewsletterSubscribed {
+                    Name = s.Name,
+                    Email = s.Email
+                });
         }
     }
 }

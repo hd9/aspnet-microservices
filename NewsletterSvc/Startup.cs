@@ -29,12 +29,9 @@ namespace NewsletterSvc
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var db = InitDb();
-
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddSingleton<IMongoClient>(x => db);
-            services.AddTransient<INewsletterRepository, NewsletterRepository>();
+            services.AddTransient<INewsletterRepository>(x => new NewsletterRepository(Configuration["ConnectionString"]));
             services.AddTransient<INewsletterSvc, Svc.NewsletterSvc>();
 
             services.AddMassTransit(x =>
@@ -67,13 +64,7 @@ namespace NewsletterSvc
                 endpoints.MapControllers();
             });
 
-
             logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
-        }
-
-        private MongoClient InitDb()
-        {
-            return new MongoClient(cfg.MongoDb.ConnectionString, cfg.MongoDb.Db, cfg.MongoDb.Collection);
         }
     }
 }

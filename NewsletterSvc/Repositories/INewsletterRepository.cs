@@ -6,7 +6,7 @@ namespace NewsletterSvc.Repositories
 {
     public interface INewsletterRepository
     {
-        Task<IList<Signup>> GetAll();
-        Task RegistrerSignup(Signup s);
+        Task Insert(Signup s);
+        Task<List<Signup>> GetSignups(int recs);
     }
 }

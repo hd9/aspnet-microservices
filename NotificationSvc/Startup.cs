@@ -1,4 +1,3 @@
-using Core.Infrastructure.Options;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,11 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NotificationSvc.Consumers;
-using NotificationSvc.Infrastructure;
 using NotificationSvc.Infrastructure.Options;
 using NotificationSvc.Repositories;
 using NotificationSvc.Services;
-using System.Threading.Tasks;
 using Svc = NotificationSvc.Services;
 
 namespace NotificationSvc
@@ -36,6 +33,7 @@ namespace NotificationSvc
             services.AddTransient<INotificationSvc, Svc.NotificationSvc>();
 
             var repo = new NotificationRepository(cfg.ConnectionString);
+
             services.AddMassTransit(x =>
             {
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>

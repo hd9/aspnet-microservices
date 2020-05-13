@@ -24,8 +24,7 @@ namespace NewsletterSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            var instruction = @"The service is alive! To test it, run:\ncurl -X POST ""http://<your-url>/signup"" -H 'Content-Type: application/json' -d' { ""Name"": ""tst01"", ""Email"": ""tst01 @mail.com"" }'";
-            return Ok(instruction);
+            return Ok("NewsletterSvc is alive!");
         }
 
         [Route("/ping")]
@@ -43,11 +42,19 @@ namespace NewsletterSvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Signup(Signup s)
         {
-            if (s == null) return BadRequest();
+            if (s == null)
+                return BadRequest();
+
             await _svc.RegistrerSignup(s);
 
             return Ok();
         }
-        
+
+        [Route("/signups")]
+        public async Task<IActionResult> GetSignups()
+        {
+            var signups = await _svc.GetSignups();
+            return Ok(signups);
+        }
     }
 }

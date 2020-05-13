@@ -235,7 +235,24 @@ CREATE TABLE shipping_info (
 
 ## NewsletterSvc
 Run the Newsletter db with:
-`docker run -d --name mongo-nlsvc -p 32768:27017 mongo`
+`docker run -d --name mysql-newslettersvc -p 3312:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3312`
+
+Create a database and table:
+```sql
+create database newsletterdb;
+use newsletterdb;
+
+CREATE TABLE newsletter (
+    id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(1000)   NOT NULL,
+    email       VARCHAR(300)    NOT NULL,
+    created_at  DATETIME        NOT NULL
+);
+```
+
 
 ## NotificationSvc
 Run the Notification db with:
@@ -243,7 +260,6 @@ Run the Notification db with:
 
 Connect to the database with:
 `mysql --protocol=tcp -u root -ptodo -P 3311`
-
 
 Create a database and table:
 ```sql

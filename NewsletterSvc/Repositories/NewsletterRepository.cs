@@ -1,5 +1,7 @@
 ﻿using Core.Models.Events;
+using Dapper;
 using MassTransit;
+using MySql.Data.MySqlClient;
 using NewsletterSvc.Infrastructure;
 using NewsletterSvc.Models;
 using System;
@@ -11,21 +13,36 @@ namespace NewsletterSvc.Repositories
 {
     public class NewsletterRepository : INewsletterRepository
     {
-        private readonly IMongoClient db;
+        private readonly string _connStr;
+        private readonly string insSignup = "INSERT INTO newsletter (name, email, created_at) values (@name, @email, sysdate())";
+        private readonly string selSignup = "SELECT * FROM newsletter ORDER BY created_at DESC limit @limit";
 
-        public NewsletterRepository(IMongoClient db)
+        public NewsletterRepository(string connStr)
         {
-            this.db = db;
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+            _connStr = connStr;
         }
 
-        public async Task<IList<Signup>> GetAll()
+        public async Task Insert(Signup s)
         {
-            return await db.GetAll<Signup>();
+            if (s == null)
+                return;
+
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                var cnt = await conn.ExecuteAsync(insSignup, new { s.Name, s.Email });
+            }
         }
 
-        public async Task RegistrerSignup(Signup s)
+        public async Task<List<Signup>> GetSignups(int recs)
         {
-            await db.Insert(s);
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                return (await conn.QueryAsync<Signup>(
+                    selSignup,
+                    new { limit = recs }
+                )).ToList();
+            }
         }
     }
 }
