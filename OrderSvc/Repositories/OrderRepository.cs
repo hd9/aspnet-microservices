@@ -27,7 +27,6 @@ namespace OrderSvc.Repositories
             var orderDictionary = new Dictionary<int, Order>();
             using (var conn = new MySqlConnection(_connStr))
             {
-                //return await conn.QueryAsync<Order>(queryByAcctId, new { accountId });
                 var orders = await conn.QueryAsync<Order, LineItem, Order>(queryByAcctId, (order, lineItem) =>
                 {
                     Order orderEntry;

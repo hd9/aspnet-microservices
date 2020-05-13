@@ -1,10 +1,10 @@
 ﻿<div id="nlApp" class="bg-light p-3 mt-2">
     <h4 class="border-bottom py-2">Newsletter</h4>
-    <p class="small">
-        Want to subscribe to our newsletter?<br />
-        Signups managed by <span class="badge badge-success">Newsletter Microservice</span>.
-    </p>
     <div v-if="!submitted">
+        <p class="small">
+            Want to subscribe to our newsletter?<br />
+            List managed by our <span class="badge badge-success">Newsletter Microservice</span>.
+        </p>
         <div class="my-2">
             <form>
                 <div class="form-group">
@@ -22,7 +22,7 @@
     </div>
     <div v-if="submitted" style="min-height:300px">
         <h6>Thanks for submitting!</h6>
-        <small>Click <a href="#" v-on:click="resubmit">here</a> to submit another email.</small>
+        <small>Click <a href="#" v-on:click="resubmit" v-on:click.prevent>here</a> to submit another email.</small>
     </div>
 
 </div>

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace Web.Services
 {
@@ -23,13 +24,17 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public void Signup(NewsletterSignUp signup)
+        public async Task Signup(NewsletterSignUp signup)
         {
             var url = $"{cfg["Services:Newsletter"]}/signup";
             logger.LogInformation($"[NewsletterSvc] Posting new signup form to: ${url}");
 
-            var data = new StringContent(JsonConvert.SerializeObject(signup), System.Text.Encoding.UTF8, "application/json");
-            var resp = httpClient.PostAsync(url, data).GetAwaiter().GetResult();
+            var data = new StringContent(
+                JsonConvert.SerializeObject(signup), 
+                Encoding.UTF8, 
+                "application/json");
+            
+            var resp = await httpClient.PostAsync(url, data);
 
             logger.LogInformation($"[NewsletterSvc] Signup response | Status Code: ${resp.StatusCode}, Headers: {resp.Headers}");
         }

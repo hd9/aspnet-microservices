@@ -1,62 +1,79 @@
-﻿using NotificationSvc.Infrastructure.Options;
-using System;
-using System.Threading.Tasks;
-using Core;
-using Core.Models;
+using Core.Infrastructure.Options;
 using MassTransit;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NotificationSvc.Consumers;
 using NotificationSvc.Infrastructure;
-using NotificationSvc.Models;
-using NotificationSvc.Services;
+using NotificationSvc.Infrastructure.Options;
 using NotificationSvc.Repositories;
+using NotificationSvc.Services;
+using System.Threading.Tasks;
+using Svc = NotificationSvc.Services;
 
 namespace NotificationSvc
 {
     public class Startup
     {
-        public async Task Run()
+
+        public IConfiguration Configuration { get; }
+        private readonly AppConfig cfg;
+
+        public Startup(IConfiguration configuration)
         {
-            var cfg = InitOptions<AppConfig>();
-
-            await InitMassTransit(cfg);
-
-            Console.WriteLine("NotificationSvc running.\nPress any key to exit");
-            await Task.Run(() => Console.ReadKey());
+            Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
-        private async static Task InitMassTransit(AppConfig cfg)
+        public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+            services.AddRouting(x => x.LowercaseUrls = true);
+            services.AddTransient<INotificationRepository>(x => new NotificationRepository(Configuration["ConnectionString"]));
+            services.AddTransient<INotificationSvc, Svc.NotificationSvc>();
+
             var repo = new NotificationRepository(cfg.ConnectionString);
-            var bus = Bus.Factory.CreateUsingRabbitMq(sbc =>
+            services.AddMassTransit(x =>
             {
-                sbc.Host(cfg.MassTransit.Host);
-                sbc.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
-                    e.Consumer<NewsletterSubscribedConsumer>();
-                    e.Consumer<MailSenderConsumer>(() => new MailSenderConsumer(cfg.Mail, repo));
-                });
+                    c.UseHealthCheck(context);
+                    c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                    {
+                        e.Consumer<NewsletterSubscribedConsumer>();
+                        e.Consumer(() => new MailSenderConsumer(cfg.Mail, repo));
+                    });
+                }));
             });
 
-            await bus.StartAsync();
+            services.AddMassTransitHostedService();
         }
 
-        private static T InitOptions<T>()
-            where T : new()
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            var config = InitConfig();
-            return config.Get<T>();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
+
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
         }
 
-        private static IConfigurationRoot InitConfig()
-        {
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile($"appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env}.json", true, true)
-                .AddEnvironmentVariables();
-
-            return builder.Build();
-        }
     }
 }

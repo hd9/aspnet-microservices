@@ -11,16 +11,14 @@ namespace NewsletterSvc.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class SignupController : ControllerBase
+    public class NewsletterController : ControllerBase
     {
 
-        private readonly INewsletterSvc svc;
-        private readonly IConfiguration cfg;
+        private readonly INewsletterSvc _svc;
 
-        public SignupController(INewsletterSvc svc, IConfiguration cfg)
+        public NewsletterController(INewsletterSvc svc)
         {
-            this.svc = svc;
-            this.cfg = cfg;
+            _svc = svc;
         }
 
         [Route("/help")]
@@ -28,6 +26,12 @@ namespace NewsletterSvc.Controllers
         {
             var instruction = @"The service is alive! To test it, run:\ncurl -X POST ""http://<your-url>/signup"" -H 'Content-Type: application/json' -d' { ""Name"": ""tst01"", ""Email"": ""tst01 @mail.com"" }'";
             return Ok(instruction);
+        }
+
+        [Route("/ping")]
+        public IActionResult Ping()
+        {
+            return Ok();
         }
 
         /// <summary>
@@ -40,7 +44,7 @@ namespace NewsletterSvc.Controllers
         public async Task<IActionResult> Signup(Signup s)
         {
             if (s == null) return BadRequest();
-            await svc.RegistrerSignup(s);
+            await _svc.RegistrerSignup(s);
 
             return Ok();
         }

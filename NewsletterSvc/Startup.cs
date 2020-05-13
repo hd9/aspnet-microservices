@@ -30,14 +30,22 @@ namespace NewsletterSvc
         public void ConfigureServices(IServiceCollection services)
         {
             var db = InitDb();
-            var bus = InitMassTransit();
 
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddSingleton<IMongoClient>(x => db);
-            services.AddSingleton<IBusControl>(x => bus);
             services.AddTransient<INewsletterRepository, NewsletterRepository>();
             services.AddTransient<INewsletterSvc, Svc.NewsletterSvc>();
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                {
+                    c.Host(cfg.MassTransit.Host);
+                }));
+            });
+
+            services.AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -66,18 +74,6 @@ namespace NewsletterSvc
         private MongoClient InitDb()
         {
             return new MongoClient(cfg.MongoDb.ConnectionString, cfg.MongoDb.Db, cfg.MongoDb.Collection);
-        }
-
-        private IBusControl InitMassTransit()
-        {
-            var bus = Bus.Factory.CreateUsingRabbitMq(sbc =>
-            {
-                sbc.Host(cfg.MassTransit.Host);
-            });
-
-            bus.Start();
-
-            return bus;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace NotificationSvc.Consumers
             msg.To.Add(_cfg.To);
 
             await smtpClient.SendMailAsync(msg);
-            await _repo.LogNotification(name, email, 'E');
+            await _repo.Insert(name, email, 'E');
         }
 
         private string FormatBody(string name, string email)

@@ -26,10 +26,12 @@ namespace Web.Controllers
         /// <param name="signup"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Signup([FromBody] NewsletterSignUp signup)
+        public async Task<IActionResult> Signup([FromBody] NewsletterSignUp signup)
         {
-            if (signup == null) return BadRequest();
-            _nlSvc.Signup(signup);
+            if (signup == null || !signup.IsValid())
+                return BadRequest();
+
+            await _nlSvc.Signup(signup);
 
             return Ok();
         }

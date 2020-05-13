@@ -38,9 +38,7 @@ docker pull mysql:latest
 
 ## RabbitMQ
 Run RabbitMQ with:
-docker run --name r1 -d       -p 5672:5672 rabbitmq
-docker run --name r1 -d -h rh -p 5672:5672 rabbitmq
-
+`docker run --name rabbitmq -d -p 5672:5672 rabbitmq`
 ## CatalogSvc
 Holds catalog and product information.
 
@@ -252,7 +250,7 @@ Create a database and table:
 create database notificationdb;
 use notificationdb;
 
-CREATE TABLE notifications (
+CREATE TABLE notification (
     id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(1000)   NOT NULL,
     email       VARCHAR(300)    NOT NULL,

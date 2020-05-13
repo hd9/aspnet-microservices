@@ -16,10 +16,11 @@ namespace NotificationSvc.Consumers
         {
             await Console.Out.WriteLineAsync(context.Message.ToString());
 
-            // todo :: do your stuff
-
-
-            await context.Publish(new SendMail { Email = context.Message.Email, Name = context.Message.Name });
+            await context.Publish(
+                new SendMail { 
+                    Email = context.Message.Email, 
+                    Name = context.Message.Name 
+                });
         }
     }
 }
