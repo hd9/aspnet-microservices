@@ -168,11 +168,13 @@ CREATE TABLE event_type (
     name                  VARCHAR(1000)   NULL
 );
 
-CREATE TABLE log (
+CREATE TABLE account_history (
     id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    account_id            INT             NULL,
     event_type_id         TINYINT         NOT NULL,
     requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
     ref_id                INT             NULL COMMENT 'Reference record ID. Ex: payment_info_id',
+    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
     ip                    VARCHAR(100)    NULL,
     info                  VARCHAR(1000)   NULL,
     created_at            DATETIME        NOT NULL,
@@ -195,7 +197,7 @@ values
 (11, 'Address Set Default'),
 (12, 'PaymentInfo Created'),
 (13, 'PaymentInfo Updated'),
-(14, 'PaymentInfo Removed');
+(14, 'PaymentInfo Removed'),
 (15, 'PaymentInfo Set Default');
 ```
 

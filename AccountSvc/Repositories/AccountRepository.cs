@@ -2,7 +2,6 @@
 using Core.Infrastructure.Extentions;
 using Dapper;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,8 +36,8 @@ namespace AccountSvc.Repositories
         private readonly string updDefaultPaymentInfo = "UPDATE payment_info SET is_default = false where account_id = @account_id; UPDATE payment_info SET is_default = true where id = @id AND account_id = @account_id";
 
         // log
-        private readonly string insLog = "insert into log (event_type_id, requested_by_id, ref_id, ip, info, created_at) values (@event_type_id, @requested_by_id, @ref_id, @ip, @info, sysdate());";
-        private readonly string selLog = "select * from log where requested_by_id=@account_id order by created_at DESC limit @limit";
+        private readonly string insAcctHistory = "insert into account_history (account_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@account_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
+        private readonly string selAcctHistory = "select * from account_history where account_id = @account_id order by created_at DESC limit @limit";
 
         public AccountRepository(string connStr)
         {
@@ -64,8 +63,8 @@ namespace AccountSvc.Repositories
                     });
 
                     var accountId = await GetLastInsertId<string>(conn);
-                    await InsertLog(conn, EventType.AccountCreated, accountId, data: $"name '{cmd.Name}' and email '{cmd.Email}'");
-                    await InsertLog(conn, EventType.PasswordCreated, accountId);
+                    await InsertLog(conn, accountId, EventType.AccountCreated, data: $"name '{cmd.Name}' and email '{cmd.Email}'");
+                    await InsertLog(conn, accountId, EventType.PasswordCreated);
 
                     await conn.ExecuteAsync(insAddress, new
                     {
@@ -83,9 +82,10 @@ namespace AccountSvc.Repositories
 
                     await InsertLog(
                         conn, 
-                        EventType.AddressCreated, 
                         accountId, 
-                        addrId, 
+                        EventType.AddressCreated, 
+                        refId: addrId, 
+                        refType: RefType.Address,
                         data: $"{cmd.Street}, {cmd.City} - {cmd.Region}, {cmd.Country}");
 
                     await transaction.CommitAsync();
@@ -105,10 +105,9 @@ namespace AccountSvc.Repositories
                 });
 
                await InsertLog(
-                   conn, 
+                   conn,
+                   cmd.Id,
                    EventType.AccountUpdated, 
-                   cmd.Id, 
-                   cmd.Id, 
                    data: $"name '{cmd.Name}' and email '{cmd.Email}'");
             }
         }
@@ -141,9 +140,8 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.PasswordUpdated,
                    cmd.AccountId,
-                   cmd.AccountId);
+                   EventType.PasswordUpdated);
             }
         }
 
@@ -167,9 +165,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.AddressCreated,
                    cmd.AccountId.ToString(),
-                   addrId,
+                   EventType.AddressCreated,
+                   refId: addrId,
+                   refType: RefType.Address,
                    data: $"{cmd.Street}, {cmd.City} - {cmd.Region}, {cmd.Country}");
             }
         }
@@ -192,9 +191,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.AddressUpdated,
                    addr.AccountId.ToString(),
-                   addr.Id.ToString(),
+                   EventType.AddressUpdated,
+                   refId: addr.Id.ToString(),
+                   refType: RefType.Address,
                    data: $"{addr.Street}, {addr.City} - {addr.Region}, {addr.Country}");
             }
         }
@@ -203,14 +203,14 @@ namespace AccountSvc.Repositories
         {
             using (var conn = new MySqlConnection(_connStr))
             {
-                // todo :: log account history
                 var addr = await conn.QuerySingleOrDefaultAsync<Address>(selAddressById, new { id = addressId });
 
                 await InsertLog(
                    conn,
-                   EventType.AddressRemoved,
                    addr.AccountId.ToString(),
-                   addr.Id.ToString(),
+                   EventType.AddressRemoved,
+                   refId: addr.Id.ToString(),
+                   refType: RefType.Address,
                    data: addr != null ? $"{addr.Street}, {addr.City} - {addr.Region}, {addr.Country}" : null
                 );
 
@@ -251,9 +251,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.AddressSetDefault,
                    acctId,
-                   addressId.ToString(),
+                   EventType.AddressSetDefault,
+                   refId: addressId.ToString(),
+                   refType: RefType.Address,
                    data: addr != null ? $"{addr.Street}, {addr.City} - {addr.Region}, {addr.Country}" : null
                 );
             }
@@ -278,9 +279,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.PaymentInfoCreated,
                    pmtInfo.AccountId.ToString(),
-                   pmtInfoId,
+                   EventType.PaymentInfoCreated,
+                   refId: pmtInfoId,
+                   refType: RefType.PaymentInfo,
                    data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
                 );
             }
@@ -313,9 +315,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.PaymentInfoUpdated,
                    pmtInfo.AccountId.ToString(),
-                   pmtInfo.Id.ToString(),
+                   EventType.PaymentInfoUpdated,
+                   refId: pmtInfo.Id.ToString(),
+                   refType: RefType.PaymentInfo,
                    data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
                 );
             }
@@ -331,9 +334,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.PaymentInfoRemoved,
                    pmtInfo.AccountId.ToString(),
-                   pmtInfo.Id.ToString(),
+                   EventType.PaymentInfoRemoved,
+                   refId: pmtInfo.Id.ToString(),
+                   refType: RefType.PaymentInfo,
                    data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
                 );
             }
@@ -370,9 +374,10 @@ namespace AccountSvc.Repositories
 
                 await InsertLog(
                    conn,
-                   EventType.PaymentInfoSetDefault,
                    pmtInfo.AccountId.ToString(),
-                   pmtInfo.Id.ToString(),
+                   EventType.PaymentInfoSetDefault,
+                   refId: pmtInfo.Id.ToString(),
+                   refType: RefType.PaymentInfo,
                    data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
                 );
             }
@@ -383,7 +388,7 @@ namespace AccountSvc.Repositories
             using (var conn = new MySqlConnection(_connStr))
             {
                 return (await conn.QueryAsync<AccountHistory>(
-                    selLog,
+                    selAcctHistory,
                     new { account_id = acctId, limit }
                 )).ToList();
             }
@@ -396,17 +401,21 @@ namespace AccountSvc.Repositories
 
         private async Task InsertLog(
             MySqlConnection conn,
+            string accountId,
             EventType et,
-            string requestedById,
-            string referenceId = null,
+            string requestedById = null,
+            string refId = null,
+            RefType? refType = null,
             string ip = null,
             string data = null)
         {
-            await conn.ExecuteAsync(insLog, new
+            await conn.ExecuteAsync(insAcctHistory, new
             {
+                account_id = accountId,
                 event_type_id = (int)et,
                 requested_by_id = requestedById,
-                ref_id = referenceId,
+                ref_id = refId,
+                ref_type_id = (int?)refType,
                 ip,
                 info = FormatMsg(et, requestedById, data)
             });
