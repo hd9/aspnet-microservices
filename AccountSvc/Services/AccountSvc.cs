@@ -107,5 +107,10 @@ namespace AccountSvc.Services
         {
             await _repo.SetDefaultPaymentInfo(accountId, pmtId);
         }
+
+        public async Task<IList<AccountHistory>> GetAccountHistory(string acctId)
+        {
+            return await _repo.GetAccountHistory(acctId);
+        }
     }
 }

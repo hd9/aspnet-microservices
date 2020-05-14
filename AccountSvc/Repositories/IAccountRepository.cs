@@ -23,5 +23,7 @@ namespace AccountSvc.Repositories
         Task RemovePaymentInfo(string pmtId);
         Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId);
         Task SetDefaultPaymentInfo(string accountId, int pmtId);
+        Task<IList<AccountHistory>> GetAccountHistory(string acctId, int limit = 10);
+
     }
 }

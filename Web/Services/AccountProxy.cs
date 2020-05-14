@@ -182,7 +182,7 @@ namespace Web.Services
                 await resp.Content.ReadAsStringAsync());
         }
 
-        public async Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId)
+        public async Task<IList<PaymentInfo>> GetPaymentInfos(string accountId)
         {
             var url = $"{_cfg["Services:Account"]}/account/payment/search?accountId={accountId}";
             _logger.LogInformation($"Getting pmtInfo by Id: '{url}'");
@@ -244,5 +244,15 @@ namespace Web.Services
             return resp.StatusCode;
         }
 
+        public async Task<IList<AccountHistory>> GetAccountHistory(string acctId)
+        {
+            var url = $"{_cfg["Services:Account"]}/account/history/{acctId}";
+            _logger.LogInformation($"Querying account history at '{url}'");
+
+            var resp = await _httpClient.GetAsync(url);
+
+            return JsonConvert.DeserializeObject<List<AccountHistory>>(
+                await resp.Content.ReadAsStringAsync());
+        }
     }
 }

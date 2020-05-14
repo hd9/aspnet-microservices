@@ -106,7 +106,7 @@ const myOrdersApp = new Vue({
                 console.log(error);
             });
     }
-})
+});
 
 var addrOptionsApp = new Vue({
     el: '#addrOptions',
@@ -266,5 +266,28 @@ var checkoutCartApp = new Vue({
 
             window.location = `/cart/review?addrId=${encodeURI(addrId)}&pmtId=${encodeURI(pmtId)}`;
         }
+    }
+});
+
+
+// account history
+const acctHistory = new Vue({
+    el: '#acctHistory',
+    data: {
+        history: []
+    },
+    mounted() {
+        if (!this.$refs.acctHistory)
+            return;
+
+        axios.get('/api/account/history')
+            .then(function (r) {
+                if (r && r.data) {
+                    acctHistory.history = r.data.map(h => h);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 })

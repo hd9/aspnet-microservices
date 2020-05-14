@@ -1,0 +1,19 @@
+﻿<div class="row">
+    <div class="my-3 col-sm-12">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col" style="min-width:80%">Event</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="h in history">
+                    <td>{{ h.info }}</td>
+                    <td>{{ new Date(h.createdAt).toDateString() }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

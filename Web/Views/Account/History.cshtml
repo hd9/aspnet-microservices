@@ -1,5 +1,14 @@
-﻿
-<h2>Account History</h2>
-<p>todo</p>
+﻿@{
+    ViewData["Title"] = "Account History";
+}
+
+<div id="acctHistory" class="my-lg-3" ref="acctHistory">
+    <h4 class="display-4">@ViewData["Title"]</h4>
+    <p class="lead">These are the last events for your account.</p>
+    <partial name="~/Views/Partials/Account/_History.cshtml" />
+    <div>
+        <a asp-action="Index" class="btn btn-primary">Back to Account</a>
+    </div>
+</div>
 
 <script src="~/js/account.js"></script>

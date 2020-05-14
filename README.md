@@ -111,7 +111,8 @@ db.Categories.insertMany([
 ```
 
 ## AccountSvc
-docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+Run the MySql image for the account service:
+`docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
 `mysql --protocol=tcp -u root -p -P 3307`
@@ -161,6 +162,41 @@ CREATE TABLE payment_info (
     FOREIGN KEY (account_id)
        REFERENCES account(id)
 );
+
+CREATE TABLE event_type (
+    id                    TINYINT         NOT NULL PRIMARY KEY,
+    name                  VARCHAR(1000)   NULL
+);
+
+CREATE TABLE log (
+    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    event_type_id         TINYINT         NOT NULL,
+    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
+    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: payment_info_id',
+    ip                    VARCHAR(100)    NULL,
+    info                  VARCHAR(1000)   NULL,
+    created_at            DATETIME        NOT NULL,
+    FOREIGN KEY (event_type_id)
+       REFERENCES event_type(id)
+);
+
+insert into event_type
+values
+(1, 'Account Created'),
+(2, 'Account Updated'),
+(3, 'Account Closed'),
+(4, 'Password Created'),
+(5, 'Password Updated'),
+(6, 'Password Reset'),
+(7, 'Forgot Password'),
+(8, 'Address Created'),
+(9, 'Address Updated'),
+(10, 'Address Removed'),
+(11, 'Address Set Default'),
+(12, 'PaymentInfo Created'),
+(13, 'PaymentInfo Updated'),
+(14, 'PaymentInfo Removed');
+(15, 'PaymentInfo Set Default');
 ```
 
 ## OrderSvc

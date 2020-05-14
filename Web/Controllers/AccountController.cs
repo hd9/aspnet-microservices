@@ -445,7 +445,7 @@ namespace Web.Controllers
         public async Task<IList<PaymentInfo>> GetPayments()
         {
             var acctId = User.FindFirstValue("Id");
-            return await _acctSvc.GetPaymentInfosByAccountId(acctId);
+            return await _acctSvc.GetPaymentInfos(acctId);
         }
 
         [HttpDelete]
@@ -471,6 +471,13 @@ namespace Web.Controllers
                 return Ok();
 
             return BadRequest();
+        }
+
+        [Route("/api/account/history")]
+        public async Task<IList<AccountHistory>> GetAccountHistory()
+        {
+            var acctId = User.FindFirstValue("Id");
+            return await _acctSvc.GetAccountHistory(acctId);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
