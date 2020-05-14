@@ -41,5 +41,11 @@ namespace OrderSvc.Models
         [StringLength(20)]
         public string Country { get; set; }
 
+        /// <summary>
+        /// Basic override for logging purposes
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() =>
+            $"Name: {Name}, Address: {Street}, {City} - {Region}, {Country}";
     }
 }

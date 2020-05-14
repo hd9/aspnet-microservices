@@ -15,5 +15,12 @@ namespace Core.Infrastructure.Extentions
                 !string.IsNullOrEmpty(val) : 
                 (val ?? "").Length >= minLength;
         }
+
+        public static string MaskCC(this string number)
+        {
+            return number.HasValue(4) ?
+                $"{number.Substring(0, 2)}-xxxx-xxxx-{number.Substring(number.Length - 2, 2)}" :
+                null;
+        }
     }
 }

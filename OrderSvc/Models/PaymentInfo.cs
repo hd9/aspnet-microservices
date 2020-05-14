@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Infrastructure.Extentions;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace OrderSvc.Models
@@ -37,5 +38,12 @@ namespace OrderSvc.Models
         [Required]
         [Range(1, 999)]
         public int CVV { get; set; }
+
+        /// <summary>
+        /// Basic override for logging purposes
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() =>
+            $"Name: {Name}, Type: {Method}, Number: {Number.MaskCC()}, Exp: {ExpDate.ToExpDate()}";
     }
 }

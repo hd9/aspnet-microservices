@@ -24,5 +24,12 @@ namespace OrderSvc.Models
         public List<LineItem> LineItems { get; set; }
         public PaymentInfo PaymentInfo { get; set; }
         public ShippingInfo ShippingInfo { get; set; }
+
+        /// <summary>
+        /// Basic override for logging purposes
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() =>
+            $"Id: '{Id}', AccountId: '{AccountId}', Price: {Currency} {TotalPrice}";
     }
 }

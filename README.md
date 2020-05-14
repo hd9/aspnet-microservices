@@ -269,6 +269,42 @@ CREATE TABLE shipping_info (
     FOREIGN KEY (payment_info_id)
        REFERENCES payment_info(id)
 );
+
+CREATE TABLE event_type (
+    id                    TINYINT         NOT NULL PRIMARY KEY,
+    name                  VARCHAR(1000)   NULL
+);
+
+CREATE TABLE order_history (
+    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id              INT             NULL,
+    event_type_id         TINYINT         NOT NULL,
+    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
+    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: PaymentInfo, ShippingInfo, etc',
+    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
+    ip                    VARCHAR(100)    NULL,
+    info                  VARCHAR(1000)   NULL,
+    created_at            DATETIME        NOT NULL,
+    FOREIGN KEY (event_type_id)
+       REFERENCES event_type(id)
+);
+
+insert into event_type
+values
+(1, 'Order Created'),
+(2, 'Order Updated'),
+(3, 'Order Cancelled'),
+(4, 'Order Approved'),
+(5, 'Order Shipped'),
+(6, 'Order Closed'),
+(10, 'Payment Submitted'),
+(11, 'Payment Requested'),
+(12, 'Payment Updated'),
+(13, 'Payment Authorized'),
+(14, 'Payment Declined'),
+(20, 'ShippingInfo Submitted'),
+(21, 'ShippingInfo Updated'),
+(22, 'ShippingInfo Removed');
 ```
 
 ## NewsletterSvc

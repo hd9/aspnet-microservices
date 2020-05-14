@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Infrastructure.Extentions;
 
 namespace OrderSvc.Repositories
 {
@@ -16,6 +17,10 @@ namespace OrderSvc.Repositories
         private readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, status, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @status, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
         private readonly string insLineItem = "insert into lineitem (order_id, name, price, qty) values (@order_id, @name, @price, @qty)";
         private readonly string queryByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
+
+        // order history
+        private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
+        private readonly string selOrderHistory = "select * from order_history where order_id = @order_id order by created_at DESC limit @limit";
 
         public OrderRepository(string connStr)
         {
@@ -67,7 +72,7 @@ namespace OrderSvc.Repositories
                         @status = (int)OrderStatus.Submitted
                     });
 
-                    order.Id = (await conn.QueryAsync<int>("select LAST_INSERT_ID();")).Single();
+                    order.Id = await GetLastInsertId<int>(conn);
 
                     // insert order lines
                     order.LineItems.ForEach(async (li) =>
@@ -81,6 +86,15 @@ namespace OrderSvc.Repositories
                         });
                     });
 
+                    await InsertLog(
+                        conn, 
+                        order.Id, 
+                        EventType.OrderCreated,
+                        order.AccountId.ToString(),
+                        data: order.ToString()
+                    );
+
+
                     // insert payment info
                     await conn.ExecuteAsync(insPmtInfo, new
                     {
@@ -93,7 +107,17 @@ namespace OrderSvc.Repositories
                         @method = (int)order.PaymentInfo.Method
                     });
 
-                    order.PaymentInfo.Id = (await conn.QueryAsync<int>("select LAST_INSERT_ID();")).Single();
+                    order.PaymentInfo.Id = await GetLastInsertId<int>(conn);
+
+                    await InsertLog(
+                        conn,
+                        order.Id,
+                        EventType.PaymentSubmitted,
+                        order.AccountId.ToString(),
+                        refId: order.PaymentInfo.Id,
+                        refType: RefType.PaymentInfo,
+                        data: order.PaymentInfo.ToString()
+                    );
 
                     // insert shipping info
                     await conn.ExecuteAsync(insShippingInfo, new
@@ -109,11 +133,65 @@ namespace OrderSvc.Repositories
                         @country = order.ShippingInfo.Country
                     });
 
+                    order.ShippingInfo.Id = await GetLastInsertId<int>(conn);
+                    await InsertLog(
+                        conn,
+                        order.Id,
+                        EventType.ShippingInfoSubmitted,
+                        order.AccountId.ToString(),
+                        refId: order.ShippingInfo.Id,
+                        refType: RefType.ShippingInfo,
+                        data: order.ShippingInfo.ToString()
+                    );
+
                     await transaction.CommitAsync();
                 }
             }
 
             return order.Id;
         }
+
+        private async Task<T> GetLastInsertId<T>(MySqlConnection conn)
+        {
+            return (await conn.QueryAsync<T>("select LAST_INSERT_ID();")).Single();
+        }
+
+        private async Task InsertLog(
+            MySqlConnection conn,
+            int orderId,
+            EventType et,
+            string requestedById,
+            int? refId = null,
+            RefType? refType = null,
+            string ip = null,
+            string data = null)
+        {
+            await conn.ExecuteAsync(insOrderHistory, new
+            {
+                order_id = orderId,
+                event_type_id = (int)et,
+                requested_by_id = requestedById,
+                ref_id = refId,
+                ref_type_id = (int?)refType,
+                ip,
+                info = FormatMsg(orderId, et, requestedById, data)
+            });
+        }
+
+        private string FormatMsg(int orderId, EventType et, string accountId, string data)
+        {
+            switch (et)
+            {
+                case EventType.OrderCreated:
+                    return $"Order created with {data}";
+                case EventType.PaymentSubmitted:
+                    return $"Payment submitted for Order {orderId}: {data}";
+                case EventType.ShippingInfoSubmitted:
+                    return $"Shipping information submitted for Order {orderId}: {data}";
+                default:
+                    return $"Order: {orderId} requested a {et}.{(data.HasValue() ? "with data: {data}" : "")}";
+            }
+        }
+
     }
 }
