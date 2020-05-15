@@ -1,9 +1,12 @@
-﻿using Core.Models.Events;
+﻿using Core.Commands;
+using Core.Events.Newsletter;
 using MassTransit;
+using NewsletterSvc.Infrastructure.Options;
 using NewsletterSvc.Models;
 using NewsletterSvc.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Infrastructure.Extentions;
 
 namespace NewsletterSvc.Services
 {
@@ -11,11 +14,13 @@ namespace NewsletterSvc.Services
     {
         private readonly INewsletterRepository _repo;
         private readonly IBusControl _bus;
+        private readonly EmailTemplate _mailOptions;
 
-        public NewsletterSvc(INewsletterRepository repo, IBusControl bus)
+        public NewsletterSvc(INewsletterRepository repo, IBusControl bus, EmailTemplate mailOptions)
         {
             _repo = repo;
             _bus = bus;
+            _mailOptions = mailOptions;
         }
 
         public async Task<IList<Signup>> GetSignups(int recs = 10)
@@ -29,6 +34,16 @@ namespace NewsletterSvc.Services
                 return;
 
             await _repo.Insert(s);
+
+            await _bus.Publish(
+                new SendMail
+                {
+                    ToName = s.Name,
+                    Email = s.Email,
+                    FromName = _mailOptions.FromName,
+                    Subject = _mailOptions.Subject,
+                    Body = _mailOptions.Body.FormatWith(s.Name)
+                });
 
             await _bus.Publish(
                 new NewsletterSubscribed {

@@ -38,12 +38,10 @@ namespace NotificationSvc
             {
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
-                    c.UseHealthCheck(context);
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.Consumer<NewsletterSubscribedConsumer>();
-                        e.Consumer(() => new MailSenderConsumer(cfg.Mail, repo));
+                        e.Consumer(() => new SendMailConsumer(repo, cfg.SmtpOptions));
                     });
                 }));
             });

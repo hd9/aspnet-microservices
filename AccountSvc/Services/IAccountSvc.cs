@@ -14,6 +14,7 @@ namespace AccountSvc.Services
         Task<Address> GetAddressById(string addrId);
         Task AddAddress(Address addr);
         Task UpdateAddress(Address addr);
+        Task SubscribeToNewsletter(string email);
         Task RemoveAddress(string addressId);
         Task<IList<Address>> GetAddressesByAccountId(string acctId);
         Task SetDefultAddress(string acctId, int addressId);

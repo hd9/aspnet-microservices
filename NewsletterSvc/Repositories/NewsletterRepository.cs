@@ -1,10 +1,6 @@
-﻿using Core.Models.Events;
-using Dapper;
-using MassTransit;
+﻿using Dapper;
 using MySql.Data.MySqlClient;
-using NewsletterSvc.Infrastructure;
 using NewsletterSvc.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -5,7 +5,8 @@ namespace NewsletterSvc.Infrastructure.Options
 {
     public class AppConfig
     {
-        public MongoOptions MongoDb { get; set; } 
+        public string ConnectionString { get; set; }
         public MassTransitOptions MassTransit { get; set; } 
+        public EmailTemplate EmailTemplate { get; set; } 
     }
 }

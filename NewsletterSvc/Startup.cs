@@ -31,8 +31,9 @@ namespace NewsletterSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<INewsletterRepository>(x => new NewsletterRepository(Configuration["ConnectionString"]));
+            services.AddTransient<INewsletterRepository>(x => new NewsletterRepository(cfg.ConnectionString));
             services.AddTransient<INewsletterSvc, Svc.NewsletterSvc>();
+            services.AddSingleton<EmailTemplate>(cfg.EmailTemplate);
 
             services.AddMassTransit(x =>
             {

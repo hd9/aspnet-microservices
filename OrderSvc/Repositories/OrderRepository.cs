@@ -20,7 +20,6 @@ namespace OrderSvc.Repositories
 
         // order history
         private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
-        private readonly string selOrderHistory = "select * from order_history where order_id = @order_id order by created_at DESC limit @limit";
 
         public OrderRepository(string connStr)
         {

@@ -7,17 +7,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Svc = RecommendationSvc.Services;
+using MassTransit;
+using RecommendationSvc.Infrastructure.Options;
 
 namespace RecommendationSvc
 {
     public class Startup
     {
-
         public IConfiguration Configuration { get; }
+        private readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -25,7 +28,17 @@ namespace RecommendationSvc
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddTransient<IRecommendationSvc, Svc.RecommendationSvc>();
-            services.AddTransient<IRecommendationRepository>(x => new RecommendationRepository(Configuration["ConnectionString"]));
+            services.AddTransient<IRecommendationRepository>(x => new RecommendationRepository(cfg.ConnectionString));
+            
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                {
+                    c.Host(cfg.MassTransit.Host);
+                }));
+            });
+
+            services.AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

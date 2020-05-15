@@ -7,17 +7,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Svc = OrderSvc.Services;
 using OrderSvc.Repositories;
+using MassTransit;
+using OrderSvc.Infrastructure.Options;
 
 namespace OrderSvc
 {
     public class Startup
     {
-
         public IConfiguration Configuration { get; }
+        private readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -25,7 +28,18 @@ namespace OrderSvc
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddTransient<IOrderSvc, Svc.OrderSvc>();
-            services.AddTransient<IOrderRepository>(x => new OrderRepository(Configuration["ConnectionString"]));
+            services.AddTransient<IOrderRepository>(x => new OrderRepository(cfg.ConnectionString));
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                {
+                    c.Host(cfg.MassTransit.Host);
+                }));
+            });
+
+            services.AddMassTransitHostedService();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

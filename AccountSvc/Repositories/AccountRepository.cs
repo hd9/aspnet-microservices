@@ -16,6 +16,7 @@ namespace AccountSvc.Repositories
         private readonly string insAcct = "INSERT INTO account (name, email, password, created_at, last_updated, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @subscribe_newsletter)";
         private readonly string updAccount = "UPDATE account set name = @name, email = @email, last_updated = sysdate() WHERE id = @id";
         private readonly string updPwd = "UPDATE account set password = @password WHERE id = @id";
+        private readonly string updNewsletter = "UPDATE account set subscribe_newsletter = true WHERE id = @id";
         private readonly string selAcctById = "SELECT * FROM account WHERE id = @id";
         private readonly string selAcctByEmail = "SELECT * FROM account WHERE email = @email";
         
@@ -394,6 +395,23 @@ namespace AccountSvc.Repositories
             }
         }
 
+        public async Task UpdateNewsletterSubscription(string email)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                var acct = await conn.QueryFirstOrDefaultAsync<Account>(
+                    selAcctByEmail, 
+                    new { email });
+
+                if (acct == null)
+                    return;
+
+                await conn.ExecuteAsync(
+                    updNewsletter, 
+                    new { id = acct.Id });
+            }
+        }
+
         private async Task<T> GetLastInsertId<T>(MySqlConnection conn)
         {
             return (await conn.QueryAsync<T>("select LAST_INSERT_ID();")).Single();
@@ -430,7 +448,7 @@ namespace AccountSvc.Repositories
                 case EventType.AccountUpdated:
                     return $"Account updated with {data}";
                 case EventType.PasswordCreated:
-                    return $"A new password was created for this account";
+                    return $"A new password for this account was created ";
                 case EventType.PasswordUpdated:
                     return $"The password was updated for this account";
                 case EventType.AddressCreated:
@@ -458,5 +476,6 @@ namespace AccountSvc.Repositories
         {
             return $"{number.Substring(0, 2)}-xxxx-xxxx-{number.Substring(number.Length - 2, 2)}";
         }
+
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Models.Events
+namespace Core.Events.Base
 {
     public abstract class EventBase : RequestBase
     {

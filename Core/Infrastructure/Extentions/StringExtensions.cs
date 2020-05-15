@@ -16,6 +16,22 @@ namespace Core.Infrastructure.Extentions
                 (val ?? "").Length >= minLength;
         }
 
+        public static string FormatWith(this string val, params object[] args)
+        {
+            if (val == null)
+                return null;
+
+            return string.Format(val, args);
+        }
+
+        public static string Append(this string val, params object[] args)
+        {
+            if (val == null)
+                return string.Join("", args);
+
+            return val + string.Join("", args);
+        }
+
         public static string MaskCC(this string number)
         {
             return number.HasValue(4) ?

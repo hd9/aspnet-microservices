@@ -1,11 +1,17 @@
+using AccountSvc.Consumers;
+using AccountSvc.Infrastructure.Options;
 using AccountSvc.Repositories;
 using AccountSvc.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NewsletterSvc.Infrastructure.Options;
+using System.Collections.Generic;
 using Svc = AccountSvc.Services;
 
 namespace AccountSvc
@@ -14,10 +20,12 @@ namespace AccountSvc
     {
 
         public IConfiguration Configuration { get; }
+        private readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -25,7 +33,22 @@ namespace AccountSvc
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddTransient<IAccountSvc, Svc.AccountSvc>();
-            services.AddTransient<IAccountRepository>(x => new AccountRepository(Configuration["ConnectionString"]));
+            services.AddTransient<IAccountRepository>(x => new AccountRepository(cfg.ConnectionString));
+            services.AddSingleton<List<EmailTemplate>>(cfg.EmailTemplates);
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                {
+                    c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                    {
+                        e.Consumer(() => new NewsletterSubscribedConsumer(context.Container.GetService<IAccountSvc>()));
+                    });
+                }));
+            });
+
+            services.AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
