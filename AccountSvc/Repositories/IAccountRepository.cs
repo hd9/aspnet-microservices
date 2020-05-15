@@ -24,6 +24,14 @@ namespace AccountSvc.Repositories
         Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId);
         Task SetDefaultPaymentInfo(string accountId, int pmtId);
         Task<IList<AccountHistory>> GetAccountHistory(string acctId, int limit = 10);
-        Task UpdateNewsletterSubscription(string email);
+        Task UpdateNewsletterSubscription(string email, bool subscribe = true);
+        Task InsertLog(
+            string accountId,
+            EventType et,
+            string requestedById = null,
+            string refId = null,
+            RefType? refType = null,
+            string ip = null,
+            string data = null);
     }
 }

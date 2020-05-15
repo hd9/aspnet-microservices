@@ -16,11 +16,10 @@ namespace AccountSvc.Models
 
         public string Password { get; set; }
 
+        public string Salt { get; set; }
+
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-
-        //public Address Address { get; set; }
-
     }
 }

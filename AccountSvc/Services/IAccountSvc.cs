@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AccountSvc.Models;
+using Web.Models;
 
 namespace AccountSvc.Services
 {
@@ -25,5 +26,6 @@ namespace AccountSvc.Services
         Task<IList<PaymentInfo>> GetPaymentInfosByAccountId(string accountId);
         Task SetDefaultPaymentInfo(string accountId, int pmtId);
         Task<IList<AccountHistory>> GetAccountHistory(string acctId);
+        Task<Account> TrySignIn(SignIn signin);
     }
 }

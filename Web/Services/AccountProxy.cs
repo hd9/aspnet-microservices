@@ -77,10 +77,17 @@ namespace Web.Services
 
         public async Task<Account> TrySignIn(SignIn request)
         {
-            var acct = await GetAccountByEmail(request.Email);
+            var url = $"{_cfg["Services:Account"]}/account/signin";
+            _logger.LogInformation($"Trying to sign in account '{request.Email}' at '{url}'");
 
-            // todo :: salt + hash pwd
-            return acct != null && acct.Password == request.Password ? acct : null;
+            var resp = await _httpClient.PostAsync(
+                url, new StringContent(
+                    JsonConvert.SerializeObject(request),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            return JsonConvert.DeserializeObject<Account>(
+                await resp.Content.ReadAsStringAsync());
         }
 
         public async Task<HttpStatusCode> UpdatePassword(UpdatePassword changePassword)

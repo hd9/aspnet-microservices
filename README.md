@@ -127,6 +127,7 @@ CREATE TABLE account (
     name                  VARCHAR(1000)   NOT NULL,
     email                 VARCHAR(300)    NOT NULL,
     password              VARCHAR(1000)   NOT NULL,
+    salt                  VARCHAR(100)    NOT NULL,
     created_at            DATETIME        NOT NULL,
     last_updated          DATETIME        NOT NULL,
     subscribe_newsletter  BIT
@@ -184,6 +185,7 @@ CREATE TABLE account_history (
 
 insert into event_type
 values
+(0, 'Login'),
 (1, 'Account Created'),
 (2, 'Account Updated'),
 (3, 'Account Closed'),

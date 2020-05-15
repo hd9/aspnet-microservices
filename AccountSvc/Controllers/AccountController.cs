@@ -6,6 +6,7 @@ using AccountSvc.Models;
 using AccountSvc.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Web.Models;
 
 namespace AccountSvc.Controllers
 {
@@ -51,13 +52,20 @@ namespace AccountSvc.Controllers
             return Ok();
         }
 
-
         [HttpPost]
         [Route("/account/update-password")]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePassword updPassword)
         {
             await _svc.UpdatePassword(updPassword);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("/account/signin")]
+        public async Task<IActionResult> SignIn([FromBody] SignIn signin)
+        {
+            var acct = await _svc.TrySignIn(signin);
+            return Ok(acct);
         }
 
         [Route("/account/{id}")]

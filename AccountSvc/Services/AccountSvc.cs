@@ -3,6 +3,7 @@ using AccountSvc.Models;
 using AccountSvc.Repositories;
 using Core.Commands;
 using Core.Events.Newsletter;
+using Core.Infrastructure.Crypt;
 using Core.Infrastructure.Extentions;
 using Core.Infrastructure.Options;
 using MassTransit;
@@ -10,6 +11,7 @@ using NewsletterSvc.Infrastructure.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Models;
 
 namespace AccountSvc.Services
 {
@@ -170,6 +172,34 @@ namespace AccountSvc.Services
         public async Task SubscribeToNewsletter(string email)
         {
             await _repo.UpdateNewsletterSubscription(email);
+        }
+
+        public async Task<Account> TrySignIn(SignIn signin)
+        {
+            if (signin == null || !signin.IsValid())
+                return null;
+
+            var acct = await _repo.GetAccountByEmail(signin.Email);
+
+            if (acct == null)
+            {
+                // todo :: log in security table?
+                await _repo.InsertLog(null, EventType.Login, data: $"[SECURITY] Attempted to login with missing account '{signin.Email}' and password '{signin.Password}'");
+                return null;
+            }
+
+            if (acct.Password != Crypt.HashPassword(signin.Password, acct.Salt))
+            {
+                // todo :: log in security table?
+                await _repo.InsertLog(acct.Id, EventType.Login, data: $"[SECURITY] Attempted to login with missing account '{signin.Email}' and password '{signin.Password}'");
+                return null;
+            }
+            else
+            {
+                await _repo.InsertLog(acct.Id, EventType.Login);
+            }
+
+            return acct;
         }
     }
 }

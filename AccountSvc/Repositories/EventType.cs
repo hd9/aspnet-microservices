@@ -10,7 +10,8 @@ namespace AccountSvc.Repositories
     /// </summary>
     public enum EventType
     {
-        AccountCreated = 1,
+        Login,
+        AccountCreated,
         AccountUpdated,
         AccountClosed,
         PasswordCreated,

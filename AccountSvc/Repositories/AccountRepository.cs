@@ -1,7 +1,9 @@
 ﻿using AccountSvc.Models;
+using Core.Infrastructure.Crypt;
 using Core.Infrastructure.Extentions;
 using Dapper;
 using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +15,10 @@ namespace AccountSvc.Repositories
         private readonly string _connStr;
 
         // act
-        private readonly string insAcct = "INSERT INTO account (name, email, password, created_at, last_updated, subscribe_newsletter) values (@name, @email, @password, sysdate(), sysdate(), @subscribe_newsletter)";
+        private readonly string insAcct = "INSERT INTO account (name, email, password, salt, created_at, last_updated, subscribe_newsletter) values (@name, @email, @password, @salt, sysdate(), sysdate(), @subscribe_newsletter)";
         private readonly string updAccount = "UPDATE account set name = @name, email = @email, last_updated = sysdate() WHERE id = @id";
         private readonly string updPwd = "UPDATE account set password = @password WHERE id = @id";
-        private readonly string updNewsletter = "UPDATE account set subscribe_newsletter = true WHERE id = @id";
+        private readonly string updNewsletter = "UPDATE account set subscribe_newsletter = @subscribe_newsletter WHERE id = @id";
         private readonly string selAcctById = "SELECT * FROM account WHERE id = @id";
         private readonly string selAcctByEmail = "SELECT * FROM account WHERE email = @email";
         
@@ -48,18 +50,18 @@ namespace AccountSvc.Repositories
 
         public async Task CreateAccount(CreateAccount cmd)
         {
-            // todo :: salt + hash pwd
             using (var conn = new MySqlConnection(_connStr))
             {
                 await conn.OpenAsync();
                 using (MySqlTransaction transaction = conn.BeginTransaction())
                 {
-
+                    var salt = Crypt.GenerateSalt();
                     await conn.ExecuteAsync(insAcct, new
                     {
                         name = cmd.Name,
                         email = cmd.Email,
-                        password = cmd.Password,
+                        password = Crypt.HashPassword(cmd.Password, salt),
+                        salt,
                         subscribe_newsletter = cmd.SubscribedToNewsletter
                     });
 
@@ -284,7 +286,7 @@ namespace AccountSvc.Repositories
                    EventType.PaymentInfoCreated,
                    refId: pmtInfoId,
                    refType: RefType.PaymentInfo,
-                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
+                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{pmtInfo.Number.MaskCC()}'"
                 );
             }
         }
@@ -320,7 +322,7 @@ namespace AccountSvc.Repositories
                    EventType.PaymentInfoUpdated,
                    refId: pmtInfo.Id.ToString(),
                    refType: RefType.PaymentInfo,
-                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
+                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{pmtInfo.Number.MaskCC()}'"
                 );
             }
         }
@@ -339,7 +341,7 @@ namespace AccountSvc.Repositories
                    EventType.PaymentInfoRemoved,
                    refId: pmtInfo.Id.ToString(),
                    refType: RefType.PaymentInfo,
-                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
+                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{pmtInfo.Number.MaskCC()}'"
                 );
             }
         }
@@ -379,7 +381,7 @@ namespace AccountSvc.Repositories
                    EventType.PaymentInfoSetDefault,
                    refId: pmtInfo.Id.ToString(),
                    refType: RefType.PaymentInfo,
-                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{MaskCC(pmtInfo.Number)}'"
+                   data: $"Name: '{pmtInfo.Name}', Method: '{pmtInfo.Method}', Number: '{pmtInfo.Number.MaskCC()}'"
                 );
             }
         }
@@ -395,7 +397,7 @@ namespace AccountSvc.Repositories
             }
         }
 
-        public async Task UpdateNewsletterSubscription(string email)
+        public async Task UpdateNewsletterSubscription(string email, bool subscribe = true)
         {
             using (var conn = new MySqlConnection(_connStr))
             {
@@ -408,7 +410,26 @@ namespace AccountSvc.Repositories
 
                 await conn.ExecuteAsync(
                     updNewsletter, 
-                    new { id = acct.Id });
+                    new
+                    {
+                        id = acct.Id,
+                        subscribe_newsletter = subscribe
+                    });
+            }
+        }
+
+        public async Task InsertLog(
+            string accountId,
+            EventType et,
+            string requestedById = null,
+            string refId = null,
+            RefType? refType = null,
+            string ip = null,
+            string data = null)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                await InsertLog(conn, accountId, et, requestedById, refId, refType, ip, data);
             }
         }
 
@@ -443,6 +464,8 @@ namespace AccountSvc.Repositories
         {
             switch (et)
             {
+                case EventType.Login:
+                    return $"A new login happened for this account";
                 case EventType.AccountCreated:
                     return $"Account created with {data}";
                 case EventType.AccountUpdated:
@@ -468,14 +491,8 @@ namespace AccountSvc.Repositories
                 case EventType.PaymentInfoSetDefault:
                     return $"Payment info with {data} was set default";
                 default:
-                    return $"AccountId: {accountId} requested a {et}.{(data.HasValue() ? " Data: {data}" : "")}";
+                    return $"A {et} was executed for this account{(data.HasValue() ? $" withata: {data}" : "")}";
             }
         }
-
-        private string MaskCC(string number)
-        {
-            return $"{number.Substring(0, 2)}-xxxx-xxxx-{number.Substring(number.Length - 2, 2)}";
-        }
-
     }
 }
