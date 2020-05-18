@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Events.Orders;
+using MassTransit;
 
 namespace RecommendationSvc.Services
 {
@@ -13,25 +15,30 @@ namespace RecommendationSvc.Services
     {
 
         private readonly IRecommendationRepository _repo;
+        private readonly IBusControl _bus;
 
-        public RecommendationSvc(IRecommendationRepository repo)
+        public RecommendationSvc(IRecommendationRepository repo, IBusControl bus)
         {
             _repo = repo;
+            _bus = bus;
         }
 
-        public async Task<int> Create(Recommendation recomm)
+        public async Task<List<Recommendation>> GetByProductSlug(string slug)
         {
-            return await _repo.Insert(recomm);
+            return await _repo.GetByProductSlug(slug);
         }
 
-        public async Task<Recommendation> GetByProductId(string productId)
-        {
-            return await _repo.GetByProductId(productId);
-        }
-
-        public async Task<Recommendation> GetByAccountId(string accountId)
+        public async Task<List<Recommendation>> GetByAccountId(string accountId)
         {
             return await _repo.GetByAccountId(accountId);
+        }
+
+        public Task BuildRecommendation(OrderSubmitted message)
+        {
+            // todo :: build recommendation
+            // todo :: from productId, get List<products> async then insert into recomm table
+
+            return Task.FromResult(0);
         }
     }
 }

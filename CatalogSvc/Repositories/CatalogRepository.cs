@@ -18,13 +18,13 @@ namespace CatalogSvc.Repositories
 
         public async Task<IList<Category>> GetCategories()
         {
-            db.Collection = "Categories";
+            db.Collection = "categories";
             return await db.GetAll<Category>();
         }
 
         public async Task<Category> GetCategory(string slug)
         {
-            db.Collection = "Categories";
+            db.Collection = "categories";
             return (await db.Find<Category>("Slug", slug)).SingleOrDefault();
         }
 

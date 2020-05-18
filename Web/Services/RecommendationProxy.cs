@@ -23,10 +23,28 @@ namespace Web.Services
             this.cfg = cfg;
         }
 
-        public void GetRecommendedProducts(string productId)
+        public async Task<List<Recommendation>> GetByProductSlug(string slug)
         {
-            // todo
-            
+            var url = $"{cfg["Services:Recommendation"]}/recommendations/{slug}";
+            logger.LogInformation($"[CatalogSvc] Querying products for product '{slug}' from: '{url}'");
+
+            var resp = await httpClient.GetAsync(url);
+            var data = await resp.Content.ReadAsStringAsync();
+
+            return JsonConvert.
+                DeserializeObject<List<Recommendation>>(data);
+        }
+
+        public async Task<List<Recommendation>> GetByAccountId(string accountId)
+        {
+            var url = $"{cfg["Services:Recommendation"]}/recommendations/account/{accountId}";
+            logger.LogInformation($"[CatalogSvc] Querying recommendations for AccountId '{accountId}' from: '{url}'");
+
+            var resp = await httpClient.GetAsync(url);
+            var data = await resp.Content.ReadAsStringAsync();
+
+            return JsonConvert.
+                DeserializeObject<List<Recommendation>>(data);
         }
     }
 }

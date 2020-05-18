@@ -34,6 +34,7 @@ namespace Web
         {
             services.AddControllersWithViews();
             services.AddRouting(x => x.LowercaseUrls = true);
+            services.AddHttpClient<IRecommendationProxy, RecommendationProxy>();
             services.AddHttpClient<INewsletterProxy, NewsletterProxy>();
             services.AddHttpClient<ICatalogProxy, CatalogProxy>();
             services.AddHttpClient<IAccountProxy, AccountProxy>();
@@ -63,11 +64,11 @@ namespace Web
 
             // allow auto-rebuilding the cshtml after changes (dev-only)
             // Ref: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation?view=aspnetcore-3.0#runtime-compilation
-#if DEBUG
+            #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-#else
+            #else
             services.AddControllersWithViews();
-#endif
+            #endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

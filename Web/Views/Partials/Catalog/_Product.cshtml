@@ -28,7 +28,7 @@
             </div>
             @if (p.HasValue)
             {
-                <p>Price: <span class="text-danger font-weight-bold">@cur $ @p.Value.ToString("0.00")</span></p>
+                <p>Price: <span class="text-danger font-weight-bold">@cur @p.Value.ToString("0.00")</span></p>
             }
             else
             {

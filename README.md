@@ -42,62 +42,85 @@ Run RabbitMQ with:
 ## CatalogSvc
 Holds catalog and product information.
 
-### Running CatalogSvc docker image:
+Running CatalogSvc docker image:
 `docker run -d --name m-cat -p 32769:27017 mongo`
 
-### Seeding Product data:
+Seeding Product data:
+
 Connect to the catalog / mongodb instance with:
 `mongo mongodb://localhost:32769`
 
 And run:
 ```js
-use catalog
-db.Products.insertMany([
-    { Slug: "xbx-123", Name: "Xbox One", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "ps4-456", Name: "PS4", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "ns-789", Name: "Nintendo Switch", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "ps5-753;", Name: "PS5", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
-    { Slug: "xbxx-951", Name: "Xbox X Series", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
-    { Slug: "wiiu-789", Name: "wii U", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "xbxc-123", Name: "Xbox One Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "ps4c-456", Name: "PS4 Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "nsc-789", Name: "Nintendo Switch Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "ps5c-753;", Name: "PS5 Controller", Price: 69, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
-    { Slug: "xbxc-951", Name: "Xbox X Series Controller", Price: 69, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
-    { Slug: "wiiuc-789", Name: "wii U Controller", Price: 49, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
-    { Slug: "fdr-951", Name: "Fender Stratocaster", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 5 } ,
-    { Slug: "gib-789", Name: "Gibson Les Paul", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 3 } ,
-    { Slug: "gljb-789", Name: "Geddy Lee's Jazz Bass", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
-    { Slug: "pb-951", Name: "Paddle Boarding", Price: 500, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
-    { Slug: "jjk-789", Name: "Jiu-Jitsu Kimono", Price: 150, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
-    { Slug: "sb-789", Name: "Soccer Ball", Price: 15, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
-    { Slug: "peaa-789", Name: "Patterns of Enterprise Application Architecture", Price: 45, Currency: "CAD", Description: "The practice of enterprise application development has benefited from the emergence of many new enabling technologies. Multi-tiered object-oriented platforms, such as Java and .NET, have become commonplace. These new tools and technologies are capable of building powerful applications, but they are not easily implemented. Common failures in enterprise applications often occur because their developers do not understand the architectural lessons that experienced object developers have learned.", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
-    { Slug: "goia-789", Name: "Go in Action", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
-    { Slug: "alg-4445", Name: "Algorithms", Price: 45, Currency: "CAD", Description: " by Robert Sedgewick & Kevin Wayne TODO", CategoryId: "books", CategoryName: "Books", Rating: 4 } ,
-    { Slug: "cd-789", Name: "Continuous Delivery", Price: 45, Currency: "CAD", Description: "by Jez Humble & David Farley", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "dpero-1515", Name: "Design Patterns: Elements of Reusable Object-Oriented Software", Price: 35, Currency: "CAD", Description: "The Design of Everyday Things is a best-selling book by cognitive scientist and usability engineer Donald Norman about how design serves as the communication between object and user, and how to optimize that conduit of communication in order to make the experience of using the object pleasurable.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "dedt-131", Name: "The Design of Everyday Things", Price: 35, Currency: "CAD", Description: "Addison-Wesley Professional, 1994", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "caw-1773", Name: "Coders at Work", Price: 35, Currency: "CAD", Description: "This is a who's who in the programming world - a fascinating look at how some of the best in the world do their work. Patterned after the best selling Founders at Work, the book represents two years of interviews with some of the top programmers of our times.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "tmmm-189", Name: "The Mythical Man-Month", Price: 35, Currency: "CAD", Description: "Few books on software project management have been as influential and timeless as The Mythical Man-Month. With a blend of software engineering facts and thought-provoking opinions, Fred Brooks offers insight for anyone managing complex projects. These essays draw from his experience as project manager for the IBM System/360 computer family and then for OS/360, its massive software system. Now, 20 years after the initial publication of his book, Brooks has revisited his original ideas and added new thoughts and advice, both for readers already familiar with his work and for readers discovering it for the first time.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "rpi-789", Name: "Raspberry Pi", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
-    { Slug: "pppro-789", Name: "Pine Book Pro ARM", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
-    { Slug: "pppro-789", Name: "Sony Bravia 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
-    { Slug: "pppro-789", Name: "Toshiba Netflix 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
-    { Slug: "ggc-789", Name: "Grass Curter", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
-    { Slug: "bbqc-789", Name: "BBQ Coal", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
-    { Slug: "seab-789", Name: "Sony Earbuddy", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "bstd3-789", Name: "Beats Studio3 Wireless Headphones, Matte Black", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "smb-506041", Name: "Sennheiser MB Pro 1 (506041)", Price: 166, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "gcd-5041", Name: "Gaming Computer Desk with Storage for Controller, Headphone & Speaker - Black", Price: 159.71, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "iphone-753", Name: "iPhone 7", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "iphone-X11", Name: "iPhone X", Price: 999, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "iphone-X11-case1", Name: "iPhone X Case", Price: 9.99, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 2 },
-    { Slug: "sg-11", Name: "Samsung Galaxy 11", Price: 600, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "sg-20", Name: "Samsung Galaxy 20", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 }
+use catalog;
+db.products.remove({});
+db.products.insertMany([
+    { Slug: "g-xbx1-123", Name: "Xbox One", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4-456", Name: "PS4", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ns-789", Name: "Nintendo Switch", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps5-753;", Name: "PS5", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "g-xbxx-951", Name: "Xbox X Series", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "g-wiiu-789", Name: "wii U", Price: 300, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-xbxc-123", Name: "Xbox One Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4c-456", Name: "PS4 Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-nsc-789", Name: "Nintendo Switch Controller", Price: 59, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps5c-753", Name: "PS5 Controller", Price: 69, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "g-xbxc-951", Name: "Xbox X Series Controller", Price: 69, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 4 } ,
+    { Slug: "g-wiiuc-789", Name: "wii U Controller", Price: 49, Currency: "CAD", Description: "TODO", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+
+    { Slug: "g-ps4-dsl3", Name: "Dark Souls 3", Price: 49, Currency: "CAD", Description: "Dark Souls, the series that spawned a hundred imitators thanks to its emphasis on difficult-but-fair gameplay, came to a close with Dark Souls 3, but what a way to go out. Featuring a variety of awe-inspiring locales (some grotesque, some majestic), the same finely-tuned combat fans had come to expect, and a new emphasis on speed and versatility inspired by FromSoftware's own Bloodborne, Dark Souls 3 is a wonderful encapsulation of the series as a whole; not as scattered as Dark Souls 2, not as rough around the edges as the original. If you've been curious about the Souls games, this is where you should start.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4-ff15", Name: "Final Fantasy 15", Price: 49, Currency: "CAD", Description: "Four adrenaline-driven teens embark on the journey of a lifetime, but this ain’t no Road Trip. The RPG tale of Prince Noctis and his merry band straddles fantasy and reality with almost balletic grace, throwing in titanic monsters and classic missions alongside conversations about the weather.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4-d00m", Name: "Doom (PS4)", Price: 49, Currency: "CAD", Description: "This modern reboot is worthy of the name Doom, and is basically the FPS equivalent of a muscular body: it's speedy, empowering, and hits incredibly hard.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-xbx1-d00m", Name: "Doom (Xbox One)", Price: 49, Currency: "CAD", Description: "This modern reboot is worthy of the name Doom, and is basically the FPS equivalent of a muscular body: it's speedy, empowering, and hits incredibly hard.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4-rotr", Name: "Rise of the Tomb Raider", Price: 49, Currency: "CAD", Description: "The storyline, with Ms Croft venturing through Siberia in an attempt to complete her father's work in the lost city of Kitezh, doesn't scream originality but packs in some genuine shocks, while the platforming and zip-lining mechanics take Lara to heights she's never before reached – and not just figuratively.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-ps4-fo4", Name: "Fallout 4 (PS4)", Price: 49, Currency: "CAD", Description: "The storyline, with Ms Croft venturing through Siberia in an attempt to complete her father's work in the lost city of Kitezh, doesn't scream originality but packs in some genuine shocks, while the platforming and zip-lining mechanics take Lara to heights she's never before reached – and not just figuratively.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-xbx1-fo4", Name: "Fallout 4 (Xbox One)", Price: 49, Currency: "CAD", Description: "Hitting PS4 with the atomic force of a Fat Boy, Fallout 4’s excellent gunplay and crafting systems can trigger a nasty case of RPG-itis. Don't worry though, there's a Stimpak for that.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+    { Slug: "g-xbx1-rmk", Name: "Resident Evil 2 Remake (Xbox One)", Price: 49, Currency: "CAD", Description: "Capcom's remake of survival horror classic Resident Evil 2 has gone down a storm with fans and newcomers alike, and it's no surprise. With gorgeous new graphics but the same brain-scratching puzzles and terrifying zombies, Resident Evil 2 is definitely a remake done right.", CategoryId: "games", CategoryName: "Games", Rating: 5 } ,
+
+    { Slug: "mi-fdr-951", Name: "Fender Stratocaster", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 5 } ,
+    { Slug: "mi-gib-789", Name: "Gibson Les Paul", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 3 } ,
+    { Slug: "mi-gljb-789", Name: "Geddy Lee's Jazz Bass", Price: 1500, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
+    
+    { Slug: "mi-ddstr-463", Name: "D'Addario XT Electric Guitar Coated Strings", Price: 21.99, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
+    { Slug: "mi-ddstrl-455", Name: "D'Addario XT Acoustic Strings, Light, 12-53", Price: 21.99, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
+    { Slug: "mi-ddstrb-74", Name: "D'Addario XT Electric Bass Coated Nickel, Light Top/Medium Bottom Long Scale", Price: 44.34, Currency: "CAD", Description: "TODO", CategoryId: "musical-instruments", CategoryName: "Musical Instruments", Rating: 4 } ,
+    
+    { Slug: "s-pb-951", Name: "Paddle Boarding", Price: 500, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    { Slug: "s-jjk-789", Name: "Jiu-Jitsu Kimono", Price: 150, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    { Slug: "s-sb-789", Name: "Soccer Ball", Price: 15, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
+    
+    { Slug: "b-peaa-789", Name: "Patterns of Enterprise Application Architecture", Price: 45, Currency: "CAD", Description: "The practice of enterprise application development has benefited from the emergence of many new enabling technologies. Multi-tiered object-oriented platforms, such as Java and .NET, have become commonplace. These new tools and technologies are capable of building powerful applications, but they are not easily implemented. Common failures in enterprise applications often occur because their developers do not understand the architectural lessons that experienced object developers have learned.", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "b-goia-789", Name: "Go in Action", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "b-alg-4445", Name: "Algorithms", Price: 45, Currency: "CAD", Description: " by Robert Sedgewick & Kevin Wayne TODO", CategoryId: "books", CategoryName: "Books", Rating: 4 } ,
+    { Slug: "b-cd-789", Name: "Continuous Delivery", Price: 45, Currency: "CAD", Description: "by Jez Humble & David Farley", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-dpero-1515", Name: "Design Patterns: Elements of Reusable Object-Oriented Software", Price: 35, Currency: "CAD", Description: "The Design of Everyday Things is a best-selling book by cognitive scientist and usability engineer Donald Norman about how design serves as the communication between object and user, and how to optimize that conduit of communication in order to make the experience of using the object pleasurable.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-dedt-131", Name: "The Design of Everyday Things", Price: 35, Currency: "CAD", Description: "Addison-Wesley Professional, 1994", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-caw-1773", Name: "Coders at Work", Price: 35, Currency: "CAD", Description: "This is a who's who in the programming world - a fascinating look at how some of the best in the world do their work. Patterned after the best selling Founders at Work, the book represents two years of interviews with some of the top programmers of our times.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-tmmm-189", Name: "The Mythical Man-Month", Price: 35, Currency: "CAD", Description: "Few books on software project management have been as influential and timeless as The Mythical Man-Month. With a blend of software engineering facts and thought-provoking opinions, Fred Brooks offers insight for anyone managing complex projects. These essays draw from his experience as project manager for the IBM System/360 computer family and then for OS/360, its massive software system. Now, 20 years after the initial publication of his book, Brooks has revisited his original ideas and added new thoughts and advice, both for readers already familiar with his work and for readers discovering it for the first time.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    
+    { Slug: "c-rpi-789", Name: "Raspberry Pi", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "c-pppro-789", Name: "Pine Book Pro ARM", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    
+    { Slug: "tv-sbrv-55p", Name: "Sony Bravia 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
+    { Slug: "tv-tnflx-55p", Name: "Toshiba Netflix 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
+    
+    { Slug: "hg-ggc-789", Name: "Grass Curter", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
+    { Slug: "hg-bbqc-789", Name: "BBQ Coal", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "home", CategoryName: "Home & Garden", Rating: 4 } ,
+    
+    { Slug: "aud-seab-789", Name: "Sony Earbuddy", Price: 40, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "aud-bstd3-789", Name: "Beats Studio3 Wireless Headphones, Matte Black", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "aud-smb-506041", Name: "Sennheiser MB Pro 1 (506041)", Price: 166, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "aud-gcd-5041", Name: "Gaming Computer Desk with Storage for Controller, Headphone & Speaker - Black", Price: 159.71, Currency: "CAD", Description: "TODO", CategoryId: "headphones-audio", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "aud-ipn-753", Name: "iPhone 7", Price: 400, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "aud-ipn-X11", Name: "iPhone X", Price: 999, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    
+    { Slug: "ph-sg-11", Name: "Samsung Galaxy 11", Price: 600, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
+    { Slug: "ph-sg-20", Name: "Samsung Galaxy 20", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 }
+    { Slug: "ph-iphone-X11-case1", Name: "iPhone X Case", Price: 9.99, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 2 },
 ]);
 
 // inserts categories
-db.Categories.insertMany([
+db.categories.insertMany([
     { Slug: "sports", Name: "Sports" } ,
     { Slug: "games", Name: "Games" } ,
     { Slug: "books", Name: "Books" } ,
@@ -399,21 +422,67 @@ And run the script to create the tables:
 use recommendationdb;
 
 create table recommendation (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    account_id          INT             NOT NULL,
-    order_id            INT             NOT NULL,
-    created_at          DATETIME        NOT NULL
+    id                  BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id          INT             NOT NULL,
+    related_id          INT             NOT NULL,
+    hits                INT             NOT NULL,
+    last_update         DATETIME        NOT NULL,
+    FOREIGN KEY (product_id)
+        REFERENCES product(id),
+    FOREIGN KEY (related_id)
+        REFERENCES product(id)
 );
 
-create table log (
+create table product (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    recomm_id           INT             NOT NULL,
+    slug                VARCHAR(100)    NOT NULL,
+    name                VARCHAR(100)    NOT NULL,
+    description         VARCHAR(1000)   NOT NULL,
+    price               DECIMAL(10,2)   NOT NULL,
     created_at          DATETIME        NOT NULL,
-    FOREIGN KEY (recomm_id)
-        REFERENCES recommendation(id)
+    last_update         DATETIME        NOT NULL
 );
-```
 
+-- insert some products
+insert into product values
+(100, 'g-ps4-456', 'Playstation 4', 'PS4 is Sony\'s last gen console and one of the most sold consoles of all time', 0, sysdate(), sysdate()),
+(200, 'g-xbx1-123', 'Xbox one', 'Xbox one is Microsoft\'s last gen console and full of 5-start exclusives.', 0, sysdate(), sysdate()),
+(101, 'g-ps4-fo4', 'Fallout 4 (PS4)', 'Fallout 4 (PS4) is probably the best Lara Croft ever made!', 0, sysdate(), sysdate()),
+(102, 'g-ps4-dsl3', 'Dark Souls 3 (PS4)', 'Featuring a variety of awe-inspiring locales (some grotesque, some majestic), the same finely-tuned combat fans had come to expect, and a new emphasis on speed and versatility inspired by FromSoftware\'s own Bloodborne', 0, sysdate(), sysdate()),
+(103, 'g-ps4-ff15', 'Final Fantasy 15 (PS4)', 'Four adrenaline-driven teens embark on the journey of a lifetime, but this ain’t no Road Trip.', 0, sysdate(), sysdate()),
+(104, 'g-ps4c-456', 'PS4 Controller', 'The PS4 Controller is the best companion for your PS4 console.', 0, sysdate(), sysdate()),
+
+-- xbox stuff
+(201, 'g-xbx1-d00m', 'Doom (Xbox One)', '', 0, sysdate(), sysdate()),
+(202, 'g-xbx1-fo4', 'Fallout 4 (Xbox One)', '', 0, sysdate(), sysdate()),
+(203, 'g-xbx1-rmk', 'Resident Evil 2 Remake (Xbox One)', 'Capcom\'s remake of survival horror classic Resident Evil 2 has gone down a storm with fans and newcomers alike, and it\'s no surprise.', 0, sysdate(), sysdate());
+(204, 'g-xbxc-123', 'Xbox One Controller', 'The Xbox One Controller is the best companion for your Xbox One console.', 0, sysdate(), sysdate());
+
+
+-- insert some recommendations to start
+insert into recommendation (product_id, related_id, hits, last_update)
+values
+-- ps4 recomms
+(100, 101, 10, sysdate()),
+(100, 102, 10, sysdate()),
+(100, 103, 10, sysdate()),
+(100, 104, 100, sysdate()),
+(101, 100, 100, sysdate()),
+(102, 100, 100, sysdate()),
+(103, 100, 100, sysdate()),
+(104, 100, 100, sysdate()),
+
+
+-- xbox recomms
+(200, 201, 10, sysdate()),
+(200, 202, 10, sysdate()),
+(200, 203, 10, sysdate()),
+(200, 204, 100, sysdate()),
+(201, 200, 100, sysdate()),
+(202, 200, 100, sysdate()),
+(203, 200, 100, sysdate()),
+(204, 200, 100, sysdate());
+```
 
 
 ## Changing Configuration

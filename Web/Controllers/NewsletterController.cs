@@ -10,14 +10,13 @@ using Web.Services;
 
 namespace Web.Controllers
 {
-    public class ApiController : Controller
+    public class NewsletterController : Controller
     {
-        private readonly ILogger<ApiController> _logger;
-        private readonly INewsletterProxy _nlSvc;
-        public ApiController(INewsletterProxy nlSvc, ILogger<ApiController> logger)
+        private readonly INewsletterProxy _svc;
+
+        public NewsletterController(INewsletterProxy svc)
         {
-            _nlSvc = nlSvc;
-            _logger = logger;
+            _svc = svc;
         }
 
         /// <summary>
@@ -31,7 +30,7 @@ namespace Web.Controllers
             if (signup == null || !signup.IsValid())
                 return BadRequest();
 
-            await _nlSvc.Signup(signup);
+            await _svc.Signup(signup);
 
             return Ok();
         }

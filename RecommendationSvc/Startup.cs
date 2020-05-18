@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Svc = RecommendationSvc.Services;
 using MassTransit;
 using RecommendationSvc.Infrastructure.Options;
+using RecommendationSvc.Consumers;
 
 namespace RecommendationSvc
 {
@@ -29,12 +30,16 @@ namespace RecommendationSvc
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddTransient<IRecommendationSvc, Svc.RecommendationSvc>();
             services.AddTransient<IRecommendationRepository>(x => new RecommendationRepository(cfg.ConnectionString));
-            
+
             services.AddMassTransit(x =>
             {
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                    {
+                        e.Consumer(() => new OrderSubmittedConsumer(context.Container.GetService<IRecommendationSvc>()));
+                    });
                 }));
             });
 

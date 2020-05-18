@@ -12,9 +12,9 @@ namespace Web.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly ILogger<ApiController> _logger;
+        private readonly ILogger<NewsletterController> _logger;
         private readonly ICatalogProxy _catSvc;
-        public CatalogController(ICatalogProxy catSvc, ILogger<ApiController> logger)
+        public CatalogController(ICatalogProxy catSvc, ILogger<NewsletterController> logger)
         {
             _catSvc = catSvc;
             _logger = logger;

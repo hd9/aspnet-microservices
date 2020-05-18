@@ -1,4 +1,5 @@
 ﻿using RecommendationSvc.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RecommendationSvc.Repositories
@@ -6,7 +7,7 @@ namespace RecommendationSvc.Repositories
     public interface IRecommendationRepository
     {
         Task<int> Insert(Recommendation recomm);
-        Task<Recommendation> GetByProductId(string productId);
-        Task<Recommendation> GetByAccountId(string accountId);
+        Task<List<Recommendation>> GetByProductSlug(string slug);
+        Task<List<Recommendation>> GetByAccountId(string accountId);
     }
 }

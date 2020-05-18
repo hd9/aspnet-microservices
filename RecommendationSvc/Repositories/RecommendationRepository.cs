@@ -11,16 +11,30 @@ namespace RecommendationSvc.Repositories
     public class RecommendationRepository : IRecommendationRepository
     {
         private readonly string _connStr;
-        //private readonly string insPmt = "INSERT INTO payment (account_id, created_at, last_modified, currency, amount, status) values (@account_id, sysdate(), sysdate(), @currency, @amount, @status)";
-        //private readonly string insLog = "INSERT INTO log (pmt_id, created_at) values (@pmt_id, sysdate())";
-        //private readonly string updPmt = "UPDATE payment (account_id, created_at, last_modified, currency, amount, status) values (@account_id, sysdate(), sysdate(), @currency, @amount, @status)";
-        //private readonly string queryPmtById = "SELECT * FROM payment WHERE id = @id";
-        //private readonly string queryPmtByAcctId = "SELECT * FROM payment WHERE account_id = @id";
+        private readonly string selBySlug = "select p.slug, p.name, p.description from product p join recommendation r on r.related_id = p.id where r.product_id = (select id from product where slug = @slug) order by hits desc;";
 
         public RecommendationRepository(string connStr)
         {
             DefaultTypeMap.MatchNamesWithUnderscores = true;
             _connStr = connStr;
+        }
+
+        public Task<List<Recommendation>> GetByAccountId(string accountId)
+        {
+            // not implemented 
+            return Task.FromResult(new List<Recommendation>());
+        }
+
+        public async Task<List<Recommendation>> GetByProductSlug(string slug)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                return (
+                    await conn.QueryAsync<Recommendation>(
+                        selBySlug, 
+                        new { slug })
+                ).ToList();
+            }
         }
 
         public async Task<int> Insert(Recommendation recomm)
@@ -30,14 +44,5 @@ namespace RecommendationSvc.Repositories
             // todo :: log
         }
 
-        public async Task<Recommendation> GetByProductId(string productId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Recommendation> GetByAccountId(string accountId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

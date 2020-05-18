@@ -190,4 +190,36 @@ const orderSubmitted = new Vue({
             localStorage.clear();
         }
     }
-})
+});
+
+// recommendation
+const recommApp = new Vue({
+    el: '#recommApp',
+    data: {
+        products: [],
+        hasProducts: false
+    },
+    mounted() {
+        if (!this.$refs.recomm)
+            return;
+
+        this.slug = this.$refs.recomm.attributes["slug"].value;
+        axios.get('/api/recommendations/' + this.slug)
+            .then(function (r) {
+                if (r && r.data && r.data.length) {
+                    recommApp.hasProducts = true;
+                    r.data.forEach(p => {
+                        p.url = '/product/' + p.slug;
+                        recommApp.products.push(p);
+                    });
+                }
+                else {
+                    recommApp.hasProducts = false;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                recommApp.hasProducts = false;
+            });
+    }
+});

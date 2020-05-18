@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RecommendationSvc.Models
+namespace Web.Models
 {
     public class Recommendation
     {
         public string Slug { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public float Price { get; set; }
     }
 }

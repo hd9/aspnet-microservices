@@ -1,8 +1,9 @@
-﻿<div id="recommApp" class="my-5">
-    <h3>Recommended for you</h3>
+﻿@model Product
+<div id="recommApp" class="my-2" ref="recomm" slug="@Model.Slug">
+    <h3>Related products</h3>
     Recommendations provided by the <span class="badge badge-success">Recommendation Microservice</span>.
     <div class="row my-4">
-        <div class="col-sm-4 col-lg-2" v-for="p in products">
+        <div class="col-sm-4 col-lg-3" v-for="p in products">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ p.name }}</h5>
@@ -10,6 +11,9 @@
                     <a v-bind:href="p.url" class="small">View product</a>
                 </div>
             </div>
+        </div>
+        <div class="small px-3" v-if="!hasProducts">
+            <p>Sorry, no recommendations found yet for this product.</p>
         </div>
     </div>
 </div>
