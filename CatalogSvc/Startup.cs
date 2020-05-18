@@ -1,6 +1,10 @@
+using CatalogSvc.Consumers;
 using CatalogSvc.Infrastructure;
+using CatalogSvc.Infrastructure.Options;
 using CatalogSvc.Repositories;
 using CatalogSvc.Services;
+using Core.Infrastructure;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,21 +19,38 @@ namespace CatalogSvc
     {
 
         public IConfiguration Configuration { get; }
+        private readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var db = InitDb();
+            var db = new MongoClient(cfg.Mongo);
 
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddSingleton<IMongoClient>(x => db);
             services.AddTransient<ICatalogRepository, CatalogRepository>();
             services.AddTransient<ICatalogSvc, Svc.CatalogSvc>();
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                {
+                    c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(Global.Endpoints.ProductInfo, e =>
+                    {
+                        e.Consumer(() => new ProductInfoRequestConsumer(
+                            context.Container.GetService<ICatalogSvc>()));
+                    });
+                }));
+            });
+
+            services.AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -51,16 +72,7 @@ namespace CatalogSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
-        }
-
-        private MongoClient InitDb()
-        {
-            var cs = Configuration["DbSettings:ConnStr"];
-            var db = Configuration["DbSettings:Db"];
-            var c = Configuration["DbSettings:Collection"];
-
-            return new MongoClient(cs, db, c);
+            logger.LogInformation($"DB Settings: {cfg.Mongo}");
         }
     }
 }

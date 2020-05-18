@@ -446,17 +446,17 @@ create table product (
 -- insert some products
 insert into product values
 (100, 'g-ps4-456', 'Playstation 4', 'PS4 is Sony\'s last gen console and one of the most sold consoles of all time', 0, sysdate(), sysdate()),
-(200, 'g-xbx1-123', 'Xbox one', 'Xbox one is Microsoft\'s last gen console and full of 5-start exclusives.', 0, sysdate(), sysdate()),
-(101, 'g-ps4-fo4', 'Fallout 4 (PS4)', 'Fallout 4 (PS4) is probably the best Lara Croft ever made!', 0, sysdate(), sysdate()),
-(102, 'g-ps4-dsl3', 'Dark Souls 3 (PS4)', 'Featuring a variety of awe-inspiring locales (some grotesque, some majestic), the same finely-tuned combat fans had come to expect, and a new emphasis on speed and versatility inspired by FromSoftware\'s own Bloodborne', 0, sysdate(), sysdate()),
-(103, 'g-ps4-ff15', 'Final Fantasy 15 (PS4)', 'Four adrenaline-driven teens embark on the journey of a lifetime, but this ain’t no Road Trip.', 0, sysdate(), sysdate()),
-(104, 'g-ps4c-456', 'PS4 Controller', 'The PS4 Controller is the best companion for your PS4 console.', 0, sysdate(), sysdate()),
+(101, 'g-ps4c-456', 'PS4 Controller', 'The PS4 Controller is the best companion for your PS4 console.', 0, sysdate(), sysdate()),
+(102, 'g-ps4-fo4', 'Fallout 4 (PS4)', 'Fallout 4 (PS4) is probably the best Lara Croft ever made!', 0, sysdate(), sysdate()),
+(103, 'g-ps4-dsl3', 'Dark Souls 3 (PS4)', 'Featuring a variety of awe-inspiring locales (some grotesque, some majestic), the same finely-tuned combat fans had come to expect, and a new emphasis on speed and versatility inspired by FromSoftware\'s own Bloodborne', 0, sysdate(), sysdate()),
+(104, 'g-ps4-ff15', 'Final Fantasy 15 (PS4)', 'Four adrenaline-driven teens embark on the journey of a lifetime, but this ain’t no Road Trip.', 0, sysdate(), sysdate()),
 
 -- xbox stuff
-(201, 'g-xbx1-d00m', 'Doom (Xbox One)', '', 0, sysdate(), sysdate()),
-(202, 'g-xbx1-fo4', 'Fallout 4 (Xbox One)', '', 0, sysdate(), sysdate()),
-(203, 'g-xbx1-rmk', 'Resident Evil 2 Remake (Xbox One)', 'Capcom\'s remake of survival horror classic Resident Evil 2 has gone down a storm with fans and newcomers alike, and it\'s no surprise.', 0, sysdate(), sysdate());
-(204, 'g-xbxc-123', 'Xbox One Controller', 'The Xbox One Controller is the best companion for your Xbox One console.', 0, sysdate(), sysdate());
+(200, 'g-xbx1-123', 'Xbox one', 'Xbox one is Microsoft\'s last gen console and full of 5-start exclusives.', 0, sysdate(), sysdate()),
+(201, 'g-xbxc-123', 'Xbox One Controller', 'The Xbox One Controller is the best companion for your Xbox One console.', 0, sysdate(), sysdate());
+(202, 'g-xbx1-d00m', 'Doom (Xbox One)', '', 0, sysdate(), sysdate()),
+(203, 'g-xbx1-fo4', 'Fallout 4 (Xbox One)', '', 0, sysdate(), sysdate()),
+(204, 'g-xbx1-rmk', 'Resident Evil 2 Remake (Xbox One)', 'Capcom\'s remake of survival horror classic Resident Evil 2 has gone down a storm with fans and newcomers alike, and it\'s no surprise.', 0, sysdate(), sysdate());
 
 
 -- insert some recommendations to start

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Events.Orders;
 using MassTransit;
+using Core.Commands.Catalog;
+using Core.Infrastructure.Extentions;
 
 namespace RecommendationSvc.Services
 {
@@ -15,12 +17,12 @@ namespace RecommendationSvc.Services
     {
 
         private readonly IRecommendationRepository _repo;
-        private readonly IBusControl _bus;
+        private readonly IRequestClient<ProductInfoRequest> _client;
 
-        public RecommendationSvc(IRecommendationRepository repo, IBusControl bus)
+        public RecommendationSvc(IRecommendationRepository repo, IRequestClient<ProductInfoRequest> client)
         {
             _repo = repo;
-            _bus = bus;
+            _client = client;
         }
 
         public async Task<List<Recommendation>> GetByProductSlug(string slug)
@@ -33,12 +35,18 @@ namespace RecommendationSvc.Services
             return await _repo.GetByAccountId(accountId);
         }
 
-        public Task BuildRecommendation(OrderSubmitted message)
+        public async Task BuildRecommendation(OrderSubmitted message)
         {
-            // todo :: build recommendation
-            // todo :: from productId, get List<products> async then insert into recomm table
+            using (var request = _client.Create(new ProductInfoRequest { Slugs = message.Slugs }))
+            {
+                var response = await request.GetResponse<ProductInfoResponse>();
+                var productInfos = response.Message.ProductInfos;
 
-            return Task.FromResult(0);
+                if (!productInfos.HasAny())
+                    return;
+
+                // todo :: build recommendation
+            }
         }
     }
 }

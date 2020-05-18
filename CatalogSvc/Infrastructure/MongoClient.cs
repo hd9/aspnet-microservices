@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Core.Infrastructure.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace CatalogSvc.Infrastructure
 
         public string Collection { get => col; set => col = value; }
 
-        public MongoClient(string connStr, string db, string collection)
+        public MongoClient(MongoOptions o)
         {
-            client = new MongoDB.Driver.MongoClient(connStr);
-            col = collection;
-            this.db = client.GetDatabase(db);
+            client = new MongoDB.Driver.MongoClient(o.ConnectionString);
+            col = o.Collection;
+            db = client.GetDatabase(o.Db);
         }
 
         public async Task<IList<T>> GetAll<T>()
@@ -32,6 +33,13 @@ namespace CatalogSvc.Infrastructure
         {
             var c = db.GetCollection<T>(col);
             var filter = Builders<T>.Filter.Eq(column, value);
+            return (await c.FindAsync<T>(filter)).ToList();
+        }
+
+        public async Task<IList<T>> Find<T>(string column, List<string> values)
+        {
+            var c = db.GetCollection<T>(col);
+            var filter = Builders<T>.Filter.In(column, values);
             return (await c.FindAsync<T>(filter)).ToList();
         }
 

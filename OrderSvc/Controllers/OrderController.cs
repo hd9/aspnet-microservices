@@ -15,7 +15,7 @@ namespace OrderSvc.Controllers
     {
         private readonly IOrderSvc _svc;
         private readonly IConfiguration _cfg;
-        const string instruction = @"The service is alive!";
+        const string instruction = @"The Order service is alive! Try GET /orders/{accountId}.";
 
         public OrderController(IOrderSvc svc, IConfiguration cfg)
         {

@@ -8,7 +8,8 @@ namespace CatalogSvc.Services
     {
         Task<IList<Category>> GetCategories();
         Task<Category> GetCategory(string slug);
-        Task<IList<Product>> GetProducts(string slug);
+        Task<IList<Product>> GetProductsByCategory(string slug);
         Task<Product> GetProduct(string slug);
+        Task<IList<Product>> GetProducts(List<string> slugs);
     }
 }

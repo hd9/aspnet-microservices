@@ -9,5 +9,6 @@ namespace CatalogSvc.Infrastructure
         Task Insert<T>(T item);
         Task<IList<T>> GetAll<T>();
         Task<IList<T>> Find<T>(string column, string value);
+        Task<IList<T>> Find<T>(string column, List<string> values);
     }
 }

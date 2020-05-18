@@ -1,11 +1,10 @@
-﻿using Core.Events.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Events.Orders
+namespace Core.Commands.Catalog
 {
-    public class OrderSubmitted : EventBase
+    public class ProductInfoRequest
     {
         public List<string> Slugs { get; set; }
     }

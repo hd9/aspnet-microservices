@@ -31,7 +31,7 @@ namespace OrderSvc.Services
             await _bus.Publish(
                 new OrderSubmitted 
                 {
-                    OrderIds = order.LineItems.Select(li => li.Id).ToList()
+                    Slugs = order.LineItems.Select(li => li.Id).ToList()
                 });
 
             return orderId;

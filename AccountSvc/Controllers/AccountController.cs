@@ -16,7 +16,7 @@ namespace AccountSvc.Controllers
     {
         private readonly IAccountSvc _svc;
         private readonly IConfiguration cfg;
-        const string help = @"The service is alive!";
+        const string help = @"The Account service is alive!";
 
         public AccountController(IAccountSvc svc, IConfiguration cfg)
         {

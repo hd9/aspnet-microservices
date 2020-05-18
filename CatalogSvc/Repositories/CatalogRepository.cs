@@ -34,7 +34,13 @@ namespace CatalogSvc.Repositories
             return (await db.Find<Product>("Slug", slug)).SingleOrDefault();
         }
 
-        public async Task<IList<Product>> GetProducts(string slug)
+        public async Task<IList<Product>> GetProducts(List<string> slugs)
+        {
+            db.Collection = "products";
+            return await db.Find<Product>("Slug", slugs);
+        }
+
+        public async Task<IList<Product>> GetProductsByCategory(string slug)
         {
             db.Collection = "products";
             return await db.Find<Product>("CategoryId", slug);

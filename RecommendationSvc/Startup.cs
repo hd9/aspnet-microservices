@@ -10,6 +10,9 @@ using Svc = RecommendationSvc.Services;
 using MassTransit;
 using RecommendationSvc.Infrastructure.Options;
 using RecommendationSvc.Consumers;
+using Core.Commands.Catalog;
+using System;
+using Core.Infrastructure;
 
 namespace RecommendationSvc
 {
@@ -38,9 +41,13 @@ namespace RecommendationSvc
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.Consumer(() => new OrderSubmittedConsumer(context.Container.GetService<IRecommendationSvc>()));
+                        e.Consumer(() => new OrderSubmittedConsumer(
+                            context.Container.GetService<IRecommendationSvc>()));
                     });
                 }));
+
+                x.AddRequestClient<ProductInfoRequest>(
+                    new Uri($"{cfg.MassTransit.Host}/{Global.Endpoints.ProductInfo}"));
             });
 
             services.AddMassTransitHostedService();

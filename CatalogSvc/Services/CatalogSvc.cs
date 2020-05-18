@@ -29,9 +29,14 @@ namespace CatalogSvc.Services
             return await _repo.GetProduct(slug);
         }
 
-        public async Task<IList<Product>> GetProducts(string slug)
+        public async Task<IList<Product>> GetProducts(List<string> slugs)
         {
-            return await _repo.GetProducts(slug);
+            return await _repo.GetProducts(slugs);
+        }
+
+        public async Task<IList<Product>> GetProductsByCategory(string slug)
+        {
+            return await _repo.GetProductsByCategory(slug);
         }
     }
 }

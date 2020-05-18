@@ -6,6 +6,7 @@ using CatalogSvc.Models;
 using CatalogSvc.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Core.Infrastructure.Extentions;
 
 namespace CatalogSvc.Controllers
 {
@@ -15,7 +16,7 @@ namespace CatalogSvc.Controllers
     {
         private readonly ICatalogSvc svc;
         private readonly IConfiguration cfg;
-        const string instruction = @"The service is alive! To test it, run: curl ""http://<your-url>/products/all""";
+        const string instruction = "The Catalog service is alive! Try GET /products/all";
 
         public CatalogController(ICatalogSvc svc, IConfiguration cfg)
         {
@@ -59,10 +60,25 @@ namespace CatalogSvc.Controllers
         }
 
         [HttpGet]
+        [Route("/products/search")]
+        public async Task<IActionResult> GetProductBySlugs(string slugs)
+        {
+            var lst = (slugs ?? "").Split(
+                ",",
+                StringSplitOptions.RemoveEmptyEntries
+            ).ToList();
+
+            if (!lst.HasAny())
+                return Ok();
+
+            return Ok(await svc.GetProducts(lst));
+        }
+
+        [HttpGet]
         [Route("/products/{slug}")]
         public async Task<IList<Product>> GetProductsByCategory(string slug)
         {
-            return await svc.GetProducts(slug);
+            return await svc.GetProductsByCategory(slug);
         }
 
         [HttpGet]

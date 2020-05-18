@@ -24,7 +24,7 @@ namespace NewsletterSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            return Ok("NewsletterSvc is alive!");
+            return Ok("The Newsletter service is alive! Try GET /signups");
         }
 
         [Route("/ping")]

@@ -30,7 +30,7 @@ namespace NotificationSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            var instruction = @"The service is alive! To test it, run: curl <url>/notifications";
+            var instruction = @"The Notification service is alive! Try GET /notifications";
             return Ok(instruction);
         }
 

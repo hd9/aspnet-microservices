@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Events.Orders;
+using Microsoft.AspNetCore.Mvc;
 using RecommendationSvc.Models;
 using RecommendationSvc.Services;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RecommendationSvc.Controllers
@@ -10,7 +12,7 @@ namespace RecommendationSvc.Controllers
     public class RecommendationController : ControllerBase
     {
         private readonly IRecommendationSvc _svc;
-        const string help = @"The service is alive! Try GET /recommendations/{product-slug}";
+        const string help = @"The Recommendation service is alive! Try GET /recommendations/{product-slug}";
 
         public RecommendationController(IRecommendationSvc svc)
         {
