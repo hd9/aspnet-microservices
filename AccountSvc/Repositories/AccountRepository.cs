@@ -1,6 +1,6 @@
 ﻿using AccountSvc.Models;
 using Core.Infrastructure.Crypt;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 using Dapper;
 using MySql.Data.MySqlClient;
 using System;

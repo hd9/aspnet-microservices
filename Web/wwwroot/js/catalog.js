@@ -27,6 +27,15 @@ const prodsApp = new Vue({
         products: [],
         slug: ''
     },
+    methods: {
+        shortDesc: function (val) {
+            var desc = (val || "");
+            if (desc.length < 100)
+                return desc;
+
+            return `${desc.substr(0, 100)}...`;
+        }
+    },
     mounted() {
         if (!this.$refs.cat)
             return;
@@ -51,7 +60,7 @@ const prodsApp = new Vue({
 var prodApp = new Vue({
     el: '#prodApp',
     data: {
-        id: '',
+        slug: '',
         name: '',
         description: '',
         price: '',
@@ -61,7 +70,7 @@ var prodApp = new Vue({
     methods: {
         addToCart: function () {
             cart.addToCart({
-                id: this.id,
+                slug: this.slug,
                 name: this.name,
                 price: this.price,
                 cat: this.cat,
@@ -75,7 +84,7 @@ var prodApp = new Vue({
             return;
 
         var a = this.$refs.product.attributes;
-        this.id = a["id"].value;
+        this.slug = a["slug"].value;
         this.name = a["name"].value;
         this.price = a["price"].value;
         this.cat = a["cat"].value;
@@ -91,7 +100,7 @@ const cart = new Vue({
     },
     methods: {
         addToCart: function (p) {
-            var el = this.products.find(x => x.id === p.id);
+            var el = this.products.find(x => x.slug === p.slug);
             if (el) el.qty++;
             else this.products.push(p);
             this.save();
@@ -142,7 +151,7 @@ const cartSubmit = new Vue({
     methods: {
         submit: function () {
             var li = this.products.map(p => ({
-                Id: p.id,
+                Slug: p.slug,
                 Qty: parseInt(p.qty),
                 Name: p.name,
                 Price: parseFloat(p.price)

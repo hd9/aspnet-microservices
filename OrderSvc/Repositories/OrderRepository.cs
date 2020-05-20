@@ -5,18 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace OrderSvc.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        private readonly string _connStr;
-        private readonly string insertOrder = "insert into orders (account_id, created_at, last_modified, currency, price, tax, shipping, total_price, status) values (@accountId, sysdate(), sysdate(), @currency, @price, @tax, @shipping, @totalPrice, @status)";
-        private readonly string insPmtInfo = "INSERT INTO payment_info (order_id, status, name, number, cvv, exp_date, method, created_at, last_updated) VALUES (@order_id, @status, @name, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
-        private readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, status, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @status, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
-        private readonly string insLineItem = "insert into lineitem (order_id, name, price, qty) values (@order_id, @name, @price, @qty)";
-        private readonly string queryByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
+
+        readonly string _connStr;
+        readonly string insertOrder = "insert into orders (account_id, created_at, last_modified, currency, price, tax, shipping, total_price, status) values (@accountId, sysdate(), sysdate(), @currency, @price, @tax, @shipping, @totalPrice, @status)";
+        readonly string insPmtInfo = "INSERT INTO payment_info (order_id, status, name, number, cvv, exp_date, method, created_at, last_updated) VALUES (@order_id, @status, @name, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
+        readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, status, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @status, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
+        readonly string insLineItem = "insert into lineitem (order_id, name, slug, price, qty) values (@order_id, @name, @slug, @price, @qty)";
+        readonly string queryByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
 
         // order history
         private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
@@ -80,6 +81,7 @@ namespace OrderSvc.Repositories
                         {
                             @order_id = order.Id,
                             @name = li.Name,
+                            @slug = li.Slug,
                             @price = li.Price,
                             @qty = li.Qty
                         });

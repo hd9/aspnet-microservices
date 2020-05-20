@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Commands.Catalog;
 using Core.Events.Orders;
+using MassTransit;
 using RecommendationSvc.Models;
 
 namespace RecommendationSvc.Services

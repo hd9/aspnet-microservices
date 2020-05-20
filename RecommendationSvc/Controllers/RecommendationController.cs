@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecommendationSvc.Models;
 using RecommendationSvc.Services;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RecommendationSvc.Controllers

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace Web.Models
 {

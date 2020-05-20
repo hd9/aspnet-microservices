@@ -1,5 +1,5 @@
 using CatalogSvc.Consumers;
-using CatalogSvc.Infrastructure;
+using CatalogSvc.Infrastructure.Db;
 using CatalogSvc.Infrastructure.Options;
 using CatalogSvc.Repositories;
 using CatalogSvc.Services;
@@ -19,7 +19,7 @@ namespace CatalogSvc
     {
 
         public IConfiguration Configuration { get; }
-        private readonly AppConfig cfg;
+        readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {

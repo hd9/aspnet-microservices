@@ -39,11 +39,13 @@ docker pull mysql:latest
 ## RabbitMQ
 Run RabbitMQ with:
 `docker run --name rabbitmq -d -p 5672:5672 rabbitmq`
+
+
 ## CatalogSvc
 Holds catalog and product information.
 
 Running CatalogSvc docker image:
-`docker run -d --name m-cat -p 32769:27017 mongo`
+`docker run -d --name mongo-catalog -p 32769:27017 mongo`
 
 Seeding Product data:
 
@@ -90,16 +92,17 @@ db.products.insertMany([
     { Slug: "s-sb-789", Name: "Soccer Ball", Price: 15, Currency: "CAD", Description: "TODO", CategoryId: "sports", CategoryName: "Sports", Rating: 3 } ,
     
     { Slug: "b-peaa-789", Name: "Patterns of Enterprise Application Architecture", Price: 45, Currency: "CAD", Description: "The practice of enterprise application development has benefited from the emergence of many new enabling technologies. Multi-tiered object-oriented platforms, such as Java and .NET, have become commonplace. These new tools and technologies are capable of building powerful applications, but they are not easily implemented. Common failures in enterprise applications often occur because their developers do not understand the architectural lessons that experienced object developers have learned.", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
-    { Slug: "b-goia-789", Name: "Go in Action", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
-    { Slug: "b-alg-4445", Name: "Algorithms", Price: 45, Currency: "CAD", Description: " by Robert Sedgewick & Kevin Wayne TODO", CategoryId: "books", CategoryName: "Books", Rating: 4 } ,
-    { Slug: "b-cd-789", Name: "Continuous Delivery", Price: 45, Currency: "CAD", Description: "by Jez Humble & David Farley", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "b-dpero-1515", Name: "Design Patterns: Elements of Reusable Object-Oriented Software", Price: 35, Currency: "CAD", Description: "The Design of Everyday Things is a best-selling book by cognitive scientist and usability engineer Donald Norman about how design serves as the communication between object and user, and how to optimize that conduit of communication in order to make the experience of using the object pleasurable.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
-    { Slug: "b-dedt-131", Name: "The Design of Everyday Things", Price: 35, Currency: "CAD", Description: "Addison-Wesley Professional, 1994", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-goia-789", Name: "Go in Action", Price: 45, Currency: "CAD", Description: "Go in Action introduces the Go language, guiding you from inquisitive developer to Go guru. The book begins by introducing the unique features and concepts of Go. Then, you'll get hands-on experience writing real-world applications including websites and network servers, as well as techniques to manipulate and convert data at speeds that will make your friends jealous.", CategoryId: "books", CategoryName: "Books", Rating: 3 } ,
+    { Slug: "b-alg-4445", Name: "Algorithms", Price: 45, Currency: "CAD", Description: "Introduction to Algorithms, the 'bible' of the field, is a comprehensive textbook covering the full spectrum of modern algorithms: from the fastest algorithms and data structures to polynomial-time algorithms for seemingly intractable problems, from classical algorithms in graph theory to special algorithms for string matching, computational geometry, and number theory.", CategoryId: "books", CategoryName: "Books", Rating: 4 } ,
+    { Slug: "b-cd-789", Name: "Continuous Delivery", Price: 45, Currency: "CAD", Description: "Continuous Delivery is the logical next step after Continuous Integration for any modern software team. This book takes the admittedly ambitous goal of constantly delivering valuable software to customers, and makes it achievable through a set of clear, effective principles and practices.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-dpero-1515", Name: "Design Patterns: Elements of Reusable Object-Oriented Software", Price: 35, Currency: "CAD", Description: "Design Patterns: Elements of Reusable Object-Oriented Software is a software engineering book describing software design patterns. The book was written by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides, with a foreword by Grady Booch.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
+    { Slug: "b-dedt-131", Name: "The Design of Everyday Things", Price: 35, Currency: "CAD", Description: "The Design of Everyday Things is a best-selling book by cognitive scientist and usability engineer Donald Norman about how design serves as the communication between object and user, and how to optimize that conduit of communication in order to make the experience of using the object pleasurable.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
     { Slug: "b-caw-1773", Name: "Coders at Work", Price: 35, Currency: "CAD", Description: "This is a who's who in the programming world - a fascinating look at how some of the best in the world do their work. Patterned after the best selling Founders at Work, the book represents two years of interviews with some of the top programmers of our times.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
     { Slug: "b-tmmm-189", Name: "The Mythical Man-Month", Price: 35, Currency: "CAD", Description: "Few books on software project management have been as influential and timeless as The Mythical Man-Month. With a blend of software engineering facts and thought-provoking opinions, Fred Brooks offers insight for anyone managing complex projects. These essays draw from his experience as project manager for the IBM System/360 computer family and then for OS/360, its massive software system. Now, 20 years after the initial publication of his book, Brooks has revisited his original ideas and added new thoughts and advice, both for readers already familiar with his work and for readers discovering it for the first time.", CategoryId: "books", CategoryName: "Books", Rating: 5 } ,
     
-    { Slug: "c-rpi-789", Name: "Raspberry Pi", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
-    { Slug: "c-pppro-789", Name: "Pine Book Pro ARM", Price: 45, Currency: "CAD", Description: "TODO", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "c-rpi-789", Name: "Raspberry Pi", Price: 45, Currency: "CAD", Description: "The Raspberry Pi is a series of small single-board computers developed in the United Kingdom by the Raspberry Pi Foundation to promote teaching of basic computer science in schools and in developing countries. The original model became far more popular than anticipated, selling outside its target market for uses such as robotics.", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "c-pppro-789", Name: "Pine Book Pro ARM", Price: 199, Currency: "CAD", Description: "A Powerful, Metal and Open Source ARM 64-Bit Laptop for Work, School or Fun. The Pinebook Pro is meant to deliver solid day-to-day Linux or *BSD experience and to be a compelling alternative to mid-ranged Chromebooks that people convert into Linux laptops.", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
+    { Slug: "c-ptab-744", Name: "PineTab", Price: 99, Currency: "CAD", Description: "Attach the optional backlit magnetc keyboard to the PineTab for ultra-portable productivity. Use it on the go with the LTE modem adapter for untethered work or entertainment.", CategoryId: "computers", CategoryName: "Computers", Rating: 3 } ,
     
     { Slug: "tv-sbrv-55p", Name: "Sony Bravia 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
     { Slug: "tv-tnflx-55p", Name: "Toshiba Netflix 55", Price: 450, Currency: "CAD", Description: "TODO", CategoryId: "tvs", CategoryName: "TVs", Rating: 4 } ,
@@ -115,7 +118,7 @@ db.products.insertMany([
     { Slug: "aud-ipn-X11", Name: "iPhone X", Price: 999, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
     
     { Slug: "ph-sg-11", Name: "Samsung Galaxy 11", Price: 600, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
-    { Slug: "ph-sg-20", Name: "Samsung Galaxy 20", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 }
+    { Slug: "ph-sg-20", Name: "Samsung Galaxy 20", Price: 800, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 4 },
     { Slug: "ph-iphone-X11-case1", Name: "iPhone X Case", Price: 9.99, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 2 },
 ]);
 
@@ -255,9 +258,10 @@ create table lineitem (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id            INT             NOT NULL,
     name                VARCHAR(1000)   NOT NULL,
+    slug                VARCHAR(100)    NOT NULL,
     price               DECIMAL(10,2)   NOT NULL,
     qty                 INT             NOT NULL,
-    FOREIGN KEY (order_id)
+    FOREIGN KEY (order_id) 
         REFERENCES orders(id)
 ); 
 
@@ -421,26 +425,23 @@ And run the script to create the tables:
 ```sql
 use recommendationdb;
 
-create table recommendation (
-    id                  BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    product_id          INT             NOT NULL,
-    related_id          INT             NOT NULL,
-    hits                INT             NOT NULL,
-    last_update         DATETIME        NOT NULL,
-    FOREIGN KEY (product_id)
-        REFERENCES product(id),
-    FOREIGN KEY (related_id)
-        REFERENCES product(id)
-);
-
 create table product (
-    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    slug                VARCHAR(100)    NOT NULL,
+    slug                VARCHAR(100)    NOT NULL PRIMARY KEY,
     name                VARCHAR(100)    NOT NULL,
     description         VARCHAR(1000)   NOT NULL,
     price               DECIMAL(10,2)   NOT NULL,
     created_at          DATETIME        NOT NULL,
     last_update         DATETIME        NOT NULL
+);
+
+create table recommendation (
+    product_slug        VARCHAR(100)    NOT NULL,
+    related_slug        VARCHAR(100)    NOT NULL,
+    hits                INT             NOT NULL DEFAULT 1,
+    last_update         DATETIME        NOT NULL,
+    PRIMARY KEY (product_slug, related_slug),
+    FOREIGN KEY (product_slug) REFERENCES product(slug),
+    FOREIGN KEY (related_slug) REFERENCES product(slug)
 );
 
 -- insert some products

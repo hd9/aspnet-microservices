@@ -6,7 +6,7 @@ using CatalogSvc.Models;
 using CatalogSvc.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace CatalogSvc.Controllers
 {

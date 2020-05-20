@@ -1,23 +1,20 @@
 ﻿using RecommendationSvc.Models;
 using RecommendationSvc.Repositories;
-using Dapper;
-using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Events.Orders;
 using MassTransit;
 using Core.Commands.Catalog;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace RecommendationSvc.Services
 {
     public class RecommendationSvc : IRecommendationSvc
     {
 
-        private readonly IRecommendationRepository _repo;
-        private readonly IRequestClient<ProductInfoRequest> _client;
+        readonly IRecommendationRepository _repo;
+        readonly IRequestClient<ProductInfoRequest> _client;
 
         public RecommendationSvc(IRecommendationRepository repo, IRequestClient<ProductInfoRequest> client)
         {
@@ -45,7 +42,27 @@ namespace RecommendationSvc.Services
                 if (!productInfos.HasAny())
                     return;
 
-                // todo :: build recommendation
+                await _repo.InsertProducts(productInfos);
+
+                // build recoms
+                var recomms = new List<RecommendationDto>();
+                productInfos.ForEach(pi =>
+                {
+                    var relatedProducts = productInfos.Where(pi2 => pi2.Slug != pi.Slug).ToList();
+                    relatedProducts.ForEach(rp => {
+                        recomms.Add(
+                            new RecommendationDto { 
+                                ProductSlug = pi.Slug, 
+                                RelatedSlug = rp.Slug, 
+                                Hits = 1 
+                            });
+                    });
+                });
+
+                if (!recomms.HasAny())
+                    return;
+
+                await _repo.InsertRecommendations(recomms);
             }
         }
     }

@@ -73,6 +73,7 @@ namespace Web.Controllers
             o.PaymentInfo = await _acctSvc.GetPaymentInfoById(o.PaymentId);
             o.Currency = Site.StoreSettings.Currency;
             o.Tax = Site.StoreSettings.Tax;
+            
 
             if (!o.IsValidForSubmit())
                 return BadRequest();

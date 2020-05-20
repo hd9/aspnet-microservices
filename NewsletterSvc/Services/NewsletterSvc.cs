@@ -6,15 +6,15 @@ using NewsletterSvc.Models;
 using NewsletterSvc.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace NewsletterSvc.Services
 {
     public class NewsletterSvc : INewsletterSvc
     {
-        private readonly INewsletterRepository _repo;
-        private readonly IBusControl _bus;
-        private readonly EmailTemplate _mailOptions;
+        readonly INewsletterRepository _repo;
+        readonly IBusControl _bus;
+        readonly EmailTemplate _mailOptions;
 
         public NewsletterSvc(INewsletterRepository repo, IBusControl bus, EmailTemplate mailOptions)
         {

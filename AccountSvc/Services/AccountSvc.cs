@@ -4,7 +4,7 @@ using AccountSvc.Repositories;
 using Core.Commands;
 using Core.Events.Newsletter;
 using Core.Infrastructure.Crypt;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 using Core.Infrastructure.Options;
 using MassTransit;
 using NewsletterSvc.Infrastructure.Options;

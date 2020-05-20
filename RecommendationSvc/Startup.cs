@@ -13,13 +13,14 @@ using RecommendationSvc.Consumers;
 using Core.Commands.Catalog;
 using System;
 using Core.Infrastructure;
+using GreenPipes;
 
 namespace RecommendationSvc
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        private readonly AppConfig cfg;
+        readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {
@@ -31,18 +32,20 @@ namespace RecommendationSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IRecommendationSvc, Svc.RecommendationSvc>();
-            services.AddTransient<IRecommendationRepository>(x => new RecommendationRepository(cfg.ConnectionString));
+            services.AddScoped<IRecommendationRepository>(x => new RecommendationRepository(cfg.ConnectionString));
+            services.AddScoped<IRecommendationSvc, Svc.RecommendationSvc>();
 
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<OrderSubmittedConsumer>();
+
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.Consumer(() => new OrderSubmittedConsumer(
-                            context.Container.GetService<IRecommendationSvc>()));
+                        e.UseMessageRetry(n => n.Interval(2, 100));
+                        e.ConfigureConsumer<OrderSubmittedConsumer>(context);
                     });
                 }));
 

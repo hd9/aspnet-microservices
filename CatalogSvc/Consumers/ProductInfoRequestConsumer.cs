@@ -1,6 +1,8 @@
-﻿using CatalogSvc.Services;
+﻿using CatalogSvc.Infrastructure.Extensions;
+using CatalogSvc.Models;
+using CatalogSvc.Services;
 using Core.Commands.Catalog;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 using MassTransit;
 using System;
 using System.Collections.Generic;
@@ -27,9 +29,13 @@ namespace CatalogSvc.Consumers
                 return;
             }
 
-            await context.RespondAsync(
-                _svc.GetProducts(context.Message.Slugs)
-            );
+            var pis = await _svc.GetProducts(context.Message.Slugs);
+            var productInfoResponse = new ProductInfoResponse
+            {
+                ProductInfos = ((List<Product>)pis).ConvertAll(pi => pi.ToProductInfo())
+            };
+
+            await context.RespondAsync(productInfoResponse);
         }
     }
 }

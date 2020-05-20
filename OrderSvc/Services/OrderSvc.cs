@@ -10,8 +10,9 @@ namespace OrderSvc.Services
 {
     public class OrderSvc : IOrderSvc
     {
-        private readonly IOrderRepository _repo;
-        private readonly IBusControl _bus;
+
+        readonly IOrderRepository _repo;
+        readonly IBusControl _bus;
 
         public OrderSvc(IOrderRepository repo, IBusControl bus)
         {
@@ -31,7 +32,7 @@ namespace OrderSvc.Services
             await _bus.Publish(
                 new OrderSubmitted 
                 {
-                    Slugs = order.LineItems.Select(li => li.Id).ToList()
+                    Slugs = order.LineItems.Select(li => li.Slug).ToList()
                 });
 
             return orderId;

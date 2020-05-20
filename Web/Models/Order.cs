@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 
 namespace Web.Models
 {

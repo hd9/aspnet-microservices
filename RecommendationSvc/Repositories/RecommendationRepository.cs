@@ -5,13 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Commands.Catalog;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace RecommendationSvc.Repositories
 {
     public class RecommendationRepository : IRecommendationRepository
     {
         private readonly string _connStr;
-        private readonly string selBySlug = "select p.slug, p.name, p.description from product p join recommendation r on r.related_id = p.id where r.product_id = (select id from product where slug = @slug) order by hits desc;";
+        private readonly string selBySlug = "select p.slug, p.name, p.description from product p join recommendation r on r.related_slug = p.slug where r.product_slug = @slug order by hits desc";
+        private readonly string insProduct = "insert into product values (@slug, @name, @description, @price, sysdate(), sysdate()) on duplicate key update name = @name, description = @description, price = @price, last_update = sysdate();";
+        private readonly string insRecomm = "insert into recommendation (product_slug, related_slug, last_update) values (@product_slug, @related_slug, sysdate()) on duplicate key update hits = hits + 1, last_update = sysdate();";
 
         public RecommendationRepository(string connStr)
         {
@@ -37,12 +41,48 @@ namespace RecommendationSvc.Repositories
             }
         }
 
-        public async Task<int> Insert(Recommendation recomm)
+        public async Task InsertProducts(List<ProductInfo> productInfos)
         {
-            throw new NotImplementedException();
-            // todo :: insert
-            // todo :: log
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                await conn.OpenAsync();
+                using (var trans = await conn.BeginTransactionAsync())
+                {
+                    foreach(var pi in productInfos)
+                    {
+                        await conn.ExecuteAsync(insProduct, new
+                        {
+                            slug = pi.Slug,
+                            name = pi.Name,
+                            description = pi.Description,
+                            price = pi.Price
+                        });
+                    }
+
+                    await trans.CommitAsync();
+                }
+            }
         }
 
+        public async Task InsertRecommendations(List<RecommendationDto> recomms)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                await conn.OpenAsync();
+                using (var trans = await conn.BeginTransactionAsync())
+                {
+                    foreach(var r in recomms)
+                    {
+                        await conn.ExecuteAsync(insRecomm, new
+                        {
+                            product_slug = r.ProductSlug,
+                            related_slug = r.RelatedSlug
+                        });
+                    }
+
+                    await trans.CommitAsync();
+                }
+            }
+        }
     }
 }

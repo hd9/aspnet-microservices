@@ -1,5 +1,5 @@
 ﻿using Core.Commands;
-using Core.Infrastructure.Extentions;
+using Core.Infrastructure.Extensions;
 using Core.Infrastructure.Options;
 using MassTransit;
 using NotificationSvc.Repositories;
@@ -7,7 +7,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using static Core.Infrastructure.Extentions.ExceptionExtensions;
+using static Core.Infrastructure.Extensions.ExceptionExtensions;
 
 namespace NotificationSvc.Consumers
 {
@@ -15,8 +15,8 @@ namespace NotificationSvc.Consumers
     {
 
         #region Attributes
-        private readonly SmtpOptions _smtpOptions;
-        private readonly INotificationRepository _repo;
+        readonly SmtpOptions _smtpOptions;
+        readonly INotificationRepository _repo;
         #endregion
 
         public SendMailConsumer(INotificationRepository repo, SmtpOptions smtpOptions)

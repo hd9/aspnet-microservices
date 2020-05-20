@@ -1,4 +1,4 @@
-﻿using Core.Infrastructure.Extentions;
+﻿using Core.Infrastructure.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 

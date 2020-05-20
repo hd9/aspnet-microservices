@@ -8,11 +8,11 @@ namespace Web.Models
     public class LineItem
     {
         [Required]
-        public string Id { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public string Name { get; set; }
-        
+        public string Slug { get; set; }
+
         [Range(0,100000)]
         [Required]
         public decimal Price { get; set; }

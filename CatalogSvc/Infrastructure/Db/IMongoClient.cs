@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CatalogSvc.Infrastructure
+namespace CatalogSvc.Infrastructure.Db
 {
     public interface IMongoClient
     {

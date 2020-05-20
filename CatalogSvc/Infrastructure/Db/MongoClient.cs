@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CatalogSvc.Infrastructure
+namespace CatalogSvc.Infrastructure.Db
 {
     public class MongoClient : IMongoClient
     {
