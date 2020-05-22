@@ -25,6 +25,7 @@ namespace Web.Controllers
         /// <param name="signup"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("/api/signup")]
         public async Task<IActionResult> Signup([FromBody] NewsletterSignUp signup)
         {
             if (signup == null || !signup.IsValid())

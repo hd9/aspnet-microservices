@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using OrderSvc.Models;
 using OrderSvc.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace OrderSvc.Controllers
 {
@@ -13,14 +12,14 @@ namespace OrderSvc.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderSvc _svc;
-        private readonly IConfiguration _cfg;
+        readonly IOrderSvc _svc;
+        readonly IBusControl _bus;
         const string instruction = @"The Order service is alive! Try GET /orders/{accountId}.";
 
-        public OrderController(IOrderSvc svc, IConfiguration cfg)
+        public OrderController(IOrderSvc svc, IBusControl bus)
         {
             _svc = svc;
-            _cfg = cfg;
+            _bus = bus;
         }
 
         [Route("/ping")]
@@ -42,6 +41,11 @@ namespace OrderSvc.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Accepts a submitted order from the rest api
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("/orders/submit")]
         public async Task<IActionResult> SubmitOrder([FromBody] Order order)

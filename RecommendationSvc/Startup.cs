@@ -1,19 +1,19 @@
-using RecommendationSvc.Repositories;
-using RecommendationSvc.Services;
+using GreenPipes;
+using HildenCo.Core.Contracts.Catalog;
+using HildenCo.Core.Infrastructure;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Svc = RecommendationSvc.Services;
-using MassTransit;
-using RecommendationSvc.Infrastructure.Options;
 using RecommendationSvc.Consumers;
-using Core.Commands.Catalog;
+using RecommendationSvc.Infrastructure.Options;
+using RecommendationSvc.Repositories;
+using RecommendationSvc.Services;
 using System;
-using Core.Infrastructure;
-using GreenPipes;
+using Svc = RecommendationSvc.Services;
 
 namespace RecommendationSvc
 {

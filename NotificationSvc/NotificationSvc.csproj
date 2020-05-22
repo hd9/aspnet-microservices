@@ -11,10 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
       <PackageReference Include="Dapper" Version="2.0.35" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="6.3.1" />
       <PackageReference Include="MySql.Data" Version="8.0.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HildenCo.Core\HildenCo.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

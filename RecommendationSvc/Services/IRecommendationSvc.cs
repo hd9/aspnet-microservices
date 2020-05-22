@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Core.Commands.Catalog;
-using Core.Events.Orders;
-using MassTransit;
+﻿using HildenCo.Core.Contracts.Orders;
 using RecommendationSvc.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RecommendationSvc.Services
 {

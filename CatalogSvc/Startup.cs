@@ -3,7 +3,7 @@ using CatalogSvc.Infrastructure.Db;
 using CatalogSvc.Infrastructure.Options;
 using CatalogSvc.Repositories;
 using CatalogSvc.Services;
-using Core.Infrastructure;
+using HildenCo.Core.Infrastructure;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

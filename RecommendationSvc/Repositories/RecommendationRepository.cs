@@ -1,12 +1,10 @@
-﻿using RecommendationSvc.Models;
-using Dapper;
+﻿using Dapper;
+using HildenCo.Core.Contracts.Catalog;
 using MySql.Data.MySqlClient;
-using System;
+using RecommendationSvc.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Commands.Catalog;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace RecommendationSvc.Repositories
 {

@@ -1,8 +1,8 @@
 ﻿using CatalogSvc.Infrastructure.Extensions;
 using CatalogSvc.Models;
 using CatalogSvc.Services;
-using Core.Commands.Catalog;
-using Core.Infrastructure.Extensions;
+using HildenCo.Core.Contracts.Catalog;
+using HildenCo.Core.Infrastructure.Extensions;
 using MassTransit;
 using System;
 using System.Collections.Generic;

@@ -1,9 +1,8 @@
 ﻿using AccountSvc.Models;
-using Core.Infrastructure.Crypt;
-using Core.Infrastructure.Extensions;
 using Dapper;
+using HildenCo.Core.Infrastructure.Crypt;
+using HildenCo.Core.Infrastructure.Extensions;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

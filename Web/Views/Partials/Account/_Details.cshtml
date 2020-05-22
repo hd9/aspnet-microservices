@@ -1,4 +1,6 @@
-﻿@model AccountDetails
+﻿@using Web.Models.Account;
+@model AccountDetails
+
 @{
     var editMode = (ViewData["EditMode"] ?? "").ToString() == "True";
 }

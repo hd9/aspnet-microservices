@@ -2,15 +2,14 @@ using AccountSvc.Consumers;
 using AccountSvc.Infrastructure.Options;
 using AccountSvc.Repositories;
 using AccountSvc.Services;
+using HildenCo.Core.Infrastructure.Options;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NewsletterSvc.Infrastructure.Options;
 using System.Collections.Generic;
 using Svc = AccountSvc.Services;
 

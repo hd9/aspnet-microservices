@@ -1,4 +1,4 @@
-using Core.Infrastructure.Options;
+using HildenCo.Core.Infrastructure.Options;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,11 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NewsletterSvc.Infrastructure;
 using NewsletterSvc.Infrastructure.Options;
 using NewsletterSvc.Repositories;
 using NewsletterSvc.Services;
-using System.Threading.Tasks;
 using Svc = NewsletterSvc.Services;
 
 namespace NewsletterSvc

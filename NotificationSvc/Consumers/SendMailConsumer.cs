@@ -1,13 +1,13 @@
-﻿using Core.Commands;
-using Core.Infrastructure.Extensions;
-using Core.Infrastructure.Options;
+﻿using HildenCo.Core.Contracts.Notification;
+using HildenCo.Core.Infrastructure.Extensions;
+using HildenCo.Core.Infrastructure.Options;
 using MassTransit;
 using NotificationSvc.Repositories;
 using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using static Core.Infrastructure.Extensions.ExceptionExtensions;
+using static HildenCo.Core.Infrastructure.Extensions.ExceptionExtensions;
 
 namespace NotificationSvc.Consumers
 {

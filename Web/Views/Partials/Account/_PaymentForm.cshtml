@@ -1,4 +1,5 @@
-﻿@model PaymentInfo
+﻿@using Web.Models.Order;
+@model PaymentInfo
 @using System.Linq;
 @using System.Linq.Expressions;
 @{
@@ -7,7 +8,7 @@
     // todo :: get from enum PaymentMethod
     //var pmtMethods = Enum.GetValues(typeof(PaymentMethod)).
     var pmtMethods = new List<SelectListItem>
-    {
+{
         new SelectListItem("MasterCard", "0"),
         new SelectListItem("Visa", "1"),
         new SelectListItem("AMEX", "2")

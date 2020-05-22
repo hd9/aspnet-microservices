@@ -1,12 +1,12 @@
-﻿using Core.Commands;
-using Core.Events.Newsletter;
+﻿using HildenCo.Core.Contracts.Newsletter;
+using HildenCo.Core.Contracts.Notification;
+using HildenCo.Core.Infrastructure.Extensions;
+using HildenCo.Core.Infrastructure.Options;
 using MassTransit;
-using NewsletterSvc.Infrastructure.Options;
 using NewsletterSvc.Models;
 using NewsletterSvc.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Infrastructure.Extensions;
 
 namespace NewsletterSvc.Services
 {

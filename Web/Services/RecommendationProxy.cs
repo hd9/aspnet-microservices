@@ -7,16 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Web.Models.Recommendation;
 
 namespace Web.Services
 {
     public class RecommendationProxy : IRecommendationProxy
     {
-        private readonly ILogger<TaxProxy> logger;
+        private readonly ILogger<RecommendationProxy> logger;
         private readonly HttpClient httpClient;
         private readonly IConfiguration cfg;
 
-        public RecommendationProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<TaxProxy> logger)
+        public RecommendationProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<RecommendationProxy> logger)
         {
             this.logger = logger;
             this.httpClient = httpClient;

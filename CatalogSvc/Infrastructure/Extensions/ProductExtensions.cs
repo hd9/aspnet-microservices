@@ -1,9 +1,5 @@
 ﻿using CatalogSvc.Models;
-using Core.Commands.Catalog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HildenCo.Core.Contracts.Catalog;
 
 namespace CatalogSvc.Infrastructure.Extensions
 {

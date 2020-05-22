@@ -1,8 +1,5 @@
-﻿using Core.Infrastructure.Options;
-using NewsletterSvc.Infrastructure.Options;
-using System;
+﻿using HildenCo.Core.Infrastructure.Options;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AccountSvc.Infrastructure.Options
 {

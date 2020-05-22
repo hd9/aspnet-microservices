@@ -1,11 +1,11 @@
-﻿@model Account
+﻿@model Web.Models.Account.Account
 @{
     ViewData["Title"] = "Create Account";
     ViewData["EditMode"] = true;
     ViewData["ShowPassword"] = true;
 }
 
-@if(TempData["ErrorMsg"] != null)
+@if (TempData["ErrorMsg"] != null)
 {
     <div class="p-3 my-3 alert-danger">@TempData["ErrorMsg"]</div>
 }

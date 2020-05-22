@@ -1,4 +1,4 @@
-﻿using Core.Events.Orders;
+﻿using HildenCo.Core.Contracts.Orders;
 using MassTransit;
 using OrderSvc.Models;
 using OrderSvc.Repositories;
@@ -30,7 +30,7 @@ namespace OrderSvc.Services
             var orderId = await _repo.Insert(order);
 
             await _bus.Publish(
-                new OrderSubmitted 
+                new OrderSubmitted
                 {
                     Slugs = order.LineItems.Select(li => li.Slug).ToList()
                 });

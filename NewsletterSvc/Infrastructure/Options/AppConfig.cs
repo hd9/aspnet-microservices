@@ -1,5 +1,4 @@
-﻿using Core.Infrastructure.Options;
-using System;
+﻿using HildenCo.Core.Infrastructure.Options;
 
 namespace NewsletterSvc.Infrastructure.Options
 {

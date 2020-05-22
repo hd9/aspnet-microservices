@@ -1,4 +1,4 @@
-﻿using Core.Infrastructure.Extensions;
+﻿using HildenCo.Core.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

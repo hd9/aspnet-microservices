@@ -1,4 +1,4 @@
-﻿using Core.Infrastructure.Extensions;
+﻿using HildenCo.Core.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +11,8 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Models;
+using Web.Models.Account;
+using Web.Models.Order;
 using Web.Services;
 
 namespace Web.Controllers

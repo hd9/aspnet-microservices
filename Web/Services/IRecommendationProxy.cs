@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Models;
+using Web.Models.Recommendation;
 
 namespace Web.Services
 {

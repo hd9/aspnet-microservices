@@ -1,4 +1,5 @@
-﻿@model Account
+﻿@using Web.Models.Account; 
+@model Account
 @using Web.Infrastructure.Global;
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;

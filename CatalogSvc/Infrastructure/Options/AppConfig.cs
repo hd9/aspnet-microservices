@@ -1,6 +1,4 @@
-﻿using Core.Infrastructure.Options;
-using System;
-using System.Text;
+﻿using HildenCo.Core.Infrastructure.Options;
 
 namespace CatalogSvc.Infrastructure.Options
 {

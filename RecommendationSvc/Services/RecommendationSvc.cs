@@ -1,12 +1,12 @@
-﻿using RecommendationSvc.Models;
+﻿using HildenCo.Core.Contracts.Catalog;
+using HildenCo.Core.Contracts.Orders;
+using HildenCo.Core.Infrastructure.Extensions;
+using MassTransit;
+using RecommendationSvc.Models;
 using RecommendationSvc.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Events.Orders;
-using MassTransit;
-using Core.Commands.Catalog;
-using Core.Infrastructure.Extensions;
 
 namespace RecommendationSvc.Services
 {

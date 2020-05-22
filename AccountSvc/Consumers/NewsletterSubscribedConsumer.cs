@@ -1,9 +1,6 @@
 ﻿using AccountSvc.Services;
-using Core.Commands;
-using Core.Events;
-using Core.Events.Newsletter;
+using HildenCo.Core.Contracts.Newsletter;
 using MassTransit;
-using System;
 using System.Threading.Tasks;
 
 namespace AccountSvc.Consumers

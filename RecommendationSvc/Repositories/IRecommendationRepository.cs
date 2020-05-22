@@ -1,4 +1,4 @@
-﻿using Core.Commands.Catalog;
+﻿using HildenCo.Core.Contracts.Catalog;
 using RecommendationSvc.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,13 +1,8 @@
-﻿using Core.Models;
-using Dapper;
-using MassTransit;
+﻿using Dapper;
 using MySql.Data.MySqlClient;
-using NotificationSvc.Infrastructure;
 using NotificationSvc.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace NotificationSvc.Repositories

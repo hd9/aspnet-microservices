@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Web.Models;
+using Web.Models.Catalog;
 using Web.Services;
 
 namespace Web.Controllers

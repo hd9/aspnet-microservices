@@ -1,9 +1,8 @@
-﻿using Core.Infrastructure.Options;
+﻿using HildenCo.Core.Infrastructure.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CatalogSvc.Infrastructure.Db
@@ -47,11 +46,6 @@ namespace CatalogSvc.Infrastructure.Db
         {
             var c = db.GetCollection<T>(col);
             await c.InsertOneAsync(item);
-        }
-
-        private void Log(string msg)
-        {
-            Console.WriteLine(msg);
         }
     }
 }

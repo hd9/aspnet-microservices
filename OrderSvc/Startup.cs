@@ -30,9 +30,9 @@ namespace OrderSvc
             services.AddTransient<IOrderSvc, Svc.OrderSvc>();
             services.AddTransient<IOrderRepository>(x => new OrderRepository(cfg.ConnectionString));
 
-            services.AddMassTransit(x =>
+            services.AddMassTransit(c =>
             {
-                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                c.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
                 }));

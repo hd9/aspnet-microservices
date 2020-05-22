@@ -1,4 +1,4 @@
-﻿using Core.Events.Orders;
+﻿using HildenCo.Core.Contracts.Orders;
 using MassTransit;
 using RecommendationSvc.Services;
 using System.Threading.Tasks;

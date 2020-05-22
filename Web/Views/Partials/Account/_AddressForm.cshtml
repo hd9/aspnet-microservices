@@ -1,5 +1,6 @@
-﻿@model Address
+﻿@using Web.Models.Account;
 @using Web.Infrastructure.Global;
+@model Address
 @{
     var editMode = ViewData["EditMode"] != null ? (bool)ViewData["EditMode"] : false;
     var settings = Site.StoreSettings;

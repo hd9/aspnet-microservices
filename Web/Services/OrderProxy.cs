@@ -1,15 +1,11 @@
-﻿using Web.Models;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Text;
-using Web.Infrastructure.Settings;
-using Web.Infrastructure.Global;
+using System.Threading.Tasks;
+using Web.Models.Order;
 
 namespace Web.Services
 {
@@ -37,7 +33,7 @@ namespace Web.Services
                     Encoding.UTF8,
                     "application/json"));
 
-            // get order number
+            // get order number (todo: refactor to OrderNumber)
             order.Id = JsonConvert.DeserializeObject<int>(
                 await resp.Content.ReadAsStringAsync());
         }
