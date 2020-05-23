@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Svc = PaymentSvc.Services;
 using MassTransit;
 using PaymentSvc.Infrastructure.Options;
+using PaymentSvc.Consumers;
+using GreenPipes;
 
 namespace PaymentSvc
 {
@@ -28,13 +30,21 @@ namespace PaymentSvc
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
             services.AddTransient<IPaymentSvc, Svc.PaymentSvc>();
+            services.AddTransient<IPaymentGateway, PaymentGateway>();
             services.AddTransient<IPaymentRepository>(x => new PaymentRepository(cfg.ConnectionString));
-            
+
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<PaymentRequestConsumer>();
+
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                    {
+                        e.UseMessageRetry(n => n.Interval(2, 100));
+                        e.ConfigureConsumer<PaymentRequestConsumer>(context);
+                    });
                 }));
             });
 

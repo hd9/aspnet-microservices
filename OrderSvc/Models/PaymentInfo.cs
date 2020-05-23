@@ -4,13 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OrderSvc.Models
 {
-    public enum PaymentMethod
-    {
-        MasterCard,
-        Visa,
-        Amex
-    }
-
     public class PaymentInfo
     {
         public int Id { get; set; }

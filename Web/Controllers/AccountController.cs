@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -447,7 +448,10 @@ namespace Web.Controllers
         public async Task<IList<PaymentInfo>> GetPayments()
         {
             var acctId = User.FindFirstValue("Id");
-            return await _acctSvc.GetPaymentInfos(acctId);
+            var pis = (List<PaymentInfo>)await _acctSvc.GetPaymentInfos(acctId);
+            pis.ForEach(pi => pi.Number = pi.Number.MaskCC());
+
+            return pis;
         }
 
         [HttpDelete]

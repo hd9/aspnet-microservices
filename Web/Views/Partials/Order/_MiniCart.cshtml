@@ -29,12 +29,12 @@
                     @if (review)
                     {
                         <tr>
-                            <th scope="row" colspan="2">Tax (@(tax * 100)%):</th>
-                            <td class="text-right small">@cur {{ parseFloat(subtotal * @tax).toFixed(2) }}</td>
+                            <th scope="row">Tax (@(tax * 100)%):</th>
+                            <td class="text-right small" colspan="2">@cur {{ parseFloat(subtotal * @tax).toFixed(2) }}</td>
                         </tr>
                         <tr class="border-top table-danger text-danger">
-                            <th scope="row" colspan="2">Total:</th>
-                            <td class="text-right small">@cur {{ parseFloat(subtotal * 1 + @tax).toFixed(2) }}</td>
+                            <th scope="row">Total:</th>
+                            <td class="text-right small" colspan="2">@cur {{ parseFloat(subtotal * (1 + @tax)).toFixed(2) }}</td>
                         </tr>
                     }
                 </tbody>

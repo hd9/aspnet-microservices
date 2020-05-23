@@ -1,12 +1,15 @@
 ﻿using PaymentSvc.Models;
+using PaymentSvc.Services;
 using System.Threading.Tasks;
 
 namespace PaymentSvc.Repositories
 {
     public interface IPaymentRepository
     {
-        Task<int> Insert(PaymentInfo order);
-        Task<PaymentInfo> GetById(string id);
-        Task<PaymentInfo> GetByAccountId(string email);
+        Task InsertPayment(Payment pmt);
+        Task UpdatePayment(Payment pmt);
+        Task InsertPaymentRequest(PaymentGatewayRequest pgr);
+        Task<Payment> GetById(string id);
+        Task<Payment> GetByAccountId(string email);
     }
 }

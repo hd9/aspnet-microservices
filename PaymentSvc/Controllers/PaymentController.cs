@@ -14,7 +14,7 @@ namespace PaymentSvc.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentSvc _svc;
-        const string help = @"The service is alive!";
+        const string help = @"The Payment service is alive! Try GET /payments/{paymentId}.";
 
         public PaymentController(IPaymentSvc svc)
         {
@@ -33,30 +33,14 @@ namespace PaymentSvc.Controllers
             return Ok(help);
         }
 
-        [HttpPost]
-        [Route("/payments/")]
-        public async Task<IActionResult> SubmitPayment([FromBody] PaymentInfo pmt)
-        {
-            await _svc.SubmitPayment(pmt);
-            return Ok();
-        }
-
-        //[HttpPut]
-        //[Route("/payments/")]
-        //public async Task<IActionResult> UpdatePayment([FromBody] PaymentInfo pmt)
-        //{
-        //    await _svc.UpdateAccount(account);
-        //    return Ok();
-        //}
-
         [Route("/payments/{id}")]
-        public async Task<PaymentInfo> GetPaymentById(string id)
+        public async Task<Payment> GetPaymentById(string id)
         {
             return await _svc.GetById(id);
         }
 
         [Route("/payments/search")]
-        public async Task<PaymentInfo> GetPaymentByAccountId(string accountId)
+        public async Task<Payment> GetPaymentByAccountId(string accountId)
         {
             return await _svc.GetByAccountId(accountId);
         }

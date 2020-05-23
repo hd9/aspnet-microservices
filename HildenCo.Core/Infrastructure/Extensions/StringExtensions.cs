@@ -35,7 +35,7 @@ namespace HildenCo.Core.Infrastructure.Extensions
         public static string MaskCC(this string number)
         {
             return number.HasValue(4) ?
-                $"{number.Substring(0, 2)}-xxxx-xxxx-{number.Substring(number.Length - 2, 2)}" :
+                $"{number.Substring(0, 2)}-XXXX-XXXX-{number.Substring(number.Length - 2, 2)}" :
                 null;
         }
     }

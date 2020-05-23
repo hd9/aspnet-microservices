@@ -1,11 +1,11 @@
 ﻿namespace PaymentSvc.Models
 {
-    public enum PaymentStatus
+    public enum PaymentGatewayResponseStatus
     {
         Pending,
         Authorized,
         Declined,
-        Cancelled,
-        Refunded
+        Invalid,
+        Error
     }
 }

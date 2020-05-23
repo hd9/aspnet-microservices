@@ -1,4 +1,5 @@
 ﻿using HildenCo.Core.Contracts.Orders;
+using HildenCo.Core.Contracts.Payment;
 using MassTransit;
 using OrderSvc.Models;
 using OrderSvc.Repositories;
@@ -35,8 +36,25 @@ namespace OrderSvc.Services
                     Slugs = order.LineItems.Select(li => li.Slug).ToList()
                 });
 
+            // todo :: automapper
+            await _bus.Publish(
+                new PaymentRequest
+                {
+                    AccountId = order.AccountId,
+                    OrderId = orderId,
+                    Currency = order.Currency,
+                    Amount = order.TotalPrice,
+                    Method = order.PaymentInfo.Method.ToString(),
+                    Name = order.PaymentInfo.Name,
+                    Number = order.PaymentInfo.Number,
+                    ExpDate = order.PaymentInfo.ExpDate,
+                    CVV = order.PaymentInfo.CVV,
+                    FakeDelay = 100,
+                    FakeResult = true
+                }
+            );
+
             return orderId;
         }
-
     }
 }
