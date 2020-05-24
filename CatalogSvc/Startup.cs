@@ -42,7 +42,7 @@ namespace CatalogSvc
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
-                    c.ReceiveEndpoint(Global.Endpoints.ProductInfo, e =>
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
                         e.Consumer(() => new ProductInfoRequestConsumer(
                             context.Container.GetService<ICatalogSvc>()));

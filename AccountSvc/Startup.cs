@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Svc = AccountSvc.Services;
+using GreenPipes;
 
 namespace AccountSvc
 {
@@ -31,18 +32,24 @@ namespace AccountSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IAccountSvc, Svc.AccountSvc>();
-            services.AddTransient<IAccountRepository>(x => new AccountRepository(cfg.ConnectionString));
-            services.AddSingleton<List<EmailTemplate>>(cfg.EmailTemplates);
+            services.AddScoped<IAccountSvc, Svc.AccountSvc>();
+            services.AddScoped<IAccountRepository>(x => new AccountRepository(cfg.ConnectionString));
+            services.AddSingleton(cfg.EmailTemplates);
 
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<NewsletterSubscribedConsumer>();
+                x.AddConsumer<AccountInfoRequestConsumer>();
+
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.Consumer(() => new NewsletterSubscribedConsumer(context.Container.GetService<IAccountSvc>()));
+                        e.PrefetchCount = 16;
+                        e.UseMessageRetry(r => r.Interval(2, 100));
+                        e.ConfigureConsumer<NewsletterSubscribedConsumer>(context);
+                        e.ConfigureConsumer<AccountInfoRequestConsumer>(context);
                     });
                 }));
             });

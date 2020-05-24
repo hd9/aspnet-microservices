@@ -1,4 +1,4 @@
-﻿namespace OrderSvc.Models
+﻿namespace HildenCo.Core.Contracts.Payment
 {
     public enum PaymentStatus
     {

@@ -50,7 +50,7 @@ namespace RecommendationSvc
                 }));
 
                 x.AddRequestClient<ProductInfoRequest>(
-                    new Uri($"{cfg.MassTransit.Host}/{Global.Endpoints.ProductInfo}"));
+                    new Uri($"{cfg.MassTransit.Host}/catalog"));
             });
 
             services.AddMassTransitHostedService();

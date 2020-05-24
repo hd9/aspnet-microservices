@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HildenCo.Core.Contracts.Payment;
+using MassTransit;
+using Core = HildenCo.Core.Contracts.Payment;
+
 
 namespace PaymentSvc.Services
 {
@@ -15,14 +17,16 @@ namespace PaymentSvc.Services
 
         readonly IPaymentRepository _repo;
         readonly IPaymentGateway _pmtGateway;
+        readonly IBusControl _bus;
 
-        public PaymentSvc(IPaymentGateway pmtGateway, IPaymentRepository repo)
+        public PaymentSvc(IPaymentGateway pmtGateway, IPaymentRepository repo, IBusControl bus)
         {
             _repo = repo;
             _pmtGateway = pmtGateway;
+            _bus = bus;
         }
 
-        public async Task RequestPayment(PaymentRequest pr)
+        public async Task RequestPayment(Core.PaymentRequest pr)
         {
             if (pr == null)
                 return;
@@ -57,6 +61,13 @@ namespace PaymentSvc.Services
                     PaymentStatus.Declined;
 
             await _repo.UpdatePayment(pmt);
+
+            await _bus.Publish(new Core.PaymentResponse
+            {
+                AccountId = pmt.AccountId,
+                OrderId = pmt.OrderId,
+                Status = Enum.Parse<Core.PaymentStatus>(pmt.Status.ToString())
+            });
         }
 
         public async Task<Payment> GetById(string id)

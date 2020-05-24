@@ -13,11 +13,13 @@ namespace OrderSvc.Repositories
     {
 
         readonly string _connStr;
-        readonly string insertOrder = "insert into orders (account_id, created_at, last_modified, currency, price, tax, shipping, total_price, status) values (@accountId, sysdate(), sysdate(), @currency, @price, @tax, @shipping, @totalPrice, @status)";
-        readonly string insPmtInfo = "INSERT INTO payment_info (order_id, status, name, number, cvv, exp_date, method, created_at, last_updated) VALUES (@order_id, @status, @name, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
-        readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, status, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @status, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
+        readonly string insOrder = "insert into orders (account_id, number, currency, price, tax, shipping_price, total_price, status, pmt_status, shipping_status, created_at, last_modified) values (@accountId, @number, @currency, @price, @tax, @shipping_price, @total_price, @status, @pmt_status, @shipping_status, sysdate(), sysdate())";
+        readonly string updOrder = "update orders set status = @status, pmt_status = @pmt_status, shipping_status = @shipping_status, last_modified = sysdate() where id = @id";
+        readonly string insPmtInfo = "INSERT INTO payment_info (order_id, name, number, cvv, exp_date, method, created_at, last_updated) VALUES (@order_id, @name, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
+        readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
         readonly string insLineItem = "insert into lineitem (order_id, name, slug, price, qty) values (@order_id, @name, @slug, @price, @qty)";
-        readonly string queryByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
+        readonly string selById = "select * from orders where id = @id";
+        readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
 
         // order history
         private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
@@ -25,6 +27,7 @@ namespace OrderSvc.Repositories
         public OrderRepository(string connStr)
         {
             _connStr = connStr;
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
         }
 
         public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
@@ -32,7 +35,7 @@ namespace OrderSvc.Repositories
             var orderDictionary = new Dictionary<int, Order>();
             using (var conn = new MySqlConnection(_connStr))
             {
-                var orders = await conn.QueryAsync<Order, LineItem, Order>(queryByAcctId, (order, lineItem) =>
+                var orders = await conn.QueryAsync<Order, LineItem, Order>(selByAcctId, (order, lineItem) =>
                 {
                     Order orderEntry;
 
@@ -54,22 +57,23 @@ namespace OrderSvc.Repositories
 
         public async Task<int> Insert(Order order)
         {
-            // todo :: order number
-            // var orderNumber = $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper()}";
             using (var conn = new MySqlConnection(_connStr))
             {
                 await conn.OpenAsync();
                 using (MySqlTransaction transaction = conn.BeginTransaction())
                 {
-                    await conn.ExecuteAsync(insertOrder, new
+                    await conn.ExecuteAsync(insOrder, new
                     {
                         @accountId = order.AccountId,
+                        @number = NewOrderNumber(),
                         @currency = order.Currency,
                         @price = order.Price,
                         @tax = order.Tax,
-                        @shipping = order.Shipping,
-                        @totalPrice = order.TotalPrice,
-                        @status = (int)OrderStatus.Submitted
+                        @shipping_price = order.Shipping,
+                        @total_price = order.TotalPrice,
+                        @status = (int)OrderStatus.Submitted,
+                        @pmt_status = (int)PaymentStatus.Pending,
+                        @shipping_status = (int)ShippingStatus.Pending
                     });
 
                     order.Id = await GetLastInsertId<int>(conn);
@@ -94,7 +98,6 @@ namespace OrderSvc.Repositories
                         order.AccountId.ToString(),
                         data: order.ToString()
                     );
-
 
                     // insert payment info
                     await conn.ExecuteAsync(insPmtInfo, new
@@ -125,7 +128,6 @@ namespace OrderSvc.Repositories
                     {
                         @order_id = order.Id,
                         @payment_info_id = order.PaymentInfo.Id,
-                        @status = (int)order.ShippingInfo.Status,
                         @name = order.ShippingInfo.Name,
                         @street = order.ShippingInfo.Street,
                         @city = order.ShippingInfo.City,
@@ -150,6 +152,33 @@ namespace OrderSvc.Repositories
             }
 
             return order.Id;
+        }
+
+        public async Task Update(
+            int id, 
+            OrderStatus orderStatus, 
+            PaymentStatus paymentStatus, 
+            ShippingStatus shippingStatus
+        )
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                await conn.ExecuteAsync(updOrder, new
+                {
+                    id,
+                    @status = (int)orderStatus,
+                    @pmt_status = (int)paymentStatus,
+                    @shipping_status = (int)shippingStatus,
+                });
+            }
+        }
+
+        public async Task<Order> GetById(int id, bool lazy = true)
+        {
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                return await conn.QuerySingleOrDefaultAsync<Order>(selById, new { id });
+            }
         }
 
         private async Task<T> GetLastInsertId<T>(MySqlConnection conn)
@@ -194,5 +223,10 @@ namespace OrderSvc.Repositories
             }
         }
 
+
+        private string NewOrderNumber()
+        {
+            return $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper()}";
+        }
     }
 }

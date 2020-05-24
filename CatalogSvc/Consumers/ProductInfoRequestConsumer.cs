@@ -23,7 +23,7 @@ namespace CatalogSvc.Consumers
 
         public async Task Consume(ConsumeContext<ProductInfoRequest> context)
         {
-            if (context == null || context.Message == null || !context.Message.Slugs.HasAny())
+            if (!context.Message.Slugs.HasAny())
             {
                 await context.RespondAsync(null);
                 return;

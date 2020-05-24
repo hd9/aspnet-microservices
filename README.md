@@ -38,7 +38,15 @@ docker pull mysql:latest
 
 ## RabbitMQ
 Run RabbitMQ with:
-`docker run --name rabbitmq -d -p 5672:5672 rabbitmq`
+`docker run -d -h hildenco --name rabbitmq-4 -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine`
+
+On the command above we essentially exposed 2 ports
+from the containers to our localhost:
+    * 15672: Rabbitmq's management interface.
+             Can be accessed at: http://localhost:15672/.
+             Login with guest/guest
+    * 5672: this is what our services will use to
+            intercommunicate
 
 
 ## CatalogSvc
@@ -236,22 +244,25 @@ Run the order database with:
 Connect to the database with:
 `mysql --protocol=tcp -u root -ptodo -P 3308`
 
-Create db with:
-`create database orderdb;`
-
-And run the script to create the tables:
+And run the script to create the db and the tables:
 ```sql
+create database orderdb;
+use orderdb;
+
 create table orders (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    number              VARCHAR(40)     NOT NULL,
     account_id          INT             NOT NULL,
-    created_at          DATETIME        NOT NULL,
-    last_modified       DATETIME        NOT NULL,
-    currency            varchar(3)      NOT NULL,
+    currency            VARCHAR(3)      NOT NULL,
     price               DECIMAL(10,2)   NOT NULL,
     tax                 DECIMAL(10,2)   NOT NULL,
-    shipping            DECIMAL(10,2)   NOT NULL,
+    shipping_price      DECIMAL(10,2)   NOT NULL,
     total_price         DECIMAL(10,2)   NOT NULL,
-    status              TINYINT         NOT NULL
+    status              TINYINT         NOT NULL,
+    pmt_status          TINYINT         NOT NULL,
+    shipping_status     TINYINT         NOT NULL,    
+    created_at          DATETIME        NOT NULL,
+    last_modified       DATETIME        NOT NULL
 );
 
 create table lineitem (
@@ -268,7 +279,6 @@ create table lineitem (
 CREATE TABLE payment_info (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id              INT             NOT NULL,
-    status                TINYINT         NOT NULL,
     name                  VARCHAR(1000)   NOT NULL,
     number                VARCHAR(20)     NOT NULL,
     cvv                   SMALLINT        NOT NULL,
@@ -284,7 +294,6 @@ CREATE TABLE shipping_info (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id              INT             NOT NULL,
     payment_info_id       INT             NOT NULL,
-    status                TINYINT         NOT NULL,
     name                  VARCHAR(1000)   NOT NULL,
     street                VARCHAR(1000)   NOT NULL,
     city                  VARCHAR(300)    NOT NULL,
@@ -304,20 +313,6 @@ CREATE TABLE event_type (
     name                  VARCHAR(1000)   NULL
 );
 
-CREATE TABLE order_history (
-    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id              INT             NULL,
-    event_type_id         TINYINT         NOT NULL,
-    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
-    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: PaymentInfo, ShippingInfo, etc',
-    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
-    ip                    VARCHAR(100)    NULL,
-    info                  VARCHAR(1000)   NULL,
-    created_at            DATETIME        NOT NULL,
-    FOREIGN KEY (event_type_id)
-       REFERENCES event_type(id)
-);
-
 insert into event_type
 values
 (1, 'Order Created'),
@@ -334,6 +329,21 @@ values
 (20, 'ShippingInfo Submitted'),
 (21, 'ShippingInfo Updated'),
 (22, 'ShippingInfo Removed');
+
+CREATE TABLE order_history (
+    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id              INT             NULL,
+    event_type_id         TINYINT         NOT NULL,
+    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
+    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: PaymentInfo, ShippingInfo, etc',
+    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
+    ip                    VARCHAR(100)    NULL,
+    info                  VARCHAR(1000)   NULL,
+    created_at            DATETIME        NOT NULL,
+    FOREIGN KEY (event_type_id)
+       REFERENCES event_type(id)
+);
+
 ```
 
 ## NewsletterSvc

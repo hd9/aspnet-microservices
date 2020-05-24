@@ -29,9 +29,9 @@ namespace PaymentSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IPaymentSvc, Svc.PaymentSvc>();
-            services.AddTransient<IPaymentGateway, PaymentGateway>();
-            services.AddTransient<IPaymentRepository>(x => new PaymentRepository(cfg.ConnectionString));
+            services.AddScoped<IPaymentSvc, Svc.PaymentSvc>();
+            services.AddScoped<IPaymentGateway, PaymentGateway>();
+            services.AddScoped<IPaymentRepository>(x => new PaymentRepository(cfg.ConnectionString));
 
             services.AddMassTransit(x =>
             {
@@ -42,6 +42,7 @@ namespace PaymentSvc
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
+                        e.PrefetchCount = 16;
                         e.UseMessageRetry(n => n.Interval(2, 100));
                         e.ConfigureConsumer<PaymentRequestConsumer>(context);
                     });

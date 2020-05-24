@@ -9,6 +9,10 @@ using Svc = OrderSvc.Services;
 using OrderSvc.Repositories;
 using MassTransit;
 using OrderSvc.Infrastructure.Options;
+using OrderSvc.Consumers;
+using GreenPipes;
+using HildenCo.Core.Contracts.Account;
+using System;
 
 namespace OrderSvc
 {
@@ -27,15 +31,27 @@ namespace OrderSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<IOrderSvc, Svc.OrderSvc>();
-            services.AddTransient<IOrderRepository>(x => new OrderRepository(cfg.ConnectionString));
+            services.AddScoped<IOrderSvc, Svc.OrderSvc>();
+            services.AddScoped<IOrderRepository>(x => new OrderRepository(cfg.ConnectionString));
+            services.AddSingleton(cfg.EmailTemplates);
 
-            services.AddMassTransit(c =>
+            services.AddMassTransit(x =>
             {
-                c.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
+                x.AddConsumer<PaymentResponseConsumer>();
+
+                x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
+                    c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
+                    {
+                        e.PrefetchCount = 16;
+                        e.UseMessageRetry(n => n.Interval(2, 100));
+                        e.ConfigureConsumer<PaymentResponseConsumer>(context);
+                    });
                 }));
+
+                x.AddRequestClient<AccountInfoRequest>(
+                    new Uri($"{cfg.MassTransit.Host}/account"));
             });
 
             services.AddMassTransitHostedService();

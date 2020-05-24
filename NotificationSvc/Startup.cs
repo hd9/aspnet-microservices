@@ -10,6 +10,8 @@ using NotificationSvc.Infrastructure.Options;
 using NotificationSvc.Repositories;
 using NotificationSvc.Services;
 using Svc = NotificationSvc.Services;
+using GreenPipes;
+using HildenCo.Core.Infrastructure.Options;
 
 namespace NotificationSvc
 {
@@ -29,19 +31,24 @@ namespace NotificationSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddTransient<INotificationRepository>(x => new NotificationRepository(Configuration["ConnectionString"]));
-            services.AddTransient<INotificationSvc, Svc.NotificationSvc>();
+            services.AddScoped<INotificationRepository>(x => new NotificationRepository(Configuration["ConnectionString"]));
+            services.AddScoped<INotificationSvc, Svc.NotificationSvc>();
+            services.AddSingleton(cfg.SmtpOptions);
 
             var repo = new NotificationRepository(cfg.ConnectionString);
 
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<SendMailConsumer>();
+
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.Consumer(() => new SendMailConsumer(repo, cfg.SmtpOptions));
+                        e.PrefetchCount = 16;
+                        e.UseMessageRetry(r => r.Interval(2, 100));
+                        e.ConfigureConsumer<SendMailConsumer>(context);
                     });
                 }));
             });

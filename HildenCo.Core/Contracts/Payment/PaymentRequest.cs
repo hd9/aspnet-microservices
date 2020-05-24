@@ -34,7 +34,7 @@ namespace HildenCo.Core.Contracts.Payment
         public bool FakeResult { get; set; }
 
         /// <summary>
-        /// A Fake delay in ms to simulate delays to the payment gateway
+        /// A Fake delay in ms to simulate a delay to the payment gateway
         /// </summary>
         public int FakeDelay { get; set; } = 5000;
     }

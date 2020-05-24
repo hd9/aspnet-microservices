@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HildenCo.Core.Contracts.Payment
+namespace HildenCo.Core.Contracts.Shipping
 {
-    public class PaymentResponse : CommandBase
+    public class ShippingRequest : CommandBase
     {
         public int AccountId { get; set; }
 
         public int OrderId { get; set; }
 
-        public PaymentStatus Status { get; set; }
+        // todo :: add address fields
     }
 }
