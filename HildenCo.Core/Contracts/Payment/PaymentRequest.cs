@@ -29,9 +29,9 @@ namespace HildenCo.Core.Contracts.Payment
         public int CVV { get; set; }
 
         /// <summary>
-        /// A fake result just to simulate approved and declined payments 
+        /// A fake result just to simulate the response from the payment gateway
         /// </summary>
-        public bool FakeResult { get; set; }
+        public PaymentStatus FakeStatus { get; set; }
 
         /// <summary>
         /// A Fake delay in ms to simulate a delay to the payment gateway

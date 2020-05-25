@@ -1,7 +1,5 @@
-﻿using HildenCo.Core.Contracts.Payment;
-using HildenCo.Core.Infrastructure.Extensions;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using HildenCo.Core.Contracts.Payment;
 
 namespace PaymentSvc.Models
 {

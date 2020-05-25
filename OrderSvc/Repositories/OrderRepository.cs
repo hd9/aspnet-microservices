@@ -19,7 +19,7 @@ namespace OrderSvc.Repositories
         readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
         readonly string insLineItem = "insert into lineitem (order_id, name, slug, price, qty) values (@order_id, @name, @slug, @price, @qty)";
         readonly string selById = "select * from orders where id = @id";
-        readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId";
+        readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId  order by o.last_modified desc limit 10;";
 
         // order history
         private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
@@ -55,7 +55,7 @@ namespace OrderSvc.Repositories
             return orderDictionary.Select(x => x.Value);
         }
 
-        public async Task<int> Insert(Order order)
+        public async Task Insert(Order order)
         {
             using (var conn = new MySqlConnection(_connStr))
             {
@@ -150,8 +150,6 @@ namespace OrderSvc.Repositories
                     await transaction.CommitAsync();
                 }
             }
-
-            return order.Id;
         }
 
         public async Task Update(

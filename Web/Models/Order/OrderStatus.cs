@@ -4,5 +4,12 @@
     {
         New,
         Submitted,
+        PaymentApproved,
+        PaymentDeclined,
+        WaitingShipping,
+        Shipped,
+        Delivered,
+        Complete,
+        Cancelled
     }
 }

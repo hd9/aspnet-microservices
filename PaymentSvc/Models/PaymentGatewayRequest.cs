@@ -34,7 +34,7 @@ namespace PaymentSvc.Models
 
         public PaymentGatewayResponseStatus Status { get; set; }
 
-        public bool FakeResult { get; set; }
+        public PaymentStatus FakeStatus { get; set; }
 
         public int FakeDelay { get; set; } = 5000;
     }

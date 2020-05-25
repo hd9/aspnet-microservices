@@ -36,9 +36,16 @@ namespace OrderSvc.Services
             return await _repo.GetOrdersByAccountId(accountId);
         }
 
-        public async Task<int> SubmitOrder(Order order)
+        public async Task SubmitOrder(Order order)
         {
-            var orderId = await _repo.Insert(order);
+            await _repo.Insert(order);
+            var acctInfo = await GetAccount(order.AccountId);
+
+            if (acctInfo == null)
+            {
+                // todo :: log
+                return;
+            }
 
             await _bus.Publish(
                 new OrderSubmitted 
@@ -46,12 +53,15 @@ namespace OrderSvc.Services
                     Slugs = order.LineItems.Select(li => li.Slug).ToList()
                 });
 
+            await SendMail(acctInfo, "OrderSubmitted");
+
             // todo :: automapper
+            var status = Core.PaymentStatus.Authorized;
             await _bus.Publish(
                 new Core.PaymentRequest
                 {
                     AccountId = order.AccountId,
-                    OrderId = orderId,
+                    OrderId = order.Id,
                     Currency = order.Currency,
                     Amount = order.TotalPrice,
                     Method = order.PaymentInfo.Method.ToString(),
@@ -59,12 +69,10 @@ namespace OrderSvc.Services
                     Number = order.PaymentInfo.Number,
                     ExpDate = order.PaymentInfo.ExpDate,
                     CVV = order.PaymentInfo.CVV,
-                    FakeDelay = 2000,
-                    FakeResult = true
+                    FakeDelay = 5000,
+                    FakeStatus = status
                 }
             );
-
-            return orderId;
         }
 
         public async Task OnPaymentProcessed(Core.PaymentResponse msg)
@@ -81,8 +89,7 @@ namespace OrderSvc.Services
                 return;
             }
 
-            var paymentStatus = Enum.Parse<PaymentStatus>(msg.Status.ToString());
-
+            var paymentStatus = msg.Status.Parse<PaymentStatus>();
             switch (paymentStatus)
             {
                 case PaymentStatus.Authorized:
@@ -95,13 +102,13 @@ namespace OrderSvc.Services
                     await OnPaymentDeclined(order, acctInfo);
                     break;
                 default:
-                    // other statuses not currently implemented
+                    // other statuses/workflows not currently implemented
                     break;
             }
         }
 
         /// <summary>
-        /// Gets account information asyncrhonously from the account service
+        /// GetAccount gets account information asyncrhonously from the Account service
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
@@ -122,16 +129,14 @@ namespace OrderSvc.Services
         {
             // on payment declined, just send the email and cancel the order
             // note: ideally we'd notify the user and provide them an opportunity to
-            //       continue the workflow but that feature is not implemented atm 
+            //       continue the workflow but that feature is not implemented yet.
             await _repo.Update(
                 order.Id,
                 OrderStatus.PaymentDeclined,
                 PaymentStatus.Declined,
                 ShippingStatus.Pending);
 
-            await SendMail(
-                acctInfo,
-                _emailTemplates.Single(x => x.TemplateName == "PaymentDeclined"));
+            await SendMail(acctInfo, "PaymentDeclined");
         }
 
         private async Task OnPaymentCancelled(Order order, AccountInfo acctInfo)
@@ -143,9 +148,7 @@ namespace OrderSvc.Services
                 PaymentStatus.Cancelled,
                 ShippingStatus.Cancelled);
 
-            await SendMail(
-                acctInfo,
-                _emailTemplates.Single(x => x.TemplateName == "PaymentCancelled"));
+            await SendMail(acctInfo, "PaymentCancelled");
         }
 
         private async Task OnPaymentAutorized(Order order, AccountInfo acctInfo)
@@ -164,14 +167,15 @@ namespace OrderSvc.Services
                 // todo :: add address fields
             });
 
-            await SendMail(
-                acctInfo,
-                _emailTemplates.Single(x => x.TemplateName == "PaymentAuthorized"));
+            await SendMail(acctInfo, "PaymentAuthorized");
         }
 
-        private async Task SendMail(AccountInfo acct, EmailTemplate tpl)
+        private async Task SendMail(AccountInfo acct, string tplName)
         {
-            await _bus.Send(new SendMail
+            var tpl = _emailTemplates
+                .Single(x => x.TemplateName == tplName);
+
+            await _bus.Publish(new SendMail
             {
                 ToName = acct.Name,
                 Email = acct.Email,

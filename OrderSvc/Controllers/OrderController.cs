@@ -50,8 +50,8 @@ namespace OrderSvc.Controllers
         [Route("/orders/submit")]
         public async Task<IActionResult> SubmitOrder([FromBody] Order order)
         {
-            var orderId = await _svc.SubmitOrder(order);
-            return Ok(orderId);
+            await _svc.SubmitOrder(order);
+            return Ok(order.Id);
         }
     }
 }

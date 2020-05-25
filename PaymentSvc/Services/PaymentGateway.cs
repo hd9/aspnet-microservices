@@ -1,4 +1,5 @@
 ﻿using HildenCo.Core.Contracts.Payment;
+using HildenCo.Core.Infrastructure.Extensions;
 using PaymentSvc.Models;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,16 @@ namespace PaymentSvc.Services
 
         private PaymentGatewayResponse BuildFakeResponse(PaymentGatewayRequest pgr)
         {
+            var approved = pgr.FakeStatus == Models.PaymentStatus.Authorized;
             return new PaymentGatewayResponse
             {
                 PaymentGatewayId = pgr.PaymentGatewayId,
                 Currency = pgr.Currency,
                 Amount = pgr.Amount,
-                AuthCode = pgr.FakeResult ? 
-                    Guid.NewGuid().ToString().ToUpper().Substring(0, 8) : 
+                Status = pgr.FakeStatus.Parse<PaymentGatewayResponseStatus>(),
+                AuthCode = approved ?
+                    Guid.NewGuid().ToString().ToUpper().Substring(0, 8) :
                     null,
-                Status = pgr.FakeResult ?
-                    PaymentGatewayResponseStatus.Authorized : 
-                    PaymentGatewayResponseStatus.Declined
             };
         }
     }

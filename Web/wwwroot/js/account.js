@@ -85,7 +85,8 @@ const myOrdersApp = new Vue({
     },
     methods: {
         statusName: function (status) {
-            return status === 0 ? 'New' : 'Submitted';
+            var statuses = ['New', 'Submitted', 'Payment Approved', 'Payment Declined', 'Waiting Shipping', 'Shipped', 'Delivered', 'Complete', 'Cancelled'];
+            return statuses[status ?? 0];
         }
     },
     mounted() {

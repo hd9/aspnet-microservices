@@ -6,6 +6,8 @@
         Authorized,
         Declined,
         Cancelled,
-        Refunded
+        Refunded,
+        Invalid,
+        Error
     }
 }

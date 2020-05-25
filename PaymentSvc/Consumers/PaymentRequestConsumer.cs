@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace PaymentSvc.Consumers
 {
+    /// <summary>
+    /// Requests a new payment from the Payment service
+    /// </summary>
     public class PaymentRequestConsumer
         : IConsumer<PaymentRequest>
     {

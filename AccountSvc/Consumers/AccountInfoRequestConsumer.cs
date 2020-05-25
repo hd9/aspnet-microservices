@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace AccountSvc.Consumers
 {
+    /// <summary>
+    /// AccountInfoRequestConsumer consumes to AccountInfoRequest events
+    /// and responds asynchronously with account information.
+    /// </summary>
     public class AccountInfoRequestConsumer
         : IConsumer<AccountInfoRequest>
     {

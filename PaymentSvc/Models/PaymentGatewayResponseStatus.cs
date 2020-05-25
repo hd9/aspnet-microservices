@@ -5,6 +5,8 @@
         Pending,
         Authorized,
         Declined,
+        Cancelled,
+        Refunded,
         Invalid,
         Error
     }

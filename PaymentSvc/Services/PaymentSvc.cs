@@ -1,14 +1,11 @@
-﻿using PaymentSvc.Models;
-using PaymentSvc.Repositories;
+﻿using System;
 using Dapper;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using PaymentSvc.Models;
+using PaymentSvc.Repositories;
 using System.Threading.Tasks;
 using MassTransit;
 using Core = HildenCo.Core.Contracts.Payment;
-
+using HildenCo.Core.Infrastructure.Extensions;
 
 namespace PaymentSvc.Services
 {
@@ -44,29 +41,24 @@ namespace PaymentSvc.Services
                 Number = pr.Number,
                 CVV = pr.CVV,
                 ExpDate = pr.ExpDate,
-                Method = Enum.Parse<PaymentMethod>(pr.Method, true),
-                FakeDelay = pr.FakeDelay,                               // fake stuff
-                FakeResult = pr.FakeResult,                             // fake stuff
+                Method = Enum.Parse<PaymentMethod>(pr.Method),
+                FakeDelay = pr.FakeDelay,                                   // fake stuff
+                FakeStatus = pr.FakeStatus.Parse<PaymentStatus>()           // fake stuff
             };
 
             var resp = await _pmtGateway.Process(pgr);
             pgr.Status = resp.Status;
             pmt.AuthCode = pgr.AuthCode = resp.AuthCode;
+            pmt.Status = resp.Status.Parse<PaymentStatus>();
 
             await _repo.InsertPaymentRequest(pgr);
-            
-            pmt.Status = 
-                resp.Status == PaymentGatewayResponseStatus.Authorized ? 
-                    PaymentStatus.Authorized : 
-                    PaymentStatus.Declined;
-
             await _repo.UpdatePayment(pmt);
 
             await _bus.Publish(new Core.PaymentResponse
             {
                 AccountId = pmt.AccountId,
                 OrderId = pmt.OrderId,
-                Status = Enum.Parse<Core.PaymentStatus>(pmt.Status.ToString())
+                Status = pmt.Status.Parse<Core.PaymentStatus>()
             });
         }
 

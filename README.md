@@ -38,7 +38,7 @@ docker pull mysql:latest
 
 ## RabbitMQ
 Run RabbitMQ with:
-`docker run -d -h hildenco --name rabbitmq-4 -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine`
+`docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine`
 
 On the command above we essentially exposed 2 ports
 from the containers to our localhost:
