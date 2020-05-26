@@ -14,7 +14,7 @@ namespace OrderSvc.Controllers
     {
         readonly IOrderSvc _svc;
         readonly IBusControl _bus;
-        const string instruction = @"The Order service is alive! Try GET /orders/{accountId}.";
+        const string instruction = @"The Order service is alive! Try GET /order/{id}.";
 
         public OrderController(IOrderSvc svc, IBusControl bus)
         {
@@ -32,6 +32,13 @@ namespace OrderSvc.Controllers
         public IActionResult Help()
         {
             return Ok(instruction);
+        }
+
+        [Route("/order/{id}")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            var orders = await _svc.GetOrderById(id);
+            return Ok(orders);
         }
 
         [Route("/orders/{accountId}")]

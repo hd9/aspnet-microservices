@@ -1,20 +1,18 @@
-using OrderSvc.Services;
+using ShippingSvc.Repositories;
+using ShippingSvc.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Svc = OrderSvc.Services;
-using OrderSvc.Repositories;
+using Svc = ShippingSvc.Services;
 using MassTransit;
-using OrderSvc.Infrastructure.Options;
-using OrderSvc.Consumers;
+using ShippingSvc.Infrastructure.Options;
+using ShippingSvc.Consumers;
 using GreenPipes;
-using HildenCo.Core.Contracts.Account;
-using System;
 
-namespace OrderSvc
+namespace ShippingSvc
 {
     public class Startup
     {
@@ -31,14 +29,12 @@ namespace OrderSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddScoped<IOrderSvc, Svc.OrderSvc>();
-            services.AddScoped<IOrderRepository>(x => new OrderRepository(cfg.ConnectionString));
-            services.AddSingleton(cfg.EmailTemplates);
+            services.AddScoped<IShippingSvc, Svc.ShippingSvc>();
+            services.AddScoped<IShippingRepository>(x => new ShippingRepository(cfg.ConnectionString));
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<PaymentResponseConsumer>();
-                x.AddConsumer<ShippingResponseConsumer>();
+                x.AddConsumer<ShippingRequestConsumer>();
 
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(c =>
                 {
@@ -47,17 +43,12 @@ namespace OrderSvc
                     {
                         e.PrefetchCount = 16;
                         e.UseMessageRetry(n => n.Interval(2, 100));
-                        e.ConfigureConsumer<PaymentResponseConsumer>(context);
-                        e.ConfigureConsumer<ShippingResponseConsumer>(context);
+                        e.ConfigureConsumer<ShippingRequestConsumer>(context);
                     });
                 }));
-
-                x.AddRequestClient<AccountInfoRequest>(
-                    new Uri($"{cfg.MassTransit.Host}/account"));
             });
 
             services.AddMassTransitHostedService();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

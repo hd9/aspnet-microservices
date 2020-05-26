@@ -8,7 +8,6 @@
         PaymentDeclined,
         WaitingShipping,
         Shipped,
-        Delivered,
         Complete,
         Cancelled
     }

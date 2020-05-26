@@ -19,6 +19,7 @@ namespace OrderSvc.Repositories
         readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
         readonly string insLineItem = "insert into lineitem (order_id, name, slug, price, qty) values (@order_id, @name, @slug, @price, @qty)";
         readonly string selById = "select * from orders where id = @id";
+        readonly string selByIdFull = "select * from orders o inner join lineitem li on li.order_id = o.id inner join payment_info pi on pi.order_id = o.id inner join shipping_info si on si.order_id = o.id where o.id = @id";
         readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId  order by o.last_modified desc limit 10;";
 
         // order history
@@ -35,22 +36,24 @@ namespace OrderSvc.Repositories
             var orderDictionary = new Dictionary<int, Order>();
             using (var conn = new MySqlConnection(_connStr))
             {
-                var orders = await conn.QueryAsync<Order, LineItem, Order>(selByAcctId, (order, lineItem) =>
-                {
-                    Order orderEntry;
-
-                    if (!orderDictionary.TryGetValue(order.Id, out orderEntry))
+                var orders = await conn.QueryAsync<Order, LineItem, Order>(
+                    selByAcctId,
+                    (o, li) =>
                     {
-                        orderEntry = order;
-                        orderEntry.LineItems = new List<LineItem>();
-                        orderDictionary.Add(orderEntry.Id, orderEntry);
-                    }
+                        Order order;
 
-                    orderEntry.LineItems.Add(lineItem);
-                    return orderEntry;
+                        if (!orderDictionary.TryGetValue(o.Id, out order))
+                        {
+                            order = o;
+                            order.LineItems = new List<LineItem>();
+                            orderDictionary.Add(order.Id, order);
+                        }
 
-                }, new { accountId });
-            }
+                        order.LineItems.Add(li);
+                        return order;
+
+                    }, new { accountId });
+                }
 
             return orderDictionary.Select(x => x.Value);
         }
@@ -171,12 +174,39 @@ namespace OrderSvc.Repositories
             }
         }
 
-        public async Task<Order> GetById(int id, bool lazy = true)
+        public async Task<Order> GetById(int id, bool fullGraph = false)
         {
+            if (!fullGraph)
+            {
+                using (var conn = new MySqlConnection(_connStr))
+                    return await conn.QuerySingleOrDefaultAsync<Order>(selById, new { id });
+            }
+
+            var od = new Dictionary<int, Order>();
             using (var conn = new MySqlConnection(_connStr))
             {
-                return await conn.QuerySingleOrDefaultAsync<Order>(selById, new { id });
+                var orders = await conn.QueryAsync<Order, LineItem, PaymentInfo, ShippingInfo, Order>(
+                    selByIdFull,
+                    (o, li, pi, si) =>
+                    {
+                        Order order;
+                        if (!od.TryGetValue(o.Id, out order))
+                        {
+                            order = o;
+                            order.LineItems = new List<LineItem>();
+                            od.Add(order.Id, order);
+                        }
+
+                        order.LineItems.Add(li);
+                        order.PaymentInfo = pi;
+                        order.ShippingInfo = si;
+
+                        return order;
+
+                    }, new { id });
             }
+
+            return od.Select(x => x.Value).FirstOrDefault();
         }
 
         private async Task<T> GetLastInsertId<T>(MySqlConnection conn)
@@ -220,7 +250,6 @@ namespace OrderSvc.Repositories
                     return $"Order: {orderId} requested a {et}.{(data.HasValue() ? "with data: {data}" : "")}";
             }
         }
-
 
         private string NewOrderNumber()
         {

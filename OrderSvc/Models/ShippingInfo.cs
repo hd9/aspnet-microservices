@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HildenCo.Core.Contracts.Shipping;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -40,6 +41,17 @@ namespace OrderSvc.Models
         [Required]
         [StringLength(20)]
         public string Country { get; set; }
+
+        /// <summary>
+        /// Shipping amount (not implemented)
+        /// </summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>
+        /// ShippingProvider (not implemented)
+        /// </summary>
+        public ShippingProvider Provider { get; set; }
+
 
         /// <summary>
         /// Basic override for logging purposes

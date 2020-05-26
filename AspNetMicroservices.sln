@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecommendationSvc", "Recomm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HildenCo.Core", "HildenCo.Core\HildenCo.Core.csproj", "{83C4E2F5-5252-45B6-A7D3-D71A99377EC6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShippingSvc", "ShippingSvc\ShippingSvc.csproj", "{597072A2-6E8E-407D-93B3-A73DBD2AB523}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{83C4E2F5-5252-45B6-A7D3-D71A99377EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83C4E2F5-5252-45B6-A7D3-D71A99377EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83C4E2F5-5252-45B6-A7D3-D71A99377EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{597072A2-6E8E-407D-93B3-A73DBD2AB523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{597072A2-6E8E-407D-93B3-A73DBD2AB523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{597072A2-6E8E-407D-93B3-A73DBD2AB523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{597072A2-6E8E-407D-93B3-A73DBD2AB523}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using HildenCo.Core.Contracts.Orders;
-using Core = HildenCo.Core.Contracts.Payment;
+using P = HildenCo.Core.Contracts.Payment;
+using S = HildenCo.Core.Contracts.Shipping;
 using MassTransit;
 using OrderSvc.Models;
 using OrderSvc.Repositories;
@@ -31,6 +32,11 @@ namespace OrderSvc.Services
             _emailTemplates = emailTemplates;
         }
 
+        public async Task<Order> GetOrderById(int id)
+        {
+            return await _repo.GetById(id, true);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
         {
             return await _repo.GetOrdersByAccountId(accountId);
@@ -39,7 +45,7 @@ namespace OrderSvc.Services
         public async Task SubmitOrder(Order order)
         {
             await _repo.Insert(order);
-            var acctInfo = await GetAccount(order.AccountId);
+            var acctInfo = await GetAccountById(order.AccountId);
 
             if (acctInfo == null)
             {
@@ -56,9 +62,9 @@ namespace OrderSvc.Services
             await SendMail(acctInfo, "OrderSubmitted");
 
             // todo :: automapper
-            var status = Core.PaymentStatus.Authorized;
+            var status = P.PaymentStatus.Authorized;
             await _bus.Publish(
-                new Core.PaymentRequest
+                new P.PaymentRequest
                 {
                     AccountId = order.AccountId,
                     OrderId = order.Id,
@@ -75,16 +81,18 @@ namespace OrderSvc.Services
             );
         }
 
-        public async Task OnPaymentProcessed(Core.PaymentResponse msg)
+        public async Task OnPaymentProcessed(P.PaymentResponse msg)
         {
             if (msg == null)
                 return;
 
             // load the order
-            var order = await _repo.GetById(msg.OrderId);
-            var acctInfo = await GetAccount(msg.AccountId);
+            var order = await _repo.GetById(msg.OrderId, true);
+            var acctInfo = await GetAccountById(msg.AccountId);
             
-            if (order == null || acctInfo == null || order.AccountId != msg.AccountId)
+            if (order == null || 
+                acctInfo == null || 
+                order.AccountId != msg.AccountId)
             {
                 return;
             }
@@ -107,22 +115,51 @@ namespace OrderSvc.Services
             }
         }
 
+        public async Task OnShippingProcessed(ShippingResponse msg)
+        {
+            var order = await _repo.GetById(msg.OrderId);
+            var acctInfo = await GetAccountById(msg.AccountId);
+
+            if (order == null || acctInfo == null)
+            {
+                // todo :: log
+                return;
+            }
+
+            switch (msg.Status)
+            {
+                case S.ShippingStatus.Delivered:
+                    await OnShippingSucceeded(order, acctInfo);
+                    break;
+                default:
+                    // other workflows not implemented
+                    // on shiping error, just cancel the order
+                    await OnShippingError(order, acctInfo);
+                    break;
+            }
+        }
+
         /// <summary>
-        /// GetAccount gets account information asyncrhonously from the Account service
+        /// GetAccountById gets account information asyncrhonously from the Account service
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        private async Task<AccountInfo> GetAccount(int accountId)
+        private async Task<AccountInfo> GetAccountById(int accountId)
         {
-            using (var request = _client.Create(new AccountInfoRequest { AccountId = accountId }))
-            {
-                var response = await request.GetResponse<AccountInfoResponse>();
+            using var request = _client.Create(
+                new AccountInfoRequest
+                {
+                    AccountId = accountId
+                }
+            );
+            var response = await request.GetResponse<AccountInfoResponse>();
 
-                if (response == null || response.Message == null || response.Message.AccountInfo == null)
-                    return null;
+            if (response == null ||
+                response.Message == null ||
+                response.Message.AccountInfo == null)
+                return null;
 
-                return response.Message.AccountInfo;
-            }
+            return response.Message.AccountInfo;
         }
 
         private async Task OnPaymentDeclined(Order order, AccountInfo acctInfo)
@@ -134,7 +171,7 @@ namespace OrderSvc.Services
                 order.Id,
                 OrderStatus.PaymentDeclined,
                 PaymentStatus.Declined,
-                ShippingStatus.Pending);
+                Models.ShippingStatus.Pending);
 
             await SendMail(acctInfo, "PaymentDeclined");
         }
@@ -146,28 +183,67 @@ namespace OrderSvc.Services
                 order.Id,
                 OrderStatus.Cancelled,
                 PaymentStatus.Cancelled,
-                ShippingStatus.Cancelled);
+                Models.ShippingStatus.Cancelled);
 
             await SendMail(acctInfo, "PaymentCancelled");
         }
 
-        private async Task OnPaymentAutorized(Order order, AccountInfo acctInfo)
+        private async Task OnPaymentAutorized(
+            Order order, 
+            AccountInfo acctInfo)
         {
             // on payment authorized, keep the workflow by requesting shipping
             await _repo.Update(
                 order.Id,
                 OrderStatus.PaymentApproved,
                 PaymentStatus.Authorized,
-                ShippingStatus.Pending);
+                Models.ShippingStatus.Pending);
 
+            var si = order.ShippingInfo;
             await _bus.Publish(new ShippingRequest
             {
                 OrderId = order.Id,
                 AccountId = order.AccountId,
-                // todo :: add address fields
+                Currency = order.Currency,
+                Name = si.Name,
+                Amount = si.Amount,
+                Street = si.Street,
+                PostalCode = si.PostalCode,
+                City = si.City,
+                Region = si.Region,
+                Country = si.Country,
+                Provider = si.Provider
             });
 
             await SendMail(acctInfo, "PaymentAuthorized");
+        }
+
+        private async Task OnShippingSucceeded(
+            Order order, 
+            AccountInfo acctInfo)
+        {
+            // on shipping cancelled, just cancel the order and send email
+            await _repo.Update(
+                order.Id,
+                OrderStatus.Complete,
+                PaymentStatus.Authorized,
+                Models.ShippingStatus.Delivered);
+
+            await SendMail(acctInfo, "OrderComplete");
+        }
+
+        private async Task OnShippingError(
+            Order order,
+            AccountInfo acctInfo)
+        {
+            // on shipping cancelled, just cancel the order and send email
+            await _repo.Update(
+                order.Id,
+                OrderStatus.Cancelled,
+                PaymentStatus.Cancelled,
+                Models.ShippingStatus.Cancelled);
+
+            await SendMail(acctInfo, "ShippingError");
         }
 
         private async Task SendMail(AccountInfo acct, string tplName)
@@ -184,5 +260,6 @@ namespace OrderSvc.Services
                 Subject = tpl.Subject
             });
         }
+
     }
 }

@@ -346,47 +346,6 @@ CREATE TABLE order_history (
 
 ```
 
-## NewsletterSvc
-Run the Newsletter db with:
-`docker run -d --name mysql-newslettersvc -p 3312:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -ptodo -P 3312`
-
-Create a database and table:
-```sql
-create database newsletterdb;
-use newsletterdb;
-
-CREATE TABLE newsletter (
-    id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(1000)   NOT NULL,
-    email       VARCHAR(300)    NOT NULL,
-    created_at  DATETIME        NOT NULL
-);
-```
-
-
-## NotificationSvc
-Run the Notification db with:
-`docker run -d --name mysql-notificationsvc -p 3311:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
-
-Connect to the database with:
-`mysql --protocol=tcp -u root -ptodo -P 3311`
-
-Create a database and table:
-```sql
-create database notificationdb;
-use notificationdb;
-
-CREATE TABLE notification (
-    id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(1000)   NOT NULL,
-    email       VARCHAR(300)    NOT NULL,
-    created_at  DATETIME        NOT NULL,
-    type        char(1)         NOT NULL
-);
-```
 
 ## PaymentSvc
 Run the payment db with:
@@ -495,7 +454,6 @@ values
 (103, 100, 100, sysdate()),
 (104, 100, 100, sysdate()),
 
-
 -- xbox recomms
 (200, 201, 10, sysdate()),
 (200, 202, 10, sysdate()),
@@ -505,6 +463,80 @@ values
 (202, 200, 100, sysdate()),
 (203, 200, 100, sysdate()),
 (204, 200, 100, sysdate());
+```
+
+
+## NotificationSvc
+Run the Notification db with:
+`docker run -d --name mysql-notificationsvc -p 3311:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3311`
+
+Create a database and table:
+```sql
+create database notificationdb;
+use notificationdb;
+
+CREATE TABLE notification (
+    id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(1000)   NOT NULL,
+    email       VARCHAR(300)    NOT NULL,
+    created_at  DATETIME        NOT NULL,
+    type        char(1)         NOT NULL
+);
+```
+
+## NewsletterSvc
+Run the Newsletter db with:
+`docker run -d --name mysql-newslettersvc -p 3312:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3312`
+
+Create a database and table:
+```sql
+create database newsletterdb;
+use newsletterdb;
+
+CREATE TABLE newsletter (
+    id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(1000)   NOT NULL,
+    email       VARCHAR(300)    NOT NULL,
+    created_at  DATETIME        NOT NULL
+);
+```
+
+
+## ShippingSvc
+Run the Shipping db with:
+`docker run -d --name mysql-shippingsvc -p 3313:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+
+Connect to the database with:
+`mysql --protocol=tcp -u root -ptodo -P 3313`
+
+Create a database and table:
+```sql
+create database shippingdb;
+use shippingdb;
+
+CREATE TABLE shipping (
+    id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    number              VARCHAR(100)    NOT NULL,
+    account_id          INT             NOT NULL,
+    order_id            INT             NOT NULL,
+    name                VARCHAR(1000)   NOT NULL COMMENT 'Name of the recipient',
+    amount              DECIMAL(10,2)   NOT NULL,
+    currency            VARCHAR(3)      NOT NULL,
+    street              VARCHAR(1000)   NOT NULL,
+    city                VARCHAR(300)    NOT NULL,
+    region              VARCHAR(100)    NOT NULL,
+    postal_code         VARCHAR(10)     NOT NULL,
+    country             VARCHAR(100)    NOT NULL,
+    status              TINYINT         NOT NULL,
+    provider            TINYINT         NOT NULL,
+    created_at          DATETIME        NOT NULL
+);
 ```
 
 
