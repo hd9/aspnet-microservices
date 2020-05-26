@@ -26,12 +26,13 @@ To run this application, you'll need the following Docker images:
     * ASP.NET Core runtime
     * RabbitMQ:latest
     * MySQL:latest
+	* Adminer
 
 Start by pulling the images with:
 docker pull mongo:latest
 docker pull rabbitmq:latest
 docker pull mysql:latest
-
+docker pull adminer:latest
 
 
 # Configuring the microservices
@@ -42,15 +43,34 @@ Run RabbitMQ with:
 
 On the command above we essentially exposed 2 ports
 from the containers to our localhost:
-    * 15672: Rabbitmq's management interface.
-             Can be accessed at: http://localhost:15672/.
-             Login with guest/guest
-    * 5672: this is what our services will use to
-            intercommunicate
+    * 15672: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
+    * 5672: this is what our services will use to intercommunicate
 
+We'll use MassTransit to abstract RabbitMQ so we can implement patterns like
+pub/sub with minimum effort. Please note that we're running our RabbitMQ
+instance using the default password (guest|guest) and MassTransit's already
+pre-configured with that. 
+
+If for some reason you decide to change your RabbitMQ password, you'll have to 
+do two things:
+	1. update the above docker command setting the username and password with
+       `-e RABBITMQ_DEFAULT_USER=<your-username> -e RABBITMQ_DEFAULT_PASS=<your-password>`
+	2. Update your `Startup.cs` file(s) with the snippet below.
+
+```csharp
+	c.Host(cfg.MassTransit.Host, h =>
+	{
+		h.Username("<your-username>");
+		h.Password("<your-password>");
+	});
+```
+
+For more information about RabbitMQ, visit:
+	* [RabbitMQ's website](https://rabbitmq.com/)
+	* [RabbitMQ @ Docker Hub](https://hub.docker.com/_/rabbitmq)
 
 ## CatalogSvc
-Holds catalog and product information.
+The Catalog service holds catalog and product information.
 
 Running CatalogSvc docker image:
 `docker run -d --name mongo-catalog -p 32769:27017 mongo`
@@ -538,6 +558,37 @@ CREATE TABLE shipping (
     created_at          DATETIME        NOT NULL
 );
 ```
+
+## Management Interfaces
+The project also includes management interfaces for RabbitMQ and MySQL
+databases. If running the default settings, you should have available:
+	* Adminer: manage your MySQL databases
+	* RabbitMQ Management Console: manage your rabbitmq broker
+
+
+### Adminer
+Adminer (formerly phpMinAdmin) is a full-featured database management tool
+written in PHP. Conversely to phpMyAdmin, it consist of a single file ready to
+deploy to the target server. Adminer is available for MySQL, PostgreSQL, SQLite,
+MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch and MongoDB.
+
+If you want to manage your MySQL databases with adminer, run it with:
+docker run -d -p 8080:8080 --name adminer adminer
+
+To open Adminer, please open [http://localhost:8080/](http://localhost:8080/)
+on your browser, enter the IP of your MySQL Docker instance (see below) as host
+and login with its password (default: root|todo)
+
+To get the IPs of the containers inside the Docker network. That can be queried
+with: `docker inspect network bridge -f '{{json .Containers}}' | jq`
+
+* Notice that you'll need jq to format the output.
+
+## RabbitMQ Management Console
+RabbitMQ is an open source multi-protocol messaging broker. It's used in this
+project via MassTransit to provide asynchronous communications via pub/sub and
+async request/responses. RabbitMQ Management Console is available at:
+[http://localhost:15672/](http://localhost:15672/). Login with guest/guest.
 
 
 ## Changing Configuration
