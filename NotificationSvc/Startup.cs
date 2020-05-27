@@ -19,7 +19,7 @@ namespace NotificationSvc
     {
 
         public IConfiguration Configuration { get; }
-        private readonly AppConfig cfg;
+        readonly AppConfig cfg;
 
         public Startup(IConfiguration configuration)
         {

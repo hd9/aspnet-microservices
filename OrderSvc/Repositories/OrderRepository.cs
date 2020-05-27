@@ -23,7 +23,7 @@ namespace OrderSvc.Repositories
         readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId  order by o.last_modified desc limit 10;";
 
         // order history
-        private readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
+        readonly string insOrderHistory = "insert into order_history (order_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@order_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
 
         public OrderRepository(string connStr)
         {

@@ -11,7 +11,7 @@ namespace Web.Controllers
 {
     public class RecommendationController : Controller
     {
-        private readonly IRecommendationProxy _svc;
+        readonly IRecommendationProxy _svc;
 
         public RecommendationController(IRecommendationProxy svc)
         {

@@ -11,35 +11,35 @@ namespace AccountSvc.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly string _connStr;
+        readonly string _connStr;
 
         // act
-        private readonly string insAcct = "INSERT INTO account (name, email, password, salt, created_at, last_updated, subscribe_newsletter) values (@name, @email, @password, @salt, sysdate(), sysdate(), @subscribe_newsletter)";
-        private readonly string updAccount = "UPDATE account set name = @name, email = @email, last_updated = sysdate() WHERE id = @id";
-        private readonly string updPwd = "UPDATE account set password = @password WHERE id = @id";
-        private readonly string updNewsletter = "UPDATE account set subscribe_newsletter = @subscribe_newsletter WHERE id = @id";
-        private readonly string selAcctById = "SELECT * FROM account WHERE id = @id";
-        private readonly string selAcctByEmail = "SELECT * FROM account WHERE email = @email";
+        readonly string insAcct = "INSERT INTO account (name, email, password, salt, created_at, last_updated, subscribe_newsletter) values (@name, @email, @password, @salt, sysdate(), sysdate(), @subscribe_newsletter)";
+        readonly string updAccount = "UPDATE account set name = @name, email = @email, last_updated = sysdate() WHERE id = @id";
+        readonly string updPwd = "UPDATE account set password = @password WHERE id = @id";
+        readonly string updNewsletter = "UPDATE account set subscribe_newsletter = @subscribe_newsletter WHERE id = @id";
+        readonly string selAcctById = "SELECT * FROM account WHERE id = @id";
+        readonly string selAcctByEmail = "SELECT * FROM account WHERE email = @email";
         
         // address
-        private readonly string insAddress = "INSERT INTO address (account_id, name, is_default, street, city, region, country, postal_code, created_at, last_updated) values (@account_id, @name, @is_default, @street, @city, @region, @country, @postal_code, sysdate(), sysdate());";
-        private readonly string updAddress = "UPDATE address set name = @name, street = @street, city = @city, region = @region, postal_code = @postal_code, country = @country, last_updated = sysdate() WHERE id = @id";
-        private readonly string updDefaultAddress = "UPDATE address set is_default = false where account_id = @account_id; UPDATE address set is_default = true where id = @id and account_id = @account_id";
-        private readonly string delAddress = "DELETE FROM address WHERE id = @id";
-        private readonly string selAddressById = "SELECT * FROM address WHERE id = @id";
-        private readonly string selGetAddressesByAccountId = "SELECT * FROM address WHERE account_id = @account_id";
+        readonly string insAddress = "INSERT INTO address (account_id, name, is_default, street, city, region, country, postal_code, created_at, last_updated) values (@account_id, @name, @is_default, @street, @city, @region, @country, @postal_code, sysdate(), sysdate());";
+        readonly string updAddress = "UPDATE address set name = @name, street = @street, city = @city, region = @region, postal_code = @postal_code, country = @country, last_updated = sysdate() WHERE id = @id";
+        readonly string updDefaultAddress = "UPDATE address set is_default = false where account_id = @account_id; UPDATE address set is_default = true where id = @id and account_id = @account_id";
+        readonly string delAddress = "DELETE FROM address WHERE id = @id";
+        readonly string selAddressById = "SELECT * FROM address WHERE id = @id";
+        readonly string selGetAddressesByAccountId = "SELECT * FROM address WHERE account_id = @account_id";
 
         // pmtinfo
-        private readonly string insPmtInfo = "INSERT INTO payment_info (account_id, name, is_default, number, cvv, exp_date, method, created_at, last_updated) VALUES (@account_id, @name, @is_default, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
-        private readonly string updPmtInfo = "UPDATE payment_info set name = @name, is_default = @is_default, number = @number, cvv = @cvv, exp_date = @exp_date, method = @method, last_updated = sysdate() where id = @id";
-        private readonly string delPmtInfo = "DELETE FROM payment_info where id = @id";
-        private readonly string selPmtInfoById = "SELECT * FROM payment_info where id = @id";
-        private readonly string selPaymentInfosByAccountId = "SELECT * FROM payment_info where account_id = @account_id";
-        private readonly string updDefaultPaymentInfo = "UPDATE payment_info SET is_default = false where account_id = @account_id; UPDATE payment_info SET is_default = true where id = @id AND account_id = @account_id";
+        readonly string insPmtInfo = "INSERT INTO payment_info (account_id, name, is_default, number, cvv, exp_date, method, created_at, last_updated) VALUES (@account_id, @name, @is_default, @number, @cvv, @exp_date, @method, sysdate(), sysdate())";
+        readonly string updPmtInfo = "UPDATE payment_info set name = @name, is_default = @is_default, number = @number, cvv = @cvv, exp_date = @exp_date, method = @method, last_updated = sysdate() where id = @id";
+        readonly string delPmtInfo = "DELETE FROM payment_info where id = @id";
+        readonly string selPmtInfoById = "SELECT * FROM payment_info where id = @id";
+        readonly string selPaymentInfosByAccountId = "SELECT * FROM payment_info where account_id = @account_id";
+        readonly string updDefaultPaymentInfo = "UPDATE payment_info SET is_default = false where account_id = @account_id; UPDATE payment_info SET is_default = true where id = @id AND account_id = @account_id";
 
         // log
-        private readonly string insAcctHistory = "insert into account_history (account_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@account_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
-        private readonly string selAcctHistory = "select * from account_history where account_id = @account_id order by created_at DESC limit @limit";
+        readonly string insAcctHistory = "insert into account_history (account_id, event_type_id, requested_by_id, ref_id, ref_type_id, ip, info, created_at) values (@account_id, @event_type_id, @requested_by_id, @ref_id, @ref_type_id, @ip, @info, sysdate());";
+        readonly string selAcctHistory = "select * from account_history where account_id = @account_id order by created_at DESC limit @limit";
 
         public AccountRepository(string connStr)
         {

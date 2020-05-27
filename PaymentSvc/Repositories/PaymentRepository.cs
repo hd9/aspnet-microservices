@@ -11,12 +11,12 @@ namespace PaymentSvc.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
-        private readonly string _connStr;
-        private readonly string insPmt = "INSERT INTO payment (account_id, order_id, amount, currency, method, status, auth_code, created_at, last_modified) values (@account_id, @order_id, @amount, @currency, @method, @status, @auth_code, sysdate(), sysdate());";
-        private readonly string updPmt = "update payment set status = @status, auth_code = @auth_code, last_modified = sysdate() where @id = id;";
-        private readonly string insPmtRequest = "INSERT INTO payment_request (pmt_gateway_id, pmt_id, amount, currency, name, number, cvv, exp_date, method, status, auth_code, created_at) values (@pmt_gateway_id, @pmt_id, @amount, @currency, @name, @number, @cvv, @exp_date, @method, @status, @auth_code, sysdate());";
-        private readonly string queryPmtById = "SELECT * FROM payment WHERE id = @id";
-        private readonly string queryPmtByAcctId = "SELECT * FROM payment WHERE account_id = @id";
+        readonly string _connStr;
+        readonly string insPmt = "INSERT INTO payment (account_id, order_id, amount, currency, method, status, auth_code, created_at, last_modified) values (@account_id, @order_id, @amount, @currency, @method, @status, @auth_code, sysdate(), sysdate());";
+        readonly string updPmt = "update payment set status = @status, auth_code = @auth_code, last_modified = sysdate() where @id = id;";
+        readonly string insPmtRequest = "INSERT INTO payment_request (pmt_gateway_id, pmt_id, amount, currency, name, number, cvv, exp_date, method, status, auth_code, created_at) values (@pmt_gateway_id, @pmt_id, @amount, @currency, @name, @number, @cvv, @exp_date, @method, @status, @auth_code, sysdate());";
+        readonly string queryPmtById = "SELECT * FROM payment WHERE id = @id";
+        readonly string queryPmtByAcctId = "SELECT * FROM payment WHERE account_id = @id";
 
         public PaymentRepository(string connStr)
         {

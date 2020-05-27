@@ -12,7 +12,7 @@ namespace Web.Controllers
 {
     public class NewsletterController : Controller
     {
-        private readonly INewsletterProxy _svc;
+        readonly INewsletterProxy _svc;
 
         public NewsletterController(INewsletterProxy svc)
         {

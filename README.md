@@ -26,6 +26,7 @@ To run this application, you'll need the following Docker images:
     * ASP.NET Core runtime
     * RabbitMQ:latest
     * MySQL:latest
+	* Redis:6-alpine
 	* Adminer
 
 Start by pulling the images with:
@@ -33,9 +34,38 @@ docker pull mongo:latest
 docker pull rabbitmq:latest
 docker pull mysql:latest
 docker pull adminer:latest
+docker pull redis:6-alpine
 
 
 # Configuring the microservices
+
+## Web
+The Web service is the frontend for our application. It requires the Redis
+service to provide distributed caching and the shopping cart experience.
+
+Redis is an open source in-memory data store, which is often used as a
+distributed cache. You can use Redis locally, and you can configure an Azure
+Redis Cache for an Azure-hosted ASP.NET Core app.
+
+An app configures the cache implementation using a RedisCache instance
+(AddStackExchangeRedisCache) in a non-Development environment in
+Startup.ConfigureServices.
+
+
+### Running our Redis Container
+To run the redis service do:
+docker run --name redis-web -d redis:6-alpine
+
+If you want to manage your Redis container from your dev machine, run the
+container exposing port 6379:
+docker run -d --name redis-web -p 6379:6379 redis:6-alpine
+
+Then, install the Redis tools. For example, on Ubuntu:
+sudo apt install redis-tools
+
+To connect to your local Redis instance (on port 6379), run:
+redis-cli
+
 
 ## RabbitMQ
 Run RabbitMQ with:

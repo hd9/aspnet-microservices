@@ -14,8 +14,8 @@ namespace CatalogSvc.Controllers
     [ApiController]
     public class CatalogController : ControllerBase
     {
-        private readonly ICatalogSvc svc;
-        private readonly IConfiguration cfg;
+        readonly ICatalogSvc svc;
+        readonly IConfiguration cfg;
         const string instruction = "The Catalog service is alive! Try GET /products/all";
 
         public CatalogController(ICatalogSvc svc, IConfiguration cfg)

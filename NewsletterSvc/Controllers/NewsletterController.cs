@@ -14,7 +14,7 @@ namespace NewsletterSvc.Controllers
     public class NewsletterController : ControllerBase
     {
 
-        private readonly INewsletterSvc _svc;
+        readonly INewsletterSvc _svc;
 
         public NewsletterController(INewsletterSvc svc)
         {

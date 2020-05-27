@@ -1,52 +1,41 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Web.Infrastructure.Base;
+using Web.Models.Account;
 using Web.Models.Order;
 
 namespace Web.Services
 {
-    public class OrderProxy : IOrderProxy
+    public class OrderProxy :
+        ProxyBase<OrderProxy>,
+        IOrderProxy
     {
-        private readonly ILogger<OrderProxy> _logger;
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _cfg;
-
-        public OrderProxy(HttpClient httpClient, IConfiguration cfg, ILogger<OrderProxy> logger)
+        public OrderProxy(
+            HttpClient httpClient,
+            IConfiguration cfg,
+            ILogger<OrderProxy> logger,
+            IDistributedCache cache) :
+            base(httpClient, cfg, logger, cache)
         {
-            _logger = logger;
-            _httpClient = httpClient;
-            _cfg = cfg;
+
         }
 
         public async Task Submit(Order order)
         {
-            var url = $"{_cfg["Services:Order"]}/orders/submit";
-            _logger.LogInformation($"Submitting order at '{url}':");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(order),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            // get order number (todo: refactor to OrderNumber)
-            order.Id = JsonConvert.DeserializeObject<int>(
-                await resp.Content.ReadAsStringAsync());
+            await PostAsync("order", order, "/orders/submit");
         }
 
         public async Task<List<Order>> GetOrdersByAccountId(string accountId)
         {
-            var url = $"{_cfg["Services:Order"]}/orders/{accountId}";
-            _logger.LogInformation($"Querying orders by accountId at: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<List<Order>>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/orders/{accountId}";
+            return await GetAsync<List<Order>>(
+                "accountid", accountId, endpoint);
         }
     }
 }

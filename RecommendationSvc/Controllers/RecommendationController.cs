@@ -8,7 +8,7 @@ namespace RecommendationSvc.Controllers
     [ApiController]
     public class RecommendationController : ControllerBase
     {
-        private readonly IRecommendationSvc _svc;
+        readonly IRecommendationSvc _svc;
         const string help = @"The Recommendation service is alive! Try GET /recommendations/{product-slug}";
 
         public RecommendationController(IRecommendationSvc svc)

@@ -10,10 +10,10 @@ namespace RecommendationSvc.Repositories
 {
     public class RecommendationRepository : IRecommendationRepository
     {
-        private readonly string _connStr;
-        private readonly string selBySlug = "select p.slug, p.name, p.description from product p join recommendation r on r.related_slug = p.slug where r.product_slug = @slug order by hits desc";
-        private readonly string insProduct = "insert into product values (@slug, @name, @description, @price, sysdate(), sysdate()) on duplicate key update name = @name, description = @description, price = @price, last_update = sysdate();";
-        private readonly string insRecomm = "insert into recommendation (product_slug, related_slug, last_update) values (@product_slug, @related_slug, sysdate()) on duplicate key update hits = hits + 1, last_update = sysdate();";
+        readonly string _connStr;
+        readonly string selBySlug = "select p.slug, p.name, p.description from product p join recommendation r on r.related_slug = p.slug where r.product_slug = @slug order by hits desc";
+        readonly string insProduct = "insert into product values (@slug, @name, @description, @price, sysdate(), sysdate()) on duplicate key update name = @name, description = @description, price = @price, last_update = sysdate();";
+        readonly string insRecomm = "insert into recommendation (product_slug, related_slug, last_update) values (@product_slug, @related_slug, sysdate()) on duplicate key update hits = hits + 1, last_update = sysdate();";
 
         public RecommendationRepository(string connStr)
         {

@@ -1,264 +1,163 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Web.Infrastructure.Base;
 using Web.Models.Account;
 using Web.Models.Order;
 
 namespace Web.Services
 {
-    public class AccountProxy : IAccountProxy
+    public class AccountProxy :
+        ProxyBase<AccountProxy>,
+        IAccountProxy
     {
-        private readonly ILogger<NewsletterProxy> _logger;
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _cfg;
-
-        public AccountProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<NewsletterProxy> logger)
+        public AccountProxy(
+            HttpClient httpClient,
+            IConfiguration cfg,
+            ILogger<AccountProxy> logger,
+            IDistributedCache cache) :
+            base(httpClient, cfg, logger, cache)
         {
-            _logger = logger;
-            _httpClient = httpClient;
-            _cfg = cfg;
+
         }
 
         public async Task<Account> GetAccountById(string id)
         {
-            var url = $"{_cfg["Services:Account"]}/account/{id}";
-            _logger.LogInformation($"Querying account from: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<Account>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/{id}";
+            return await GetAsync<Account>(
+                "account", id, endpoint);
         }
 
         public async Task<Account> GetAccountByEmail(string email)
         {
-            var url = $"{_cfg["Services:Account"]}/account/search?email={email}";
-            _logger.LogInformation($"Querying account by email from: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<Account>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/search?email={email}";
+            return await GetAsync<Account>(
+                "email", email, endpoint);
         }
 
         public async Task<HttpStatusCode> CreateAccount(Account acct)
         {
-            var url = $"{_cfg["Services:Account"]}/account/";
-            _logger.LogInformation($"Creating account from: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(acct),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PostAsync("account", acct, "/account/");
         }
 
         public async Task<HttpStatusCode> UpdateAccount(AccountDetails acct)
         {
-            var url = $"{_cfg["Services:Account"]}/account/";
-            _logger.LogInformation($"Creating account from: '{url}'");
-
-            var resp = await _httpClient.PutAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(acct),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PostAsync(
+                "account-upd", acct, "/account/");
         }
 
-        public async Task<Account> TrySignIn(SignIn request)
+        public async Task<Account> TrySignIn(SignIn signIn)
         {
-            var url = $"{_cfg["Services:Account"]}/account/signin";
-            _logger.LogInformation($"Trying to sign in account '{request.Email}' at '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(request),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return JsonConvert.DeserializeObject<Account>(
-                await resp.Content.ReadAsStringAsync());
+            return await PostAsync<Account>(
+                "signin", signIn, "/account/signin");
         }
 
-        public async Task<HttpStatusCode> UpdatePassword(UpdatePassword changePassword)
+        public async Task<HttpStatusCode> UpdatePassword(UpdatePassword updPassword)
         {
-            var url = $"{_cfg["Services:Account"]}/account/update-password";
-            _logger.LogInformation($"Updating account password at: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(changePassword),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PostAsync(
+                "update-password",
+                updPassword,
+                "/account/update-password");
         }
 
         public async Task<Address> GetAddressById(string addrId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address/{addrId}";
-            _logger.LogInformation($"Getting address at: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<Address>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/address/{addrId}";
+            return await GetAsync<Address>(
+                "address", addrId, endpoint);
         }
 
         public async Task<HttpStatusCode> AddAddress(Address addr)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address";
-            _logger.LogInformation($"Creating address at: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(addr),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PostAsync("address", addr, "/account/address");
         }
 
         public async Task<HttpStatusCode> UpdateAddress(Address addr)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address";
-            _logger.LogInformation($"Updating address at: '{url}'");
-
-            var resp = await _httpClient.PutAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(addr),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PutAsync("address-upd", addr, "/account/address");
         }
 
         public async Task<HttpStatusCode> RemoveAddress(string addressId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address/{addressId}";
-            _logger.LogInformation($"Removing address at: '{url}'");
-
-            var resp = await _httpClient.DeleteAsync(url);
-
-            return resp.StatusCode;
+            return await DeleteAsync(
+                "address-del",
+                $"/account/address/{addressId}");
         }
 
         public async Task<IList<Address>> GetAddressesByAccountId(string acctId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address/search?accountId={acctId}";
-            _logger.LogInformation($"Getting address by accountId: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<IList<Address>>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/address/search?accountId={acctId}";
+            return await GetAsync<IList<Address>>(
+                "address-by-accountid", acctId, endpoint);
         }
 
         public async Task<HttpStatusCode> SetDefaultAddress(string acctId, int addressId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/address/default?accountId={acctId}&addressId={addressId}";
-            _logger.LogInformation($"Creating address at: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(new { acctId, addressId } ),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            var endpoint = $"/account/address/default?accountId={acctId}&addressId={addressId}";
+            return await PostAsync(
+                "address-default", 
+                new { acctId, addressId }, 
+                endpoint);
         }
 
         public async Task<PaymentInfo> GetPaymentInfoById(string pmtId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment/{pmtId}";
-            _logger.LogInformation($"Getting pmtInfo at: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<PaymentInfo>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/payment/{pmtId}";
+            return await GetAsync<PaymentInfo>(
+                "payment", pmtId, endpoint);
         }
 
         public async Task<IList<PaymentInfo>> GetPaymentInfos(string accountId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment/search?accountId={accountId}";
-            _logger.LogInformation($"Getting pmtInfo by Id: '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<IList<PaymentInfo>>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/payment/search?accountId={accountId}";
+            return await GetAsync<IList<PaymentInfo>>(
+                "payment-accountid", accountId, endpoint);
         }
 
         public async Task<HttpStatusCode> AddPayment(PaymentInfo pmtInfo)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment";
-            _logger.LogInformation($"Creating pmtInfo at: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(pmtInfo),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PostAsync(
+                "payment-add",
+                pmtInfo,
+                "/account/payment");
         }
+
         public async Task<HttpStatusCode> RemovePayment(string pmtId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment/{pmtId}";
-            _logger.LogInformation($"Removing pmtInfo at: '{url}'");
-
-            var resp = await _httpClient.DeleteAsync(url);
-
-            return resp.StatusCode;
+            return await DeleteAsync(
+                "payment-remove",
+                $"/account/payment/{pmtId}");
         }
 
         public async Task<HttpStatusCode> SetDefaultPayment(string acctId, int pmtId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment/default?accountId={acctId}&pmtId={pmtId}";
-            _logger.LogInformation($"Setting pmtInfo {pmtId} as default at: '{url}'");
-
-            var resp = await _httpClient.PostAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(new { acctId, pmtId }),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            var endpoint = $"/account/payment/default?accountId={acctId}&pmtId={pmtId}";
+            return await PostAsync(
+                "payment-default",
+                new { acctId, pmtId },
+                endpoint);
         }
 
         public async Task<HttpStatusCode> UpdatePayment(PaymentInfo pmtInfo)
         {
-            var url = $"{_cfg["Services:Account"]}/account/payment";
-            _logger.LogInformation($"Updating address at: '{url}'");
-
-            var resp = await _httpClient.PutAsync(
-                url, new StringContent(
-                    JsonConvert.SerializeObject(pmtInfo),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            return resp.StatusCode;
+            return await PutAsync(
+                "payment-upd",
+                pmtInfo,
+                "/account/payment");
         }
 
         public async Task<IList<AccountHistory>> GetAccountHistory(string acctId)
         {
-            var url = $"{_cfg["Services:Account"]}/account/history/{acctId}";
-            _logger.LogInformation($"Querying account history at '{url}'");
-
-            var resp = await _httpClient.GetAsync(url);
-
-            return JsonConvert.DeserializeObject<List<AccountHistory>>(
-                await resp.Content.ReadAsStringAsync());
+            var endpoint = $"/account/history/{acctId}";
+            return await GetAsync<IList<AccountHistory>>(
+                "account-history", acctId, endpoint);
         }
     }
 }

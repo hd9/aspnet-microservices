@@ -9,8 +9,8 @@ namespace CatalogSvc.Infrastructure.Db
 {
     public class MongoClient : IMongoClient
     {
-        private readonly MongoDB.Driver.MongoClient client;
-        private readonly IMongoDatabase db;
+        readonly MongoDB.Driver.MongoClient client;
+        readonly IMongoDatabase db;
         private string col;
 
         public string Collection { get => col; set => col = value; }

@@ -11,10 +11,10 @@ namespace ShippingSvc.Repositories
 {
     public class ShippingRepository : IShippingRepository
     {
-        private readonly string _connStr;
-        private readonly string insShipping = "INSERT INTO shipping (number, account_id, order_id, name, amount, currency, street, city, region, postal_code, country, status, provider, created_at) values (@number, @account_id, @order_id, @name, @amount, @currency, @street, @city, @region, @postal_code, @country, @status, @provider, sysdate());";
-        private readonly string queryById = "SELECT * FROM shipping WHERE id = @id";
-        private readonly string queryByAcctId = "SELECT * FROM shipping WHERE account_id = @account_id";
+        readonly string _connStr;
+        readonly string insShipping = "INSERT INTO shipping (number, account_id, order_id, name, amount, currency, street, city, region, postal_code, country, status, provider, created_at) values (@number, @account_id, @order_id, @name, @amount, @currency, @street, @city, @region, @postal_code, @country, @status, @provider, sysdate());";
+        readonly string queryById = "SELECT * FROM shipping WHERE id = @id";
+        readonly string queryByAcctId = "SELECT * FROM shipping WHERE account_id = @account_id";
 
         public ShippingRepository(string connStr)
         {

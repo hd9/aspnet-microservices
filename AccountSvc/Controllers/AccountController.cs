@@ -14,8 +14,8 @@ namespace AccountSvc.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountSvc _svc;
-        private readonly IConfiguration cfg;
+        readonly IAccountSvc _svc;
+        readonly IConfiguration cfg;
         const string help = @"The Account service is alive! Try GET /account/{account-id}";
 
         public AccountController(IAccountSvc svc, IConfiguration cfg)

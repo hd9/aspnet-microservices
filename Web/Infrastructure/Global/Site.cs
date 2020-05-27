@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Web.Infrastructure.Settings;
+﻿using Web.Infrastructure.Options;
 
 namespace Web.Infrastructure.Global
 {

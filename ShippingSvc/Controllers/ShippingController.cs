@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using ShippingSvc.Models;
 using ShippingSvc.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace ShippingSvc.Controllers
 {
@@ -13,7 +9,7 @@ namespace ShippingSvc.Controllers
     [ApiController]
     public class ShippingController : ControllerBase
     {
-        private readonly IShippingSvc _svc;
+        readonly IShippingSvc _svc;
         const string help = @"The Shipping service is alive! Try GET /shippings/{ShippingId}.";
 
         public ShippingController(IShippingSvc svc)

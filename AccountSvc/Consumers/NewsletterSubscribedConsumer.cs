@@ -7,7 +7,7 @@ namespace AccountSvc.Consumers
 {
     public class NewsletterSubscribedConsumer : IConsumer<NewsletterSubscribed>
     {
-        private readonly IAccountSvc _svc;
+        readonly IAccountSvc _svc;
 
         public NewsletterSubscribedConsumer(IAccountSvc svc)
         {

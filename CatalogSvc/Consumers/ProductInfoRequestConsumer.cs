@@ -14,7 +14,7 @@ namespace CatalogSvc.Consumers
     public class ProductInfoRequestConsumer : IConsumer<ProductInfoRequest>
     {
 
-        private readonly ICatalogSvc _svc;
+        readonly ICatalogSvc _svc;
 
         public ProductInfoRequestConsumer(ICatalogSvc svc)
         {

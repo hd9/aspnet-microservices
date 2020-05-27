@@ -14,7 +14,7 @@ namespace NotificationSvc.Controllers
     public class NotificationController : ControllerBase
     {
 
-        private readonly INotificationSvc _svc;
+        readonly INotificationSvc _svc;
 
         public NotificationController(INotificationSvc svc)
         {

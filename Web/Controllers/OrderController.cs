@@ -2,13 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Infrastructure.Global;
-using Web.Infrastructure.Settings;
 using Web.Models;
 using Web.Models.Order;
 using Web.Services;
@@ -18,9 +15,9 @@ namespace Web.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly IOrderProxy _oSvc;
-        private readonly IAccountProxy _acctSvc;
-        private readonly ILogger<HomeController> _logger;
+        readonly IOrderProxy _oSvc;
+        readonly IAccountProxy _acctSvc;
+        readonly ILogger<HomeController> _logger;
 
         public OrderController(IOrderProxy oSvc, IAccountProxy acctSvc, ILogger<HomeController> logger)
         {

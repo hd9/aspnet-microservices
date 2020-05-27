@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Web.Infrastructure.Settings
+namespace Web.Infrastructure.Options
 {
     public class StoreSettings
     {

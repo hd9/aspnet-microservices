@@ -8,7 +8,7 @@ namespace CatalogSvc.Repositories
 {
     public class CatalogRepository : ICatalogRepository
     {
-        private readonly IMongoClient db;
+        readonly IMongoClient db;
 
         public CatalogRepository(IMongoClient db)
         {

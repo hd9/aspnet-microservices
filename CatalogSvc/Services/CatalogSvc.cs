@@ -7,7 +7,7 @@ namespace CatalogSvc.Services
 {
     public class CatalogSvc : ICatalogSvc
     {
-        private readonly ICatalogRepository _repo;
+        readonly ICatalogRepository _repo;
 
         public CatalogSvc(ICatalogRepository repo)
         {

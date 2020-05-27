@@ -10,9 +10,9 @@ namespace NotificationSvc.Repositories
     public class NotificationRepository : INotificationRepository
     {
 
-        private readonly string _connStr;
-        private readonly string insNotification = "INSERT INTO notification (name, email, created_at, type) values (@name, @email, sysdate(), @type)";
-        private readonly string selNotification = "SELECT * FROM notification ORDER BY created_at DESC limit @limit";
+        readonly string _connStr;
+        readonly string insNotification = "INSERT INTO notification (name, email, created_at, type) values (@name, @email, sysdate(), @type)";
+        readonly string selNotification = "SELECT * FROM notification ORDER BY created_at DESC limit @limit";
 
         public NotificationRepository(string connStr)
         {

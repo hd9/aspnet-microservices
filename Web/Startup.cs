@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Web.Infrastructure.Global;
-using Web.Infrastructure.Settings;
-using Web.Models;
+using Web.Infrastructure.Options;
 using Web.Services;
 
 namespace Web
@@ -23,11 +16,13 @@ namespace Web
 
         #region Attributes
         public IConfiguration Configuration { get; }
+        readonly AppConfig cfg;
         #endregion
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            cfg = configuration.Get<AppConfig>();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -40,7 +35,7 @@ namespace Web
             services.AddHttpClient<IAccountProxy, AccountProxy>();
             services.AddHttpClient<IOrderProxy, OrderProxy>();
 
-            Site.StoreSettings = ParseSetting<StoreSettings>();
+            Site.StoreSettings = cfg.StoreSettings;
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
@@ -49,10 +44,12 @@ namespace Web
                     o.AccessDeniedPath = "/Account/Forbidden";
                     o.Cookie.Name = ".hildenco.session";
                 });
-            
-            //services.AddDistributedMemoryCache();
 
-            //services.AddIdentity<User, IdentityRole>();
+            services.AddStackExchangeRedisCache(o =>
+            {
+                o.Configuration = cfg.Redis.Configuration;
+                o.InstanceName = cfg.Redis.InstanceName;
+            });
 
             //services.AddSession(o =>
             //{
@@ -64,7 +61,7 @@ namespace Web
 
             // allow auto-rebuilding the cshtml after changes (dev-only)
             // Ref: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation?view=aspnetcore-3.0#runtime-compilation
-            #if DEBUG
+#if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             #else
             services.AddControllersWithViews();

@@ -21,9 +21,9 @@ namespace Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IAccountProxy _acctSvc;
-        private readonly IOrderProxy _orderSvc;
+        readonly ILogger<HomeController> _logger;
+        readonly IAccountProxy _acctSvc;
+        readonly IOrderProxy _orderSvc;
 
         public AccountController(IAccountProxy accSvc, IOrderProxy oSvc, ILogger<HomeController> logger)
         {

@@ -13,8 +13,8 @@ namespace Web.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly ILogger<NewsletterController> _logger;
-        private readonly ICatalogProxy _catSvc;
+        readonly ILogger<NewsletterController> _logger;
+        readonly ICatalogProxy _catSvc;
         public CatalogController(ICatalogProxy catSvc, ILogger<NewsletterController> logger)
         {
             _catSvc = catSvc;

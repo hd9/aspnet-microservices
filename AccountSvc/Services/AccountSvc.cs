@@ -16,9 +16,9 @@ namespace AccountSvc.Services
 {
     public class AccountSvc : IAccountSvc
     {
-        private readonly IAccountRepository _repo;
-        private readonly IBusControl _bus;
-        private readonly List<EmailTemplate> _emailTemplates;
+        readonly IAccountRepository _repo;
+        readonly IBusControl _bus;
+        readonly List<EmailTemplate> _emailTemplates;
 
         public AccountSvc(IAccountRepository acctRepo, IBusControl bus, List<EmailTemplate> emailTemplates)
         {

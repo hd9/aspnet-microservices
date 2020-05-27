@@ -9,9 +9,9 @@ namespace NewsletterSvc.Repositories
 {
     public class NewsletterRepository : INewsletterRepository
     {
-        private readonly string _connStr;
-        private readonly string insSignup = "INSERT INTO newsletter (name, email, created_at) values (@name, @email, sysdate())";
-        private readonly string selSignup = "SELECT * FROM newsletter ORDER BY created_at DESC limit @limit";
+        readonly string _connStr;
+        readonly string insSignup = "INSERT INTO newsletter (name, email, created_at) values (@name, @email, sysdate())";
+        readonly string selSignup = "SELECT * FROM newsletter ORDER BY created_at DESC limit @limit";
 
         public NewsletterRepository(string connStr)
         {

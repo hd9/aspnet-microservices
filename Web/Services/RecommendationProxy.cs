@@ -1,51 +1,44 @@
-﻿using Web.Models;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Web.Infrastructure.Base;
 using Web.Models.Recommendation;
 
 namespace Web.Services
 {
-    public class RecommendationProxy : IRecommendationProxy
+    public class RecommendationProxy :
+        ProxyBase<RecommendationProxy>,
+        IRecommendationProxy
     {
-        private readonly ILogger<RecommendationProxy> logger;
-        private readonly HttpClient httpClient;
-        private readonly IConfiguration cfg;
 
-        public RecommendationProxy(HttpClient httpClient, IConfiguration cfg,  ILogger<RecommendationProxy> logger)
+        public RecommendationProxy(
+            HttpClient httpClient,
+            IConfiguration cfg,
+            ILogger<RecommendationProxy> logger,
+            IDistributedCache cache) :
+            base(httpClient, cfg, logger, cache)
         {
-            this.logger = logger;
-            this.httpClient = httpClient;
-            this.cfg = cfg;
+
         }
 
         public async Task<List<Recommendation>> GetByProductSlug(string slug)
         {
-            var url = $"{cfg["Services:Recommendation"]}/recommendations/{slug}";
-            logger.LogInformation($"[CatalogSvc] Querying products for product '{slug}' from: '{url}'");
+            var url = $"/recommendations/{slug}";
 
-            var resp = await httpClient.GetAsync(url);
-            var data = await resp.Content.ReadAsStringAsync();
-
-            return JsonConvert.
-                DeserializeObject<List<Recommendation>>(data);
+            return await GetAsync<List<Recommendation>>(
+                "product", slug, url);
         }
 
         public async Task<List<Recommendation>> GetByAccountId(string accountId)
         {
-            var url = $"{cfg["Services:Recommendation"]}/recommendations/account/{accountId}";
-            logger.LogInformation($"[CatalogSvc] Querying recommendations for AccountId '{accountId}' from: '{url}'");
+            var url = $"/recommendations/account/{accountId}";
 
-            var resp = await httpClient.GetAsync(url);
-            var data = await resp.Content.ReadAsStringAsync();
-
-            return JsonConvert.
-                DeserializeObject<List<Recommendation>>(data);
+            return await GetAsync<List<Recommendation>>(
+                "account", accountId, url);
         }
+
     }
 }
