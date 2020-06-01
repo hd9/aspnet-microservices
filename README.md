@@ -54,17 +54,28 @@ Startup.ConfigureServices.
 
 ### Running our Redis Container
 To run the redis service do:
-docker run --name redis-web -d redis:6-alpine
+`docker run --name web-redis -d redis:6-alpine`
 
-If you want to manage your Redis container from your dev machine, run the
-container exposing port 6379:
-docker run -d --name redis-web -p 6379:6379 redis:6-alpine
+Alternatively, if you want to manage your Redis container from outside of the container
+network so you can use it with your development tools, run the following command:
+`docker run -d --name web-redis -p 6379:6379 redis:6-alpine`
 
 Then, install the Redis tools. For example, on Ubuntu:
-sudo apt install redis-tools
+`sudo apt install redis-tools`
 
 To connect to your local Redis instance (on port 6379), run:
-redis-cli
+`redis-cli`
+
+### Using Redis Commander 
+If you want, you can optionally start a [Redis Commander](http://joeferner.github.io/redis-commander/)
+[Docker Instance](https://hub.docker.com/r/rediscommander/redis-commander) and use as a WYSIWYG 
+admin interface for Redis with:
+
+First get the web-redis IP with:
+`web_redis_ip=$(docker inspect web-redis -f '{{json .NetworkSettings.IPAddress}}')`
+
+Then run the below command:
+`docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 8082:8081 rediscommander/redis-commander:latest`
 
 
 ## RabbitMQ

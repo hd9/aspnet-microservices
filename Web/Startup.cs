@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
+using System;
 using Web.Infrastructure.Global;
 using Web.Infrastructure.Options;
 using Web.Services;
@@ -37,14 +40,6 @@ namespace Web
 
             Site.StoreSettings = cfg.StoreSettings;
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(o =>
-                {
-                    o.LoginPath = "/Account/SignIn";
-                    o.AccessDeniedPath = "/Account/Forbidden";
-                    o.Cookie.Name = ".hildenco.session";
-                });
-
             services.AddStackExchangeRedisCache(o =>
             {
                 o.Configuration = cfg.Redis.Configuration;
@@ -54,17 +49,24 @@ namespace Web
             //services.AddSession(o =>
             //{
             //    o.Cookie.Name = ".hildenco.session";
-            //    o.IdleTimeout = TimeSpan.FromSeconds(10);
+            //    o.IdleTimeout = TimeSpan.FromMinutes(10);
             //    o.Cookie.HttpOnly = true;
             //    o.Cookie.IsEssential = true;
+            //    o.Cookie.SameSite = SameSiteMode.Strict;
             //});
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o =>
+                {
+                    o.LoginPath = "/Account/SignIn";
+                    o.AccessDeniedPath = "/Account/Forbidden";
+                    o.Cookie.Name = ".hildenco.session";
+                });
+
             // allow auto-rebuilding the cshtml after changes (dev-only)
-            // Ref: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation?view=aspnetcore-3.0#runtime-compilation
-#if DEBUG
+            // https://docs.microsoft.com/en-us/aspnet/core/mvc/views/view-compilation?view=aspnetcore-3.0#runtime-compilation
+            #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            #else
-            services.AddControllersWithViews();
             #endif
         }
 
@@ -83,10 +85,11 @@ namespace Web
 
             //app.UseHttpContextItemsMiddleware();
             app.UseStaticFiles();
+            //app.UseCookiePolicy();
+            //app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -94,17 +97,6 @@ namespace Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            logger.LogInformation($"NewsletterSvc: {Configuration["Services:Newsletter"]}, CatalogSvc: {Configuration["Services:Catalog"]}");
-        }
-            
-        private T ParseSetting<T>()
-            where T : new()
-        {
-            var settings = new T();
-            Configuration.GetSection("StoreSettings").Bind(settings);
-
-            return settings;
         }
     }
 }
