@@ -1,43 +1,114 @@
 # ASP.NET Microservices
-
 This is a sample application to demo Microservices in .NET
-using ASP.NET Core, Docker Compose, MongoDB, Vue.js, Azure App Services,
-Azure AKS and Kubernetes.
+using [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet),
+[Docker](https://www.docker.com/),
+[Docker Compose](https://docs.docker.com/compose/), 
+[MongoDB])(https://www.mongodb.com/), [MySQL](https://www.mysql.com/),
+[Redis](https://redis.io/), [Vue.js](https://vuejs.org/),
+[Azure App Services](https://azure.microsoft.com/en-us/services/app-service/),
+[Azure AKS](https://docs.microsoft.com/en-us/azure/aks/) and
+[Kubernetes](https://kubernetes.io/).
 
-To learn more about this app, Docker, Azure and microservices, please check our blog at: blog.hildenco.com
+To learn more about this app, Docker, Azure and microservices, please check our
+blog at: [blog.hildenco.com](https://blog.hildenco.com)
 
-Source code at: github.com/hd9/aspnet-microservices
+## Source Code
+The source code is available at
+[github.com/hd9/aspnet-microservices](github.com/hd9/aspnet-microservices).
 
 ## License
-The license for this project is MIT.
+This project is licensed under [The MIT License](https://opensource.org/licenses/MIT).
+
+## Disclaimer
+Please don't use this project in production. Most of the settings
+used here are default so it's simpler for people to understand the
+different parts of the system.
+
+## Services
+So far, the project consists of the following services:
+    * Web: the frontend for the web store
+    * Catalog: provides catalog information for the web store
+    * Newsletter: accepts user emails and stores them in the newsletter database 
+    * Order: provides order features for the web store
+    * Account: provides account services (login, creation, etc) for the web store
+    * Recommendation: provides recommendations between products
+    * Notification: sends email notifications on certain events in the system
+    * Payment: simulates a _fake_ payment store
+    * Shipping: simulates a _fake_ shipping store
 
 
 ## Dependencies
-The dependencies for this project are:
+To run this project on your machine, please make sure you have installed:
     * Docker Desktop (Mac, Windows) or Docker Engine (Linux)
-    * .NET Core SDK 3.1
+    * [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+    * A git client
 
-Optionally, to debug I suggest using Visual Studio 2019.
+If you want to develop/extend/modify it, then I'd suggest you to also have:
+    * a valid [GitHub](https://github.com) account
+	* [Visual Studio 2019](https://visualstudio.microsoft.com/vs/)
+	* (or) [Visual Studio Code](https://code.visualstudio.com/)
 
-### Installing the requirements
+# Initializing the Project
+To initialize the project run:   
+`dotnet clone https://github.com/hd9/aspnet-microservices`
+
+
+# For Developers
+On this section we'll list the essentials on how to modify
+and run this project on your machine.
+
+If you're not interested in details about development feel
+free to jump to the next section.
+
+## Building the project
+Assuming you have the [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+installed, you should be able to build the project with
+Visual Studio 2019 or with the dotnet CLI.
+
+## Building the Docker Images
+Each project (apart from `Microservices.Core`) contains a `build` script
+that should be executed on [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+
+You could manually run each `build` script from each folder or simpler,
+just run `build-all` located in the `src` folder. Please note that it'll
+be necessary to run `chmod +x build-all` before you run it.
+
+## Configurations
+todo
+
+## Solutions
+There are two solutions on this project:
+	* `AspNetMicroservices.sln`: the main solution, consisting on most of the
+	  projects
+	* `Microservices.Core.sln`: source for the core NuGet package. This package is
+	  necessary so our containers be isolated from each other. The package is
+	  published on GitHub at [github.com/hd9?tab=packages](https://github.com/hd9?tab=packages)
+
+
+## Installing the required Docker images
 To run this application, you'll need the following Docker images:
-    * Mongo:latest
     * ASP.NET Core SDK
     * ASP.NET Core runtime
-    * RabbitMQ:latest
+    * Mongo:latest
     * MySQL:latest
 	* Redis:6-alpine
+    * RabbitMQ:latest
 	* Adminer
+	* rediscommander/redis-commander:latest
 
-Start by pulling the images with:
+Start by pulling the images with:   
+```s
 docker pull mongo:latest
 docker pull rabbitmq:latest
 docker pull mysql:latest
 docker pull adminer:latest
 docker pull redis:6-alpine
+docker pull rediscommander/redis-commander:latest
+```
 
 
-# Configuring the microservices
+# Setting up the microservices
+Let's now review how to build each of the services.
 
 ## Web
 The Web service is the frontend for our application. It requires the Redis
@@ -51,6 +122,35 @@ An app configures the cache implementation using a RedisCache instance
 (AddStackExchangeRedisCache) in a non-Development environment in
 Startup.ConfigureServices.
 
+### Building the Web container
+To build the Web container, run:
+```s
+docker build -t web .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name web -p 21400:80 web
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+# To remove it, run:
+docker image rm web -f
+docker container rm -f web
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### Running the dependencies
+Web utilizes `Redis` so it can effectively cache its data and 
+[Redis Commander](http://joeferner.github.io/redis-commander/) optionally,
+if you want to play with your `Redis` data.
+Let's see how to run them.
 
 ### Running our Redis Container
 To run the redis service do:
@@ -67,9 +167,10 @@ To connect to your local Redis instance (on port 6379), run:
 `redis-cli`
 
 ### Using Redis Commander 
-If you want, you can optionally start a [Redis Commander](http://joeferner.github.io/redis-commander/)
-[Docker Instance](https://hub.docker.com/r/rediscommander/redis-commander) and use as a WYSIWYG 
-admin interface for Redis with:
+If you want, you can optionally start a
+[Redis Commander](http://joeferner.github.io/redis-commander/)
+[Docker Instance](https://hub.docker.com/r/rediscommander/redis-commander)
+and use as a WYSIWYG admin interface for Redis with:
 
 First get the web-redis IP with:
 `web_redis_ip=$(docker inspect web-redis -f '{{json .NetworkSettings.IPAddress}}')`
@@ -79,7 +180,10 @@ Then run the below command:
 
 
 ## RabbitMQ
-Run RabbitMQ with:
+This project uses RabbitMQ to provide an asyncrhonous pub/sub interface
+where the services can communicate.
+
+To run RabbitMQ, do:
 `docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine`
 
 On the command above we essentially exposed 2 ports
@@ -110,14 +214,43 @@ For more information about RabbitMQ, visit:
 	* [RabbitMQ's website](https://rabbitmq.com/)
 	* [RabbitMQ @ Docker Hub](https://hub.docker.com/_/rabbitmq)
 
+
+
 ## CatalogSvc
 The Catalog service holds catalog and product information.
 
-Running CatalogSvc docker image:
+### Building the container
+To build the container, run:
+```s
+docker build -t catalog .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name catalog -p 21401:80 catalog
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+# To remove it, run:
+docker image rm catalog -f
+docker container rm -f catalog
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+
+### Running Catalog database
+Our `CatalogSvc` utilizes MongoDB as it data store. To run
+it with Docker do:
 `docker run -d --name mongo-catalog -p 32769:27017 mongo`
 
-Seeding Product data:
-
+### Seeding Product data
+Let's now seed some initial data.
 Connect to the catalog / mongodb instance with:
 `mongo mongodb://localhost:32769`
 
@@ -191,7 +324,7 @@ db.products.insertMany([
     { Slug: "ph-iphone-X11-case1", Name: "iPhone X Case", Price: 9.99, Currency: "CAD", Description: "TODO", CategoryId: "phones", CategoryName: "Headphones & Audio", Rating: 2 },
 ]);
 
-// inserts categories
+// insert categories
 db.categories.insertMany([
     { Slug: "sports", Name: "Sports" } ,
     { Slug: "games", Name: "Games" } ,
@@ -205,8 +338,36 @@ db.categories.insertMany([
 ]);
 ```
 
+
 ## AccountSvc
-Run the MySql image for the account service:
+The Account service provides account services.
+
+### Building the Account container
+To build the Account container, run:
+```s
+docker build -t account .
+```
+
+### Running the container
+To run the account container, run:
+```s
+docker run --name account -p 21404:80 account
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm account -f
+docker container rm -f account
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### Running the database
+AccountSvc uses `MySql` as its data store.
+To run the account db, do:
 `docker run -d --name mysql-accountsvc -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -298,8 +459,36 @@ values
 (15, 'PaymentInfo Set Default');
 ```
 
+
 ## OrderSvc
-Run the order database with:
+The Order service manages orders in the application.
+
+### Building the container
+To build the order container, run:
+```s
+docker build -t order .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name order -p 21403:80 order
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm order -f
+docker container rm -f order
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### The Order database
+OrderSvc also uses `MySQL` as its data store.
+To run the order database, do:
 `docker run -d --name mysql-ordersvc -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -409,7 +598,35 @@ CREATE TABLE order_history (
 
 
 ## PaymentSvc
-Run the payment db with:
+The Payment service provides _fake_ payment data
+so we can test the whole workflow.
+
+### Building the container
+To build the payment container, run:
+```s
+docker build -t payment .
+```
+
+### Running the container
+To run the payment container, run:
+```s
+docker run --name payment -p 21407:80 payment
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm payment -f
+docker container rm -f payment
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### The Payment Database
+PaymentSvc also uses `MySQL` as its data store. To run
+it, do:
 `docker run -d --name mysql-paymentsvc -p 3309:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -453,8 +670,37 @@ create table payment_request (
 );
 ```
 
+
 ## RecommendationSvc
-Run the recommendation db with:
+The Recommendation service provides (naive) recommendations
+for the application.
+
+### Building the container
+To build the recommendation container, run:
+```s
+docker build -t recommendation .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name recommendation -p 21405:80 recommendation
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm recommendation -f
+docker container rm -f recommendation
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### The Recommendation database
+RecommendationSvc also uses `MySQL` as its data store.
+To run the recommendation db, do:
 `docker run -d --name mysql-recommendationsvc -p 3310:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -501,7 +747,6 @@ insert into product values
 (203, 'g-xbx1-fo4', 'Fallout 4 (Xbox One)', '', 0, sysdate(), sysdate()),
 (204, 'g-xbx1-rmk', 'Resident Evil 2 Remake (Xbox One)', 'Capcom\'s remake of survival horror classic Resident Evil 2 has gone down a storm with fans and newcomers alike, and it\'s no surprise.', 0, sysdate(), sysdate());
 
-
 -- insert some recommendations to start
 insert into recommendation (product_id, related_id, hits, last_update)
 values
@@ -528,7 +773,36 @@ values
 
 
 ## NotificationSvc
-Run the Notification db with:
+The Notification service provides simple notification
+via SMTP (you can use your Gmail, for example) for events
+that trigger that functionality.
+
+### Building the container
+To build the notification container, run:
+```s
+docker build -t notification .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name notification -p 21406:80 notification
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm notification -f
+docker container rm -f notification
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### The Notification database
+NotificationSvc also uses `MySQL` as its data store.
+To run the it, do:
 `docker run -d --name mysql-notificationsvc -p 3311:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -548,8 +822,37 @@ CREATE TABLE notification (
 );
 ```
 
+
 ## NewsletterSvc
-Run the Newsletter db with:
+The Newsletter service provides simple newsletter functionality.
+
+### Building the container
+To build the newsletter container, run:
+```s
+docker build -t newsletter .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name newsletter -p 21402:80 newsletter
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm newsletter -f
+docker container rm -f newsletter
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+
+### The newsletter database
+NewsletterSvc also uses `MySQL` as its data store. To
+run the Newsletter db, do:
 `docker run -d --name mysql-newslettersvc -p 3312:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -570,7 +873,35 @@ CREATE TABLE newsletter (
 
 
 ## ShippingSvc
-Run the Shipping db with:
+The Shipping service provides _fake_ shipping information
+so the application can complete some simple workflows.
+
+### Building the Shipping container
+To build the Shipping container, run:
+```s
+docker build -t shipping .
+```
+
+### Running the container
+To run the container, run:
+```s
+docker run --name shipping -p 21408:80 shipping
+```
+
+### Cleaning up
+To remove the container and its images from the system, do:
+```s
+docker image rm shipping -f
+docker container rm -f shipping
+```
+
+Note: For simplicity, I'm not tagging the images so all images
+will be tagged as `latest` by default by Docker. Feel free to
+modify the name, ports and version.
+
+### The Shipping database
+ShippingSvc also uses `MySQL` as its data store. To run
+the Shipping db, do:
 `docker run -d --name mysql-shippingsvc -p 3313:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
 
 Connect to the database with:
@@ -600,6 +931,7 @@ CREATE TABLE shipping (
 );
 ```
 
+
 ## Management Interfaces
 The project also includes management interfaces for RabbitMQ and MySQL
 databases. If running the default settings, you should have available:
@@ -625,11 +957,25 @@ with: `docker inspect network bridge -f '{{json .Containers}}' | jq`
 
 * Notice that you'll need jq to format the output.
 
+
 ## RabbitMQ Management Console
 RabbitMQ is an open source multi-protocol messaging broker. It's used in this
 project via MassTransit to provide asynchronous communications via pub/sub and
 async request/responses. RabbitMQ Management Console is available at:
 [http://localhost:15672/](http://localhost:15672/). Login with guest/guest.
+
+
+# Configuration
+By default, the apps are configured at:
+    * Web: http://localhost:21400
+    * Catalog: http://localhost:21401
+    * Newsletter: http://localhost:21402
+    * Order: http://localhost:21403
+    * Account: http://localhost:21404
+    * Recommendation: http://localhost:21405
+    * Notification: http://localhost:21406
+    * Payment: http://localhost:21407
+    * Shipping: http://localhost:21408
 
 
 ## Changing Configuration
@@ -641,23 +987,35 @@ todo add:
 Ex: passing config to dotnet on the command line:
 dotnet run DbSettings:ConnStr="mongodb://brunobruno:12345"
 
-With env varialbes:
+With env variables:
 todo
 
 
-## Running the Services
-todo :: add how to run 
+## Docker Compose
+todo
 
 
+## Kubernetes
+todo
 
 
-## Testing
-Frontend: http://localhost:21400
-Catalog: http://localhost:21401
-Newsletter: http://localhost:21402/signup
+# Cheatsheet
+This got complicated enough. Here are some commands to free up
+some of your memory.
 
+```s
+# running the instances individually
+docker run --name web -p 21400:80 web
+docker run --name catalog -p 21401:80 catalog
+docker run --name account -p 21404:80 account
+docker run --name order -p 21403:80 order
+docker run --name payment -p 21407:80 payment
+docker run --name recommendation -p 21405:80 recommendation
+docker run --name notification -p 21406:80 notification
+docker run --name newsletter -p 21402:80 newsletter
+docker run --name shipping -p 21408:80 shipping
 
-
+```
 
 
 # References

@@ -1,0 +1,72 @@
+﻿@using Microservices.Core.Infrastructure.Extensions
+@model Web.Models.Order.CartReview
+@{
+    ViewData["Title"] = "Cart Review";
+ ViewData["Review"] = true;
+ var missingInfo = Model.Account == null || Model.Address == null || Model.PaymentInfo == null;
+ var addr = Model.Address;
+ var pmt = Model.PaymentInfo;
+}
+
+<div>
+    <h2 class="display-4">@ViewData["Title"]</h2>
+
+    @if (missingInfo)
+    {
+        <div class="alert alert-danger my-4" role="alert">
+            ERROR: Missing Account and/or payment information.
+        </div>
+
+        <p>
+            Please return to the
+            <a asp-action="Checkout">checkout page</a>,
+            choose and <strong>Address</strong>, a <strong>Payment Option</strong>
+            and try again.
+        </p>
+    }
+    else
+    {
+        <p class="lead mb-4">Here's the summary of your order:</p>
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Address information</h5>
+                <div class="small mb-4">
+                    Not correct?
+                    <a asp-action="Checkout">Change Address</a>
+                </div>
+                <ul class="list-unstyled">
+                    <li><strong>@Model.Account.Name.ToUpper()</strong> </li>
+                    <li>@addr.Street</li>
+                    <li>@($"{addr.City}, {addr.Region} - {addr.PostalCode}")</li>
+                    <li>@addr.Country</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Payment Information</h5>
+                <div class="small mb-4">
+                    Not correct?
+                    <a asp-action="Checkout">Change Payment Info</a>
+                </div>
+                <ul class="list-unstyled">
+                    <li><strong>@pmt.Name</strong> </li>
+                    <li>@($"{pmt.Method}")</li>
+                    <li>@pmt.Number.MaskCC()</li>
+                    <li>EXP @pmt.ExpDate.ToString("MM/yy")</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <partial name="~/Views/Partials/Order/_MiniCart.cshtml" />
+            </div>
+        </div>
+        <div class="row" id="cartSubmit" ref="data" addrId="@addr.Id" pmtId="@pmt.Id">
+            <div class="col-sm-12 mt-3 text-right">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Keep Shopping</a>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Change Cart</a>
+                <a href="#" class="btn btn-danger btn-sm" v-on:click="submit">Submit Order</a>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="~/js/account.js"></script>
+<script src="~/js/catalog.js"></script>
