@@ -5,6 +5,7 @@ using [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet),
 [Docker Compose](https://docs.docker.com/compose/), 
 [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/),
 [Redis](https://redis.io/), [Vue.js](https://vuejs.org/),
+[Dapper ORM](https://dapper-tutorial.net/dapper),
 [Azure App Services](https://azure.microsoft.com/en-us/services/app-service/),
 [Azure AKS](https://docs.microsoft.com/en-us/azure/aks/) and
 [Kubernetes](https://kubernetes.io/).
@@ -15,31 +16,35 @@ please check my blog at:
 
 ## Source Code
 The source code is available at
-[github.com/hd9/aspnet-microservices](github.com/hd9/aspnet-microservices).
+[github.com/hd9/aspnet-microservices](https://github.com/hd9/aspnet-microservices).
 
 
 ## Disclaimer
-When you create a microservice-based application, you need to deal with
-complexity and make some choices. Ours were to reduce the complexity by
-avoiding some parlalel design patterns and focusing on development of the
-services themselves. That said, I chose to reduce the scope of work to make this
-application more intuitive so that those starting with microservices and .NET
-Core.
+When you create a sample microservice-based application, you need to deal with
+complexity and make some choices. I chose to explicitly reduce the complexity by
+avoiding some parallel design patterns and focused on development of the
+services themselves. That said, this application was built so that it presents
+the foundations of Docker, Compose, Kubernetes and microservices and serves as a
+more intuitive guide for those starting in this area.
 
-Please, **don't use this project in production**. Its objective is to serve
-as a simple reference for those building microservices in .NET and potentially
-a good fork candidate for implementing some of the _areas of improvement_
-listed next.
+Please, **don't use this project in production** as its objective is be a
+simple reference for those building microservices in .NET. However, this
+project can be a good fork candidate for those looking for a 
+base setup. Check the [Areas of improvement](https://github.com/hd9/aspnet-microservices#areas-for-improvement)
+section for more details on open and pending fields.
 
+If you want a project containing all the design patterns in 
+a single solution, please check [Microsoft's eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
 
 ## Areas for improvement
 Because this project is supposed to be a lightweight introduction to microservices
 adding all the recommended patterns would increase a lot its complexity. Here
 are some of the areas that could be improved:
-* **Testing**: as any time-constraint project, no testing was written for the
-  services included in this project. However, if you'd like to implement yours,
+* **Testing**: as any time-constraint project, no tests were written for the
+  services. However, if you'd like to implement yours,
   feel free to add your testing framework of choice. For a good introduction on 
-  how to test ASP.CORE, [check this page](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps).
+  how to test .NET Core and ASP.NET Core,
+  [please check this page](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps).
 * **Security**: most of the settings here are default, or even no credentials.
   That was done un purpose so it's simpler for people to understand the
   different parts of the application, interact with the services (Redis, MongoDB,
@@ -48,9 +53,11 @@ are some of the areas that could be improved:
   on security best practices on ASP.NET microservices, 
   [check this link](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/secure-net-microservices-web-applications/).
 * **Performance**: performance isn't also implemented by default -
-  the databases contain no indexes and no microservice (apart from `Web`) contain 
-  caching.
-* **Async-Communication**: the project used MassTransit to provide async
+  the databases contain no indexes and no microservice (apart from `Web`) contains 
+  caching. However, I implemented a simple caching strategy on `Web` using `Redis`
+  so everyone understands the essentials of
+  [distributed caching in ASP.NET Core 3.1](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed).
+* **Async-Communication**: the project used `MassTransit` to provide async
   request/response essentially between the backend services. While I do 
   use async request/replies between `Order`, `Shipping` and `Payment`,
   I didn't utilize the pattern in   `Web` where I essentially proxied external
@@ -60,11 +67,13 @@ are some of the areas that could be improved:
   as it reduces coupling and increases the resilience of the communicating service
   especially for background events such as subscribing to newsletters or creating
   orders.
-* **Infrastructure**: for the purposes of this exercise, we utilized `RabbitMQ`
-  as a lightweight message-broker running on a `Docker` continaer. However,
-  in production, it would represent a risk as it would become a single point
+* **Infrastructure**: for this exercise, we utilized `RabbitMQ`
+  as a lightweight message-broker running on a `Docker` container. However,
+  note that in production it would represent a risk as it would become a single point
   of failure. For high availability and high scalability, you should consider
-  using [Azure Service Bus](https://azure.microsoft.com/en-us/services/service-bus/). 
+  using cloud-based solutions such as
+  [Azure Service Bus](https://azure.microsoft.com/en-us/services/service-bus/)
+  or equivalent. 
 * **Versioning**: when developing complex applications, its inevitable that
   we'll have to make changes to our apis. This project doesn't take that into
   account as it would grow it in size and complexity. For more information on 
@@ -73,19 +82,22 @@ are some of the areas that could be improved:
 * **Single Repository**: at first sight, having all microservices in the same .NET
   solution may sound strange. And indeed it is because on large organizations,
   different microservices are developed by different teams using potentially
-  different tools (programming languages, databases, etc) and hosted on different
-  repositories. However, the purpose of this project is to expose the
-  essential bits of the microservice architecture which, as previously stated,
-  if we adopted the previous practices would significantily grow its complexity.
+  different tools (programming languages, databases, etc) and are usually hosted on
+  different repositories. However, the purpose of this project is to expose the
+  essential bits of the microservice architecture without significantily
+  increased complexity.
 * **Resiliency**: the project also does not apply resiliency patterns such as
-  exponential backoffs or circuit breakers. Feel free to fork and write your own.
+  [exponential backoffs](https://en.wikipedia.org/wiki/Exponential_backoff)
+  or [circuit breakers](https://microservices.io/patterns/reliability/circuit-breaker.html).
+  But feel free to fork and write your own.
   For more information, [check this document](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/resilient-high-availability-microservices).
   A nice way to learn that would be using dedicated libraries to the purpose 
   such as [Polly.net](https://github.com/App-vNext/Polly) or use the built-in
   functionality provided by frameworks
   such as [NServiceBus](https://github.com/App-vNext/Polly) or
   [MassTransit](https://masstransit-project.com/).
-* **Monolithic UI**: the `Web` service is also implemented as a monolithic UI.
+* **Monolithic UI**: the `Web` service is also implemented as a
+  [monolithic frontend](https://xebia.com/blog/the-monolithic-frontend-in-the-microservices-architecture/).
   While today, the preferred approach would be using [Micro Frontends](https://martinfowler.com/articles/micro-frontends.html),
   it would almost exponentially increase the scope of work and the complexity of 
   the project. However, this project serves as a solid foundation for those
@@ -105,10 +117,10 @@ are some of the areas that could be improved:
 So far, the project consists of the following services:
 * **Web**: the frontend for the web store
 * **Catalog**: provides catalog information for the web store
-* **Newsletter**: accepts user emails and stores them in the newsletter database 
+* **Newsletter**: accepts user emails and stores them in the newsletter database for future use
 * **Order**: provides order features for the web store
-* **Account**: provides account services (login, creation, etc) for the web store
-* **Recommendation**: provides recommendations between products
+* **Account**: provides account services (login, account creation, etc) for the web store
+* **Recommendation**: provides simple recommendations between products
 * **Notification**: sends email notifications on certain events in the system
 * **Payment**: simulates a _fake_ payment store
 * **Shipping**: simulates a _fake_ shipping store
@@ -123,10 +135,11 @@ free to jump to the next section.
 
 ## Technical Dependencies
 To run this project on your machine, please make sure you have installed:
-* Docker Desktop (Mac, Windows) or Docker Engine (Linux)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac, Windows) or
+  [Docker Engine](https://docs.docker.com/engine/install/) (Linux)
 * [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-* A git client
-* A Linux terminal or WSL
+* A [git client](https://git-scm.com/downloads)
+* A Linux shell or [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 
 If you want to develop/extend/modify it, then I'd suggest you to also have:
 * a valid [GitHub](https://github.com) account
@@ -144,14 +157,18 @@ These are the Docker images that we'll use:
 * Adminer
 * rediscommander/redis-commander:latest
 
-### Initializing the Project
+### Initializing the project
 To initialize the project run:   
 ```s
 git clone https://github.com/hd9/aspnet-microservices`
 ```
 
+### Understanding the services
+The easiest way to understand the services and their configurations
+is by opening the `src/docker-compose.yml` file.
+
 ### Building with Visual Studio
-Building with Visual Studio 2019 should be straight forward.
+Building with Visual Studio 2019 should be straightforward.
 Simply open the `AspNetMicroservices.sln` file from the `src` folder
 and Visual Studio should be able to build the project.
 
@@ -160,7 +177,9 @@ To build all the images, the quickest way is to use
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 installed, you should be able to build the project with:   
-`docker-compose build`
+```
+docker-compose build
+```
 
 ### Building the Docker images independently
 But if you really want, you can also build the images independently.
@@ -172,9 +191,6 @@ You could manually run each `build` script from each folder or simpler,
 just run `build-all` located in the `src` folder. Please note that it'll
 be necessary to run `chmod +x build-all` before you run it.
 
-### Configuration
-The easiest way to understand the services and their configurations
-is by opening the `src/docker-compose.yml` file.
 
 ### Making changes to the project
 If you want to make changes to the project, the simplest way by opening
@@ -245,48 +261,44 @@ docker image rm web -f
 
 
 ### Running Web's dependencies
-Web utilizes `Redis` so it can effectively cache its data and 
-[Redis Commander](http://joeferner.github.io/redis-commander/) optionally,
-if you want to play with your `Redis` data.
+Web utilizes `Redis` so it can effectively cache its data.
 Let's see how to run them.
 
 To run the redis service do:   
-`docker run --name redis -d redis:6-alpine`
+```s
+docker run --name redis -d redis:6-alpine
+```
 
 Alternatively, if you want to manage your Redis container
 from outside of the container network so you can use it with
 your development tools, run the following command:   
-`docker run -d --name redis -p 6379:6379 redis:6-alpine`
+```s
+docker run -d --name redis -p 6379:6379 redis:6-alpine
+```
 
 Then, install the Redis tools. For example, on Ubuntu:   
-`sudo apt install redis-tools`
+```s
+sudo apt install redis-tools
+```
 
 To connect to your local Redis instance (on port 6379), run:
-`redis-cli`
-
-#### Redis Commander 
-If you want, you can optionally start a
-[Redis Commander](http://joeferner.github.io/redis-commander/)
-[Docker Instance](https://hub.docker.com/r/rediscommander/redis-commander)
-and use as a WYSIWYG admin interface for Redis with the information below.
-
-First get the redis IP with:   
-`web_redis_ip=$(docker inspect redis -f '{{json .NetworkSettings.IPAddress}}')`
-
-Then run the below command:   
-`docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 8082:8081 rediscommander/redis-commander:latest`
+```s
+redis-cli
+```
 
 ### Setting up RabbitMQ
 This project uses RabbitMQ to provide an asyncrhonous pub/sub interface
 where the services can communicate.
 
 To run RabbitMQ, do:   
-`docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine`
+```s
+docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:management-alpine
+```
 
 On the command above we essentially exposed 2 ports
 from the containers to our localhost:
-  * 15672: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
-  * 5672: this is what our services will use to intercommunicate
+  * *15672*: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
+  * *5672*: this is what our services will use to intercommunicate
 
 We'll use MassTransit to abstract RabbitMQ so we can implement patterns like
 pub/sub with minimum effort. Please note that we're running our RabbitMQ
@@ -335,19 +347,22 @@ docker image rm catalog -f
 ### Running Catalog database
 Our `CatalogSvc` utilizes MongoDB as it data store. To run
 it with Docker do:   
-`docker run -d --name catalog-db -p 3301:27017 mongo`
+```s
+docker run -d --name catalog-db -p 3301:27017 mongo
+```
 
 #### Seeding Product data
 To seed some initial data, connect to the catalog / mongodb
 instance with:   
-`mongo mongodb://localhost:32769`
+```s
+mongo mongodb://localhost:32769
+```
 
 And run the commands:   
-```
+```s
 mongoimport --db catalog --collection products products.json --port 3301 --jsonArray
 mongoimport --db catalog --collection categories categories.json --port 3301 --jsonArray
 ```
-
 
 
 ## AccountSvc
@@ -373,21 +388,28 @@ docker image rm account -f
 ### Running the database
 AccountSvc uses `MySql` as its data store.
 To run the account db, do:   
-`docker run -d --name account-db -p 3304:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name account-db -p 3304:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3304 < AccountSvc/db.sql`
-
+```s
+mysql --protocol=tcp -u root -ptodo -P 3304 < AccountSvc/db.sql
+```
 
 
 ## OrderSvc
 The Order service manages orders in the application.
 
 To manually build the order container, run:   
-`docker build -t order .`
+```s
+docker build -t order .
+```
 
 To run the container, do:
-`docker run --name order -p 8003:80 order`
+```s
+docker run --name order -p 8003:80 order
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -399,10 +421,14 @@ docker image rm order -f
 ### The Order database
 OrderSvc also uses `MySQL` as its data store.
 To run the order database, do:   
-`docker run -d --name order-db -p 3303:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name order-db -p 3303:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 Connect to the database with:   
-`mysql --protocol=tcp -u root -ptodo -P 3303 < OrderSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3303 < OrderSvc/db.sql
+```
 
 
 ## PaymentSvc
@@ -410,10 +436,14 @@ The Payment service provides _fake_ payment data
 so we can test the whole workflow.
 
 To build the payment container, run:   
-`docker build -t payment .`
+```s
+docker build -t payment .
+```
 
 To run the payment container, run:   
-`docker run --name payment -p 8007:80 payment`
+```s
+docker run --name payment -p 8007:80 payment
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -425,10 +455,14 @@ docker image rm payment -f
 ### The Payment Database
 PaymentSvc also uses `MySQL` as its data store. To run
 it, do:   
-`docker run -d --name payment-db -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name payment-db -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3307 < PaymentSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3307 < PaymentSvc/db.sql
+```
 
 
 
@@ -437,10 +471,14 @@ The Recommendation service provides (naive) recommendations
 for the application.
 
 To build the recommendation container, run:   
-`docker build -t recommendation .`
+```s
+docker build -t recommendation .
+```
 
 To run the container, run:   
-`docker run --name recommendation -p 8005:80 recommendation`
+```s
+docker run --name recommendation -p 8005:80 recommendation
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -452,10 +490,14 @@ docker image rm recommendation -f
 ### The Recommendation database
 RecommendationSvc also uses `MySQL` as its data store.
 To run the recommendation db, do:   
-`docker run -d --name recommendation-db -p 3305:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name recommendation-db -p 3305:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3305 < RecommendationSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3305 < RecommendationSvc/db.sql
+```
 
 
 ## NotificationSvc
@@ -464,10 +506,14 @@ via SMTP (you can use your Gmail, for example) for events
 that trigger that functionality.
 
 To build the notification container, run:   
-`docker build -t notification .`
+```s
+docker build -t notification .
+```
 
 To run the container, run:   
-`docker run --name notification -p 8006:80 notification`
+```s
+docker run --name notification -p 8006:80 notification
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -479,10 +525,14 @@ docker image rm notification -f
 ### The Notification database
 NotificationSvc also uses `MySQL` as its data store.
 To run the it, do:   
-`docker run -d --name notification-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name notification-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3306 < NotificationSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3306 < NotificationSvc/db.sql
+```
 
 
 
@@ -491,10 +541,14 @@ The Newsletter service provides simple newsletter functionality.
 
 ### Building the Newsletter image
 To build the newsletter container, run:   
-`docker build -t newsletter .`
+```s
+docker build -t newsletter .
+```
 
 To run the container, run:   
-`docker run --name newsletter -p 8002:80 newsletter`
+```s
+docker run --name newsletter -p 8002:80 newsletter
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -506,10 +560,14 @@ docker image rm newsletter -f
 ### The Newsletter database
 NewsletterSvc also uses `MySQL` as its data store. To
 run the Newsletter db, do:
-`docker run -d --name newsletter-db -p 3302:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name newsletter-db -p 3302:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3304 < NewsletterSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3304 < NewsletterSvc/db.sql
+```
 
 
 ## ShippingSvc
@@ -517,10 +575,14 @@ The Shipping service provides _fake_ shipping information
 so the application can complete some simple workflows.
 
 To build the Shipping container, run:   
-`docker build -t shipping .`
+```s
+docker build -t shipping .
+```
 
 To run the container, run:   
-`docker run --name shipping -p 8007:80 shipping`
+```s
+docker run --name shipping -p 8007:80 shipping
+```
 
 To remove the container and its images from the system, do:   
 ```s
@@ -532,33 +594,43 @@ docker image rm shipping -f
 ### The Shipping database
 ShippingSvc also uses `MySQL` as its data store. To run
 the Shipping db, do:
-`docker run -d --name shipping-db -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql`
+```s
+docker run -d --name shipping-db -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
+```
 
 To import the database, run:   
-`mysql --protocol=tcp -u root -ptodo -P 3308 < ShippingSvc/db.sql`
+```s
+mysql --protocol=tcp -u root -ptodo -P 3308 < ShippingSvc/db.sql
+```
 
 
-## Management Interfaces
+# Management Interfaces
 The project also includes management interfaces for RabbitMQ and MySQL
 databases. If running the default settings, you should have available:
-* Adminer: manage your MySQL databases
-* RabbitMQ Management Console: manage your rabbitmq broker
+* **Adminer**: manage your MySQL databases
+* **RabbitMQ** Management Console: manage your rabbitmq broker
 
 
-### Adminer
-Adminer (formerly phpMinAdmin) is a full-featured database management tool
-written in PHP. Conversely to phpMyAdmin, it consist of a single file ready to
-deploy to the target server. Adminer is available for MySQL, PostgreSQL, SQLite,
-MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch and MongoDB.
+## Adminer
+[Adminer](https://www.adminer.org/) (formerly phpMinAdmin) is a full-featured
+database management tool written in PHP. Conversely to phpMyAdmin, it consist
+of a single file ready to deploy to the target server. Adminer is available
+for MySQL, PostgreSQL, SQLite, MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch
+and MongoDB.
 
 If you want to manage your MySQL databases with adminer, run it with:   
-`docker run -d -p 8012:8080 --name adminer adminer`
+```s
+docker run -d -p 8012:8080 --name adminer adminer
+```
 
 To open Adminer, please open [http://localhost:8012/](http://localhost:8012/)
 on your browser, enter the IP of your MySQL Docker instance (see below) as host
-and login with its password (default: root|todo)
+and login with its password (default: root|todo).
 
-To get the IPs of the containers inside the Docker network. That can be queried
+If you're running with `docker-compose`, simply enter the db-name.
+
+If you're unning from `Visual Studio`, you'll need to get the IPs of the
+containers inside the Docker network. That can be queried
 with:   
 `docker inspect network bridge -f '{{json .Containers}}' | jq`
 
@@ -569,7 +641,24 @@ with:
 RabbitMQ is an open source multi-protocol messaging broker. It's used in this
 project via MassTransit to provide asynchronous communications via pub/sub and
 async request/responses. RabbitMQ Management Console is available at:
-[http://localhost:8010/](http://localhost:8010/). Login with guest/guest.
+[http://localhost:8010/](http://localhost:8010/). Login with `guest/guest`.
+
+
+## Redis Commander 
+If you want, you can optionally start a
+[Redis Commander](http://joeferner.github.io/redis-commander/) container
+and use as a WYSIWYG admin interface for Redis with the information below.
+
+If you're running with `docker-compose`, it should start automatically. Else,
+first get the redis IP with:   
+```s
+web_redis_ip=$(docker inspect redis -f '{{json .NetworkSettings.IPAddress}}')
+```
+
+Then run the below command:   
+```s
+docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 8082:8081 rediscommander/redis-commander:latest
+```
 
 
 # Configuration
@@ -581,8 +670,8 @@ For more information about Docker Compose, please
 ## Changing Configuration
 To change configuration, check `appsettings.json` and `appsettings.Development.json`
 in each project's folder. Essentially you want to modify:
-* appsettings.json: for your container configuration
-* appsettings.Development.json: for your Visual Studio debugging configuration
+* **appsettings.json**: for your container configuration
+* **appsettings.Development.json**: for your Visual Studio debugging configuration
 
 ## Docker Compose
 For more information about the compose spec, please
@@ -623,7 +712,7 @@ And the management tools are available on:
 * payment-db: mysql://localhost:3307
 * shipping-db: mysql://localhost:3308
 
-## Commands
+# Commands
 ```s
 # running it all with docker-compose
 # on the src folder, run:
@@ -642,7 +731,6 @@ docker run --name recommendation -p 8005:80 recommendation
 docker run --name notification -p 8006:80 notification
 docker run --name newsletter -p 8002:80 newsletter
 docker run --name shipping -p 8007:80 shipping
-
 ```
 
 
