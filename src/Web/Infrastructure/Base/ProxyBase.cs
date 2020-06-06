@@ -95,7 +95,7 @@ namespace Web.Infrastructure.Base
             RequestType rt)
         {
             var url = $"{_host}{endpoint}";
-            Log($"{rt.ToString().ToUpper()} {key} to: ${url}");
+            Log($"{rt.ToString().ToUpper()} {key} to: {url}");
 
             var data = new StringContent(
                 JsonConvert.SerializeObject(val),
@@ -118,12 +118,16 @@ namespace Web.Infrastructure.Base
                     throw new NotImplementedException();
             }
 
-            Log($"Response for '{key}' was: {resp.StatusCode} / {resp.ReasonPhrase}");
+            var msg = $"Response for '{key}' was: {resp.StatusCode} / {resp.ReasonPhrase}";
+            Log(msg);
+
+            if (!resp.IsSuccessStatusCode)
+            {
+                _logger.LogError($"[{_svcName}] {msg}. Error: {resp.ReasonPhrase}");
+            }
 
             return resp;
         }
-
-
 
         protected string GetCacheKey(string cat, string id)
         {
@@ -132,7 +136,7 @@ namespace Web.Infrastructure.Base
 
         protected void Log(string msg)
         {
-            _logger.LogInformation($"[{_svcName}] {msg}");
+            _logger.LogDebug($"[{_svcName}] {msg}");
         }
     }
 }

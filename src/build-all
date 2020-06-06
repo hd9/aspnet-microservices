@@ -25,40 +25,6 @@ do
 	cd ..
 done
 
-
-# printf "  [+] building AccountSvc: "
-# cd AccountSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd CatalogSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd NewsletterSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd NotificationSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd OrderSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd PaymentSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd RecommendationSvc && ./build
-# echo "[DONE]
-# 
-# printf "  [+] building Web: "
-# cd ShippingSvc && ./build
-# echo "[DONE]
-
-
 printf "\nDeleting unused images...\n"
 docker.exe image prune -f
 

@@ -1,0 +1,229 @@
+version: '3.7'
+
+services:
+
+  web:
+    image: web
+    build: ./Web
+    ports:
+      - "8000:80"
+    depends_on:
+      - catalog
+      - newsletter
+      - order
+      - account
+      - recommendation
+      - notification
+      - payment
+      - shipping
+      - redis
+      - rabbitmq
+      - redis-commander
+      - mysql-admin
+
+  catalog:
+    image: catalog
+    build: ./CatalogSvc
+    expose:
+      - "80"
+    environment:
+      - todo=true
+    ports:
+      - "8001:80"
+    depends_on:
+      - catalog-db
+      - rabbitmq
+
+  catalog-db:
+    image: mongo
+    expose:
+      - "27017"
+    ports:
+      - "3301:27017"
+
+
+  newsletter:
+    image: newsletter
+    build: ./NewsletterSvc
+    expose:
+      - "80"
+    environment:
+      - todo=true
+    ports:
+      - "8002:80"
+    depends_on:
+      - newsletter-db
+      - rabbitmq
+
+  newsletter-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3302:3306"
+    
+  order:
+    image: order
+    build: ./OrderSvc
+    expose:
+      - "80"
+    environment:
+      - todo=true
+    ports:
+      - "8003:80"
+    depends_on:
+      - order-db
+      - rabbitmq
+
+  order-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3303:3306"
+
+  account:
+    build: ./AccountSvc
+    image: account
+    expose:
+      - "80"
+    environment:
+      - todo=true
+    ports:
+      - "8004:80"
+    depends_on:
+      - account-db
+      - rabbitmq
+
+  account-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3304:3306"
+
+  recommendation:
+    image: recommendation
+    build: ./RecommendationSvc
+    expose:
+      - "80"
+    environment:
+      - todo=true
+    ports:
+      - "8005:80"
+    depends_on:
+      - recommendation-db
+      - rabbitmq
+
+  recommendation-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3305:3306"
+
+
+  notification:
+    image: notification
+    build: ./NotificationSvc
+    environment:
+      - todo=true
+    expose:
+      - "80"
+    ports:
+      - "8006:80"
+    depends_on:
+      - notification-db
+      - rabbitmq
+
+  notification-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+
+  payment:
+    image: payment
+    build: ./PaymentSvc
+    environment:
+      - todo=true
+    expose:
+      - "80"
+    ports:
+      - "8007:80"
+    depends_on:
+      - payment-db
+      - rabbitmq
+
+  payment-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3307:3306"
+
+  shipping:
+    image: shipping
+    build: ./ShippingSvc
+    environment:
+      - todo=true
+    expose:
+      - "80"
+    ports:
+      - "8008:80"
+    depends_on:
+      - shipping-db
+      - rabbitmq
+
+  shipping-db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3308:3306"
+
+  redis:
+    image: redis:6-alpine
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    environment:
+      - todo
+    expose:
+      - "5672"
+    ports:
+      - "5672:5672"
+      - "8010:15672"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=redis
+    ports:
+      - "8011:8081"
+    depends_on:
+      - redis
+
+  mysql-admin:
+     image: adminer:latest
+     ports:
+      - "8012:8080"

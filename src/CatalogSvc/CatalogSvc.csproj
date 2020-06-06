@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="categories.json" />
+    <Content Remove="products.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="build" />
+    <None Remove="Dockerfile" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="categories.json" />
+    <None Include="products.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microservices.Core" Version="0.0.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.3.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="6.3.2" />

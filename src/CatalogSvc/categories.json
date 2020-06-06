@@ -1,0 +1,38 @@
+[
+	{
+		"Slug": "sports",
+		"Name": "Sports"
+	},
+	{
+		"Slug": "games",
+		"Name": "Games"
+	},
+	{
+		"Slug": "books",
+		"Name": "Books"
+	},
+	{
+		"Slug": "computers",
+		"Name": "Computers"
+	},
+	{
+		"Slug": "tvs",
+		"Name": "TVs"
+	},
+	{
+		"Slug": "home",
+		"Name": "Home"
+	},
+	{
+		"Slug": "musical-instruments",
+		"Name": "Musical Instruments"
+	},
+	{
+		"Slug": "headphones-audio",
+		"Name": "Headphones & Audio"
+	},
+	{
+		"Slug": "phones",
+		"Name": "Phones"
+	}
+]

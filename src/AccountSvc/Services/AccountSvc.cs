@@ -38,6 +38,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = cmd.Name,
+                    FromName = tpl.FromName,
                     Email = cmd.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(cmd.Name)
@@ -62,6 +63,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = cmd.Name,
+                    FromName = tpl.FromName,
                     Email = cmd.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(cmd.Name)
@@ -87,6 +89,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = acct.Name,
+                    FromName = tpl.FromName,
                     Email = acct.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(acct.Name)

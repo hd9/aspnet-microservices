@@ -39,8 +39,8 @@ namespace NewsletterSvc.Services
                 new SendMail
                 {
                     ToName = s.Name,
-                    Email = s.Email,
                     FromName = _mailOptions.FromName,
+                    Email = s.Email,
                     Subject = _mailOptions.Subject,
                     Body = _mailOptions.Body.FormatWith(s.Name)
                 });

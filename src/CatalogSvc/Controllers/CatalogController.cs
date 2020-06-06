@@ -16,7 +16,7 @@ namespace CatalogSvc.Controllers
     {
         readonly ICatalogSvc svc;
         readonly IConfiguration cfg;
-        const string instruction = "The Catalog service is alive! Try GET /products/all";
+        const string instruction = "The Catalog service is alive! Try GET /categories";
 
         public CatalogController(ICatalogSvc svc, IConfiguration cfg)
         {
