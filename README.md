@@ -209,12 +209,29 @@ The most straight forward way to run the application is
 by using [Docker Compose](https://docs.docker.com/compose/).
 Docker Compose is a tool that can be used to define and run
 multiple containers as a single service using the command below:   
-`docker-compose up`
+```s
+docker-compose up
+```
+
+To stop the services, run:   
+```s
+docker-compose down
+```
+
+And to build/rebuild everything:
+```s
+docker-compose build
+```
+
+For more information on `docker compose` and other commands,
+please [check this link](https://docs.docker.com/compose/).
+
 
 ## Manually running the services
-This is a more detailed guide on how to run the services one by one.
-Feel free to jump to the next section if running with compose
-is sufficient for you.
+This is a more detailed guide on how to run the services one by one
+and is not required if you're running your services with `docker compose`.
+Feel free to jump [to the next section](https://github.com/hd9/aspnet-microservices#management-interfaces)
+if running with compose is sufficient for you.
 
 Start by pulling the required images with:   
 ```s
@@ -625,17 +642,18 @@ docker run -d -p 8012:8080 --name adminer adminer
 
 To open Adminer, please open [http://localhost:8012/](http://localhost:8012/)
 on your browser, enter the IP of your MySQL Docker instance (see below) as host
-and login with its password (default: root|todo).
+and login with its password (default: `root|todo`).
 
-If you're running with `docker-compose`, simply enter the db-name.
-
-If you're unning from `Visual Studio`, you'll need to get the IPs of the
+Accessing your databases:
+* with `docker-compose`: simply enter the db-name (see cheatsheet below).
+* with `Visual Studio`: you'll need to get the IPs of the
 containers inside the Docker network. That can be queried
 with:   
-`docker inspect network bridge -f '{{json .Containers}}' | jq`
+```s
+docker inspect network bridge -f '{{json .Containers}}' | jq
+```
 
 **Note**: you'll need [jq](https://stedolan.github.io/jq/) to format the output.
-
 
 ## RabbitMQ Management Console
 RabbitMQ is an open source multi-protocol messaging broker. It's used in this
@@ -649,8 +667,10 @@ If you want, you can optionally start a
 [Redis Commander](http://joeferner.github.io/redis-commander/) container
 and use as a WYSIWYG admin interface for Redis with the information below.
 
-If you're running with `docker-compose`, it should start automatically. Else,
-first get the redis IP with:   
+If you're running with `docker-compose`, it be available on
+[http://localhost:8011/](http://localhost:8011/).
+
+Else, first get the redis IP with:   
 ```s
 web_redis_ip=$(docker inspect redis -f '{{json .NetworkSettings.IPAddress}}')
 ```
