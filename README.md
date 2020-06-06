@@ -130,7 +130,7 @@ So far, the project consists of the following services:
 On this section we'll list the essentials on how to modify
 and run this project on your machine.
 If you're not interested in details about development feel
-free to jump to the next section.
+free to jump [to the next section](https://github.com/hd9/aspnet-microservices#running-the-services).
 
 
 ## Technical Dependencies
@@ -199,7 +199,7 @@ one of the solutions on this project:
   projects and services.
 * `Microservices.Core.sln`: source for the core NuGet package. This package is
   necessary so our containers be isolated from each other. The package is
-  published on GitHub at [github.com/hd9?tab=packages](https://github.com/hd9?tab=packages)
+  published on [this project's package repo](https://github.com/hd9/aspnet-microservices/packages/251630)
 
 # Running the services
 Let's quickly review how to run the services.
@@ -314,8 +314,8 @@ docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:m
 
 On the command above we essentially exposed 2 ports
 from the containers to our localhost:
-  * *15672*: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
-  * *5672*: this is what our services will use to intercommunicate
+  * **15672**: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
+  * **5672**: this is what our services will use to intercommunicate
 
 We'll use MassTransit to abstract RabbitMQ so we can implement patterns like
 pub/sub with minimum effort. Please note that we're running our RabbitMQ
@@ -626,6 +626,7 @@ The project also includes management interfaces for RabbitMQ and MySQL
 databases. If running the default settings, you should have available:
 * **Adminer**: manage your MySQL databases
 * **RabbitMQ** Management Console: manage your rabbitmq broker
+* **Redis Commander** Management console for Redis
 
 
 ## Adminer
@@ -695,7 +696,8 @@ in each project's folder. Essentially you want to modify:
 
 ## Docker Compose
 For more information about the compose spec, please
-check the `docker-compose.yml` file in the `src` folder.
+check the [docker-compose.yml file](https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml)
+in the `src` folder.
 
 ## Kubernetes
 todo
@@ -742,15 +744,15 @@ docker-compose up <service-name>            # start <service-name> and its depen
 docker-compose build                        # build all the services
 
 # running the instances individually
-docker run --name web -p 8000:80 web
-docker run --name catalog -p 8001:80 catalog
-docker run --name account -p 8004:80 account
-docker run --name order -p 8003:80 order
-docker run --name payment -p 8007:80 payment
+docker run --name web            -p 8000:80 web
+docker run --name catalog        -p 8001:80 catalog
+docker run --name account        -p 8004:80 account
+docker run --name order          -p 8003:80 order
+docker run --name payment        -p 8007:80 payment
 docker run --name recommendation -p 8005:80 recommendation
-docker run --name notification -p 8006:80 notification
-docker run --name newsletter -p 8002:80 newsletter
-docker run --name shipping -p 8007:80 shipping
+docker run --name notification   -p 8006:80 notification
+docker run --name newsletter     -p 8002:80 newsletter
+docker run --name shipping       -p 8007:80 shipping
 ```
 
 
