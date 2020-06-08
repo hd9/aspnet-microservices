@@ -6,13 +6,15 @@ using [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet),
 [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/),
 [Redis](https://redis.io/), [Vue.js](https://vuejs.org/),
 [Dapper ORM](https://dapper-tutorial.net/dapper),
-[Azure App Services](https://azure.microsoft.com/en-us/services/app-service/),
-[Azure AKS](https://docs.microsoft.com/en-us/azure/aks/) and
-[Kubernetes](https://kubernetes.io/).
+[Prometheus](https://prometheus.io/),
+[Grafana](https://grafana.com/),
+[cadvisor](https://github.com/google/cadvisor)
+[Kubernetes](https://kubernetes.io/),
+[Azure App Services](https://azure.microsoft.com/en-us/services/app-service/) and
+[Azure AKS](https://docs.microsoft.com/en-us/azure/aks/).
 
-To learn more about this app, Docker, Azure and microservices,
-please check my blog at:
-[blog.hildenco.com](https://blog.hildenco.com)
+To learn more about this app, Docker, Azure, Kubernetes, Linux
+and microservices, check my blog at: [blog.hildenco.com](https://blog.hildenco.com)
 
 ## Source Code
 The source code is available at
@@ -125,6 +127,22 @@ So far, the project consists of the following services:
 * **Payment**: simulates a _fake_ payment store
 * **Shipping**: simulates a _fake_ shipping store
 
+## Third-party tools included in this project
+Of course, we could (and should!) have some fun with 3rd party tool.
+Included in this project you'll have:
+
+* **Grafana**: a multi-platform open source analytics and interactive
+  visualization web application. It provides charts, graphs, and alerts
+  for the web when connected to supported data sources.
+* **Prometheus**: a systems monitoring and alerting toolkit
+* **cadvisor**: provides container users an understanding of the resource usage
+  and performance characteristics of their running containers.
+  It is a running daemon that collects, aggregates, processes,
+  and exports information about running containers. 
+* **MySQL** Admin: tool to manage our MySQL databases
+* **Mongo Express**: tool to manage our Mongo db
+* **RabbitMQ** dashboard: tool to manage our RabbitMQ service
+* **Redis Commander**: tool to manage our Redis instance
 
 # Info for developers
 On this section we'll list the essentials on how to modify
@@ -132,8 +150,7 @@ and run this project on your machine.
 If you're not interested in details about development feel
 free to jump [to the next section](https://github.com/hd9/aspnet-microservices#running-the-services).
 
-
-## Technical Dependencies
+## Technical Requirements
 To run this project on your machine, please make sure you have installed:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac, Windows) or
   [Docker Engine](https://docs.docker.com/engine/install/) (Linux)
@@ -151,11 +168,15 @@ These are the Docker images that we'll use:
 * ASP.NET Core SDK
 * ASP.NET Core runtime
 * Mongo:latest
+* Mongo-express:latest
 * MySQL:latest
 * Redis:6-alpine
 * RabbitMQ:latest
-* Adminer
+* Adminer:latest
 * rediscommander/redis-commander:latest
+* grafana:latest
+* prometheus:latest
+* cadvisor:latest
 
 ### Initializing the project
 To initialize the project run:   
@@ -164,24 +185,44 @@ git clone https://github.com/hd9/aspnet-microservices`
 ```
 
 ### Understanding the services
-The easiest way to understand the services and their configurations
-is by opening the `src/docker-compose.yml` file.
+Code is always the best documentation. The easiest way to understand
+the services and their configurations is by reading the
+`src/docker-compose.yml` file.
 
-### Building with Visual Studio
+### Building and running with Visual Studio
 Building with Visual Studio 2019 should be straightforward.
 Simply open the `AspNetMicroservices.sln` file from the `src` folder
 and Visual Studio should be able to build the project.
 
-### Building the Docker images with Docker Compose
+### Building and running the Docker images with Docker Compose
 To build all the images, the quickest way is to use
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 installed, you should be able to build the project with:   
-```
+```s
 docker-compose build
 ```
 
-### Building the Docker images independently
+This command will not only pull the images you don't have
+but also build them (in case they aren't) and init the 
+databases so you have your application running as soon as possible.
+
+For available urls to hit, check the
+[Urls section](https://github.com/hd9/aspnet-microservices#urls).
+
+## Changing Configuration
+To change configuration for the ASP.NET services,
+check the `appsettings.json` and `appsettings.Development.json` files
+in each project's folder. Essentially you want to modify:
+* **appsettings.json**: to change your container configuration
+* **appsettings.Development.json**: to change your Visual Studio debugging configuration
+
+## Docker Compose
+For more information about the compose spec, please
+check the [docker-compose.yml file](https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml)
+in the `src` folder.
+
+## Building the Docker images independently
 But if you really want, you can also build the images independently.
 Inside each project (and apart from [Microservices.Core](https://github.com/hd9/aspnet-microservices/tree/master/src/Microservices.Core))
 you should see a `build` script that should be executed on a Linux terminal
@@ -192,7 +233,7 @@ just run `build-all` located in the `src` folder. Please note that it'll
 be necessary to run `chmod +x build-all` before you run it.
 
 
-### Making changes to the project
+## Making changes to the project
 If you want to make changes to the project, the simplest way by opening
 one of the solutions on this project:
 * `AspNetMicroservices.sln`: the main solution, consisting on most of the
@@ -202,9 +243,6 @@ one of the solutions on this project:
   published on [this project's package repo](https://github.com/hd9/aspnet-microservices/packages/251630)
 
 # Running the services
-Let's quickly review how to run the services.
-
-## Running with Docker compose
 The most straight forward way to run the application is
 by using [Docker Compose](https://docs.docker.com/compose/).
 Docker Compose is a tool that can be used to define and run
@@ -212,15 +250,18 @@ multiple containers as a single service using the command below:
 ```s
 docker-compose up
 ```
-
 To stop the services, run:   
 ```s
 docker-compose down
 ```
-
 And to build/rebuild everything:
 ```s
 docker-compose build
+```
+In case you want to run a specific service (for example, `catalog`,
+the product catalog and its MongoDB database), run:
+```s
+docker-compose build catalog
 ```
 
 For more information on `docker compose` and other commands,
@@ -241,12 +282,17 @@ docker pull mysql:latest
 docker pull adminer:latest
 docker pull redis:6-alpine
 docker pull rediscommander/redis-commander:latest
+docker pull rediscommander/redis-commander:latest
+docker pull grafana:latest
+docker pull prometheus:latest
+docker pull cadvisor:latest
 ```
-Let's now review how to build each of the services.
 
 ***Note***: For simplicity, I'm not tagging the images so all images
 will be tagged as `latest` by default by Docker. Feel free to
 modify the name, ports and version.
+
+Let's now review how to build each of the services.
 
 ## Setting up the Web service
 The Web service is the frontend for our application. It requires a Redis
@@ -624,12 +670,19 @@ mysql --protocol=tcp -u root -ptodo -P 3308 < ShippingSvc/db.sql
 # Management Interfaces
 The project also includes management interfaces for RabbitMQ and MySQL
 databases. If running the default settings, you should have available:
-* **Adminer**: manage your MySQL databases
+* **Grafana**: Get container / system information
+* **MySQL Admin (Adminer)**: manage your MySQL databases
+* **Mongo Express**: manage your MongoDb database (`catalog`)
 * **RabbitMQ** Management Console: manage your rabbitmq broker
 * **Redis Commander** Management console for Redis
 
+## Grafana
+In order for Grafana to run, you'll also have to configure `Prometheus`
+and `cadvisor`. Check `docker-compose.yml` for more information.
+By default, `Grafana` should be available at [http://localhost:3000](http://localhost:3000).
 
-## Adminer
+
+## MySQL Admin (Adminer)
 [Adminer](https://www.adminer.org/) (formerly phpMinAdmin) is a full-featured
 database management tool written in PHP. Conversely to phpMyAdmin, it consist
 of a single file ready to deploy to the target server. Adminer is available
@@ -638,7 +691,7 @@ and MongoDB.
 
 If you want to manage your MySQL databases with adminer, run it with:   
 ```s
-docker run -d -p 8012:8080 --name adminer adminer
+docker run -d -p 8010:8080 --name adminer adminer
 ```
 
 To open Adminer, please open [http://localhost:8012/](http://localhost:8012/)
@@ -682,23 +735,6 @@ docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 808
 ```
 
 
-# Configuration
-For a complete information on the services running,
-check the `docker-compose.yml` file in the `src` folder.
-For more information about Docker Compose, please 
-[check this link](https://docs.docker.com/compose/).
-
-## Changing Configuration
-To change configuration, check `appsettings.json` and `appsettings.Development.json`
-in each project's folder. Essentially you want to modify:
-* **appsettings.json**: for your container configuration
-* **appsettings.Development.json**: for your Visual Studio debugging configuration
-
-## Docker Compose
-For more information about the compose spec, please
-check the [docker-compose.yml file](https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml)
-in the `src` folder.
-
 ## Kubernetes
 todo
 
@@ -709,50 +745,53 @@ commands to free up some of your memory.
 
 ## Urls
 By default, the apps are configured at:
-* Web: http://localhost:8000
-* Catalog: http://localhost:8001
-* Newsletter: http://localhost:8002
-* Order: http://localhost:8003
-* Account: http://localhost:8004
-* Recommendation: http://localhost:8005
-* Notification: http://localhost:8006
-* Payment: http://localhost:8007
-* Shipping: http://localhost:8008
+* **Web**: [http://localhost:8000](http://localhost:8000)
+* **Catalog**: [http://localhost:8001](http://localhost:8001)
+* **Newsletter**: [http://localhost:8002](http://localhost:8002)
+* **Order**: [http://localhost:8003](http://localhost:8003)
+* **Account**: [http://localhost:8004](http://localhost:8004)
+* **Recommendation**: [http://localhost:8005](http://localhost:8005)
+* **Notification**: [http://localhost:8006](v)
+* **Payment**: [http://localhost:8007](http://localhost:8007)
+* **Shipping**: [http://localhost:8008](http://localhost:8008)
 
 And the management tools are available on:
-* RabbitMQ dashboard: http://localhost:8010/
-* Redis Commander: http://localhost:8011/
-* MySQL Admin: http://localhost:8012/
+* **Grafana**: [http://localhost:3000/](http://localhost:3000/)
+* **MySQL Admin**: [http://localhost:8010/](http://localhost:8010/)
+* **Mongo Express**: [http://localhost:8011/](http://localhost:8011/)
+* **RabbitMQ dashboard**: [http://localhost:8012/](http://localhost:8012/)
+* **Redis Commander**: [http://localhost:8013/](http://localhost:8013/)
 
 ## Databases
-* catalog-db: mongodb://localhost:3301
-* newsletter-db: mysql://localhost:3302
-* order-db: mysql://localhost:3303
-* account-db: mysql://localhost:3304
-* recommendation-db: mysql://localhost:3305
-* notification-db: mysql://localhost:3306
-* payment-db: mysql://localhost:3307
-* shipping-db: mysql://localhost:3308
+* **catalog-db**: mongodb://localhost:3301
+* **newsletter-db**: mysql://localhost:3302
+* **order-db**: mysql://localhost:3303
+* **account-db**: mysql://localhost:3304
+* **recommendation-db**: mysql://localhost:3305
+* **notification-db**: mysql://localhost:3306
+* **payment-db**: mysql://localhost:3307
+* **shipping-db**: mysql://localhost:3308
 
 # Commands
 ```s
-# running it all with docker-compose
-# on the src folder, run:
-docker-compose up                           # start all the services
-docker-compose down                         # stop all the services
+# running it all with docker-compose (recommended)
+# from the src folder, run:
+docker-compose up                           # start all the services in the foreground
+docker-compose up -d                        # start all the services in the background
+docker-compose down                         # stop and remove all the services
 docker-compose up <service-name>            # start <service-name> and its dependencies. Ex: docker-compose up shipping
 docker-compose build                        # build all the services
 
 # running the instances individually
 docker run --name web            -p 8000:80 web
 docker run --name catalog        -p 8001:80 catalog
-docker run --name account        -p 8004:80 account
+docker run --name newsletter     -p 8002:80 newsletter
 docker run --name order          -p 8003:80 order
-docker run --name payment        -p 8007:80 payment
+docker run --name account        -p 8004:80 account
 docker run --name recommendation -p 8005:80 recommendation
 docker run --name notification   -p 8006:80 notification
-docker run --name newsletter     -p 8002:80 newsletter
-docker run --name shipping       -p 8007:80 shipping
+docker run --name payment        -p 8007:80 payment
+docker run --name shipping       -p 8008:80 shipping
 ```
 
 
@@ -766,3 +805,10 @@ docker run --name shipping       -p 8007:80 shipping
 
 ## License
 This project is licensed under [the MIT License](https://opensource.org/licenses/MIT).
+
+## Final Thoughts
+First and foremost: Have fun!
+
+Then, to learn more about this app, Docker, Azure, Kubernetes, Linux
+and microservices, check my blog at: [blog.hildenco.com](https://blog.hildenco.com)
+

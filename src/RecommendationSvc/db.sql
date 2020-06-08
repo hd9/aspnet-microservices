@@ -2,7 +2,7 @@
 create database if not exists recommendationdb;
 use recommendationdb;
 
-create table product (
+create table if not exists product (
     slug                VARCHAR(100)    NOT NULL PRIMARY KEY,
     name                VARCHAR(100)    NOT NULL,
     description         VARCHAR(1000)   NOT NULL,
@@ -11,7 +11,7 @@ create table product (
     last_update         DATETIME        NOT NULL
 );
 
-create table recommendation (
+create table if not exists recommendation (
     product_slug        VARCHAR(100)    NOT NULL,
     related_slug        VARCHAR(100)    NOT NULL,
     hits                INT             NOT NULL DEFAULT 1,

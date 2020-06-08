@@ -2,7 +2,7 @@
 create database if not exists notificationdb;
 use notificationdb;
 
-CREATE TABLE notification (
+CREATE TABLE if not exists notification (
     id          INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(1000)   NOT NULL,
     email       VARCHAR(300)    NOT NULL,

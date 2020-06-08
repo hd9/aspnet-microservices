@@ -1,8 +1,8 @@
 -- AccountSvc database init script 
-create database accountdb;
+create database if not exists accountdb;
 use accountdb;
 
-CREATE TABLE account (
+CREATE TABLE if not exists account (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name                  VARCHAR(1000)   NOT NULL,
     email                 VARCHAR(300)    NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE account (
     subscribe_newsletter  BIT
 );
 
-CREATE TABLE address (
+CREATE TABLE if not exists address (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id            INT             NOT NULL,
     name                  VARCHAR(1000)   NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE address (
        REFERENCES account(id)
 );
 
-CREATE TABLE payment_info (
+CREATE TABLE if not exists payment_info (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id            INT             NOT NULL,
     name                  VARCHAR(1000)   NOT NULL,
@@ -44,12 +44,12 @@ CREATE TABLE payment_info (
        REFERENCES account(id)
 );
 
-CREATE TABLE event_type (
+CREATE TABLE if not exists event_type (
     id                    TINYINT         NOT NULL PRIMARY KEY,
     name                  VARCHAR(1000)   NULL
 );
 
-CREATE TABLE account_history (
+CREATE TABLE if not exists account_history (
     id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id            INT             NULL,
     event_type_id         TINYINT         NOT NULL,

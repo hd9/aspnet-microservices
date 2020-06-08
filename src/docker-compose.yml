@@ -1,5 +1,8 @@
 version: '3.7'
 
+volumes:
+    grafana_data: {}
+
 services:
 
   web:
@@ -36,11 +39,16 @@ services:
 
   catalog-db:
     image: mongo
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: todo
+      MONGO_INITDB_DATABASE: catalog
+    volumes:
+    - ./CatalogSvc/db.js:/docker-entrypoint-initdb.d/db.js:ro
     expose:
       - "27017"
     ports:
       - "3301:27017"
-
 
   newsletter:
     image: newsletter
@@ -57,6 +65,9 @@ services:
 
   newsletter-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./NewsletterSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -79,6 +90,9 @@ services:
 
   order-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./OrderSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -101,6 +115,9 @@ services:
 
   account-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./AccountSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -123,6 +140,9 @@ services:
 
   recommendation-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./RecommendationSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -146,6 +166,9 @@ services:
 
   notification-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./NotificationSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -168,6 +191,9 @@ services:
 
   payment-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./PaymentSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -190,6 +216,9 @@ services:
 
   shipping-db:
     image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./ShippingSvc/db.sql:/data/db.sql
     environment:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
@@ -203,7 +232,24 @@ services:
       - "6379"
     ports:
       - "6379:6379"
-    
+
+  mysql-admin:
+     image: adminer:latest
+     ports:
+      - "8010:8080"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8011:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=catalog-db
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: todo
+    depends_on:
+      - catalog-db
+
   rabbitmq:
     image: rabbitmq:management-alpine
     environment:
@@ -212,18 +258,61 @@ services:
       - "5672"
     ports:
       - "5672:5672"
-      - "8010:15672"
+      - "8012:15672"
 
   redis-commander:
     image: rediscommander/redis-commander:latest
     environment:
       - REDIS_HOSTS=redis
     ports:
-      - "8011:8081"
+      - "8013:8081"
     depends_on:
       - redis
 
-  mysql-admin:
-     image: adminer:latest
-     ports:
-      - "8012:8080"
+  # config for prometheus (time-series db)
+  # uncomment the port if you want to access it
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    # ports:
+    # - 9090:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+    - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+    - cadvisor
+
+  # config for cadvisor (tool to gather container metrics)
+  # uncomment the port if you want to access it
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    # ports:
+    # - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+
+  # frontend for prometheus
+  # access it at: http://localhost:3000 [admin | admin]
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - cadvisor
+      

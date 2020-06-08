@@ -2,7 +2,7 @@
 create database if not exists paymentdb;
 use paymentdb;
 
-create table payment (
+create table if not exists payment (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id          INT             NOT NULL,
     order_id            INT             NOT NULL,
@@ -15,7 +15,7 @@ create table payment (
     last_modified       DATETIME        NOT NULL
 );
 
-create table payment_request (
+create table if not exists payment_request (
     pmt_gateway_id      VARCHAR(37)     NOT NULL PRIMARY KEY,
     pmt_id              INT             NOT NULL,
     amount              DECIMAL(10,2)   NOT NULL,

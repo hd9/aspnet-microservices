@@ -2,7 +2,7 @@
 create database if not exists orderdb;
 use orderdb;
 
-create table orders (
+create table if not exists orders (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     number              VARCHAR(40)     NOT NULL,
     account_id          INT             NOT NULL,
@@ -18,7 +18,7 @@ create table orders (
     last_modified       DATETIME        NOT NULL
 );
 
-create table lineitem (
+create table if not exists lineitem (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id            INT             NOT NULL,
     name                VARCHAR(1000)   NOT NULL,
@@ -29,7 +29,7 @@ create table lineitem (
         REFERENCES orders(id)
 ); 
 
-CREATE TABLE payment_info (
+CREATE TABLE if not exists payment_info (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id              INT             NOT NULL,
     name                  VARCHAR(1000)   NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE payment_info (
        REFERENCES orders(id)
 );
 
-CREATE TABLE shipping_info (
+CREATE TABLE if not exists shipping_info (
     id                    INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     order_id              INT             NOT NULL,
     payment_info_id       INT             NOT NULL,
@@ -61,10 +61,25 @@ CREATE TABLE shipping_info (
        REFERENCES payment_info(id)
 );
 
-CREATE TABLE event_type (
+CREATE TABLE if not exists event_type (
     id                    TINYINT         NOT NULL PRIMARY KEY,
     name                  VARCHAR(1000)   NULL
 );
+
+CREATE TABLE if not exists order_history (
+    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id              INT             NULL,
+    event_type_id         TINYINT         NOT NULL,
+    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
+    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: PaymentInfo, ShippingInfo, etc',
+    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
+    ip                    VARCHAR(100)    NULL,
+    info                  VARCHAR(1000)   NULL,
+    created_at            DATETIME        NOT NULL,
+    FOREIGN KEY (event_type_id)
+       REFERENCES event_type(id)
+);
+
 
 insert into event_type
 values
@@ -82,17 +97,3 @@ values
 (20, 'ShippingInfo Submitted'),
 (21, 'ShippingInfo Updated'),
 (22, 'ShippingInfo Removed');
-
-CREATE TABLE order_history (
-    id                    BIGINT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    order_id              INT             NULL,
-    event_type_id         TINYINT         NOT NULL,
-    requested_by_id       VARCHAR(1000)   NULL COMMENT 'AccountId that requested the operation',
-    ref_id                INT             NULL COMMENT 'Reference record ID. Ex: PaymentInfo, ShippingInfo, etc',
-    ref_type_id           TINYINT         NULL COMMENT 'Type ID. Ex: Address=0, PaymentInfo=1, ShippingInfo=2 ',
-    ip                    VARCHAR(100)    NULL,
-    info                  VARCHAR(1000)   NULL,
-    created_at            DATETIME        NOT NULL,
-    FOREIGN KEY (event_type_id)
-       REFERENCES event_type(id)
-);

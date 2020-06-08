@@ -2,7 +2,7 @@
 create database if not exists shippingdb;
 use shippingdb;
 
-CREATE TABLE shipping (
+CREATE TABLE if not exists shipping (
     id                  INT             NOT NULL AUTO_INCREMENT PRIMARY KEY,
     number              VARCHAR(100)    NOT NULL,
     account_id          INT             NOT NULL,
