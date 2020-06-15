@@ -21,7 +21,7 @@ The source code is available at
 [github.com/hd9/aspnet-microservices](https://github.com/hd9/aspnet-microservices).
 
 
-## Disclaimer
+## Introduction
 When you create a sample microservice-based application, you need to deal with
 complexity and make some choices. I chose to explicitly reduce the complexity by
 avoiding some parallel design patterns and focused on development of the
@@ -44,9 +44,8 @@ adding all the recommended patterns would increase a lot its complexity. Here
 are some of the areas that could be improved:
 * **Testing**: as any time-constraint project, no tests were written for the
   services. However, if you'd like to implement yours,
-  feel free to add your testing framework of choice. For a good introduction on 
-  how to test .NET Core and ASP.NET Core,
-  [please check this page](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps).
+  feel free to write your tests using your testing framework of choice.
+  [For a good introduction on how to test .NET Core and ASP.NET Core, read this](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps).
 * **Security**: most of the settings here are default, or even no credentials.
   That was done un purpose so it's simpler for people to understand the
   different parts of the application, interact with the services (Redis, MongoDB,
@@ -122,8 +121,8 @@ So far, the project consists of the following services:
 * **Newsletter**: accepts user emails and stores them in the newsletter database for future use
 * **Order**: provides order features for the web store
 * **Account**: provides account services (login, account creation, etc) for the web store
-* **Recommendation**: provides simple recommendations between products
-* **Notification**: sends email notifications on certain events in the system
+* **Recommendation**: provides simple recommendations based on products purchased on different sessions
+* **Notification**: sends email notifications upon certain events in the system
 * **Payment**: simulates a _fake_ payment store
 * **Shipping**: simulates a _fake_ shipping store
 
@@ -143,6 +142,7 @@ Included in this project you'll have:
 * **Mongo Express**: tool to manage our Mongo db
 * **RabbitMQ** dashboard: tool to manage our RabbitMQ service
 * **Redis Commander**: tool to manage our Redis instance
+* **The ELK Stack (Experimental)**: the ELK stack to capture, review and query container logs.
 
 # Info for developers
 On this section we'll list the essentials on how to modify
@@ -181,10 +181,9 @@ These are the Docker images that we'll use:
 ### Initializing the project
 To initialize the project run:   
 ```s
-git clone https://github.com/hd9/aspnet-microservices`
+git clone https://github.com/hd9/aspnet-microservices
 ```
 
-### Understanding the services
 Code is always the best documentation. The easiest way to understand
 the services and their configurations is by reading the
 `src/docker-compose.yml` file.
@@ -192,10 +191,10 @@ the services and their configurations is by reading the
 ### Building and running with Visual Studio
 Building with Visual Studio 2019 should be straightforward.
 Simply open the `AspNetMicroservices.sln` file from the `src` folder
-and Visual Studio should be able to build the project.
+and debug the project from Visual Studio 2019.
 
 ### Building and running the Docker images with Docker Compose
-To build all the images, the quickest way is to use
+The recommended way to build the images is by using:
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 installed, you should be able to build the project with:   
@@ -211,16 +210,17 @@ For available urls to hit, check the
 [Urls section](https://github.com/hd9/aspnet-microservices#urls).
 
 ## Changing Configuration
+There are three places you should go for changing configuration: the
+settings files and `docker-compose.yml`.
+
 To change configuration for the ASP.NET services,
 check the `appsettings.json` and `appsettings.Development.json` files
 in each project's folder. Essentially you want to modify:
 * **appsettings.json**: to change your container configuration
 * **appsettings.Development.json**: to change your Visual Studio debugging configuration
 
-## Docker Compose
-For more information about the compose spec, please
-check the [docker-compose.yml file](https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml)
-in the `src` folder.
+The docker-compose configuration can be read (and modifed) on the
+`src/docker-compose.yml` file.
 
 ## Building the Docker images independently
 But if you really want, you can also build the images independently.
@@ -455,7 +455,7 @@ To run the account db, do:
 docker run -d --name account-db -p 3304:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3304 < AccountSvc/db.sql
 ```
@@ -522,7 +522,7 @@ it, do:
 docker run -d --name payment-db -p 3307:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3307 < PaymentSvc/db.sql
 ```
@@ -557,7 +557,7 @@ To run the recommendation db, do:
 docker run -d --name recommendation-db -p 3305:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3305 < RecommendationSvc/db.sql
 ```
@@ -592,7 +592,7 @@ To run the it, do:
 docker run -d --name notification-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3306 < NotificationSvc/db.sql
 ```
@@ -627,7 +627,7 @@ run the Newsletter db, do:
 docker run -d --name newsletter-db -p 3302:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3304 < NewsletterSvc/db.sql
 ```
@@ -661,7 +661,7 @@ the Shipping db, do:
 docker run -d --name shipping-db -p 3308:3306 -e MYSQL_ROOT_PASSWORD=todo mysql
 ```
 
-To import the database, run:   
+To manually import the database, run:   
 ```s
 mysql --protocol=tcp -u root -ptodo -P 3308 < ShippingSvc/db.sql
 ```
@@ -673,8 +673,9 @@ databases. If running the default settings, you should have available:
 * **Grafana**: Get container / system information
 * **MySQL Admin (Adminer)**: manage your MySQL databases
 * **Mongo Express**: manage your MongoDb database (`catalog`)
-* **RabbitMQ** Management Console: manage your rabbitmq broker
-* **Redis Commander** Management console for Redis
+* **RabbitMQ**: Management Console: manage your rabbitmq broker
+* **Redis Commander**: Management console for Redis
+* **Kibana**: Management console for the ELK stack
 
 ## Grafana
 In order for Grafana to run, you'll also have to configure `Prometheus`
@@ -761,8 +762,10 @@ And the management tools are available on:
 * **Mongo Express**: [http://localhost:8011/](http://localhost:8011/)
 * **RabbitMQ dashboard**: [http://localhost:8012/](http://localhost:8012/)
 * **Redis Commander**: [http://localhost:8013/](http://localhost:8013/)
+* **The ELK Stack (Experimental)**: [http://localhost:5601/app/kibana#/home](http://localhost:5601/app/kibana#/home).
 
 ## Databases
+If the container ports are open, you should reach the databases at the following urls:
 * **catalog-db**: mongodb://localhost:3301
 * **newsletter-db**: mysql://localhost:3302
 * **order-db**: mysql://localhost:3303
@@ -773,6 +776,7 @@ And the management tools are available on:
 * **shipping-db**: mysql://localhost:3308
 
 # Commands
+The main commands to run are:
 ```s
 # running it all with docker-compose (recommended)
 # from the src folder, run:

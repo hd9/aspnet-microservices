@@ -1,6 +1,14 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+article h1, article h2, article h3, article h4 {
+    margin-top: 3rem;
+}
+
+article {
+    font-size: 1.2rem;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -81,4 +89,18 @@ body {
 
 .clickeable {
     cursor: pointer;
+}
+
+pre {
+    display: inline-block;
+    padding: 15px;
+    margin: 10px 0;
+    width: 92%;
+    color: #333;
+    font-weight: 400;
+    overflow: hidden;
+    vertical-align: middle;
+    font-size: 1.1rem;
+    background-color: #EFEFEF;
+    border-left: 3px solid #3E78A6 !important;
 }

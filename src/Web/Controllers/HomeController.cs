@@ -18,6 +18,12 @@ namespace Web.Controllers
             return View();
         }
 
+        [Route("/help")]
+        public IActionResult Help()
+        {
+            return View();
+        }
+
         public IActionResult Products()
         {
             return View();
