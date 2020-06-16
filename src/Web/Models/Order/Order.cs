@@ -9,7 +9,7 @@ namespace Web.Models.Order
 {
     public class Order
     {
-        public int Id { get; set; }
+        public string Number  { get; set; }
         public int AccountId { get; set; }
         public OrderStatus Status { get; set; }
         public PaymentStatus PaymentStatus { get; set; }

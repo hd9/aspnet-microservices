@@ -72,12 +72,11 @@ namespace Web.Controllers
             o.Currency = Site.StoreSettings.Currency;
             o.Tax = Site.StoreSettings.Tax;
             
-
             if (!o.IsValidForSubmit())
                 return BadRequest();
 
             await _oSvc.Submit(o);
-            return Ok(o.Id);
+            return Ok(o.Number);
         }
 
         public IActionResult Submitted()

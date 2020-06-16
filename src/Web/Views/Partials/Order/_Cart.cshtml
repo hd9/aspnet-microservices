@@ -45,8 +45,8 @@
                 <p class="lead">Summary of your order.</p>
                 <p class="font-weight-bold">Subtotal: <span class="text-danger font-weight-bold">@cur {{ parseFloat(subtotal).toFixed(2) }}</span></p>
                 <div class="text-center py-3">
-                    <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
-                    <a asp-action="Checkout" class="btn btn-primary btn-sm">Checkout</a>
+                    <button class="btn btn-danger" v-on:click="clear">Clear Cart</button>
+                    <a asp-action="Checkout" class="btn btn-primary">Checkout</a>
                 </div>
                 <p class="text-center small"><a asp-controller="Home" asp-action="Index">Continue shopping</a></p>
             </div>

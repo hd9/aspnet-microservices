@@ -66,8 +66,8 @@ namespace Web.Infrastructure.Base
         protected async Task<TResult> PostAsync<TResult>(string key, object val, string endpoint)
         {
             var resp = await RequestAsync(key, val, endpoint, RequestType.Post);
-            return JsonConvert.DeserializeObject<TResult>(
-                await resp.Content.ReadAsStringAsync());
+            var content = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TResult>(content);
         }
 
         protected async Task<HttpStatusCode> PostAsync(string key, object val, string endpoint)

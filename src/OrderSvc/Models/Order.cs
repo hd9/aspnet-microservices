@@ -8,7 +8,12 @@ namespace OrderSvc.Models
 {
     public class Order
     {
+        // For simplicity, we're making Id public 
+        // but it shouldn't be exposed to any external service
+        // as it's part of the internal information for OrderSvc.
+        // All external references should use the field `Number`
         public int Id { get; set; }
+        public string Number { get; set; }
         public int AccountId { get; set; }
         public OrderStatus Status { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
@@ -30,6 +35,6 @@ namespace OrderSvc.Models
         /// </summary>
         /// <returns></returns>
         public override string ToString() =>
-            $"Id: '{Id}', AccountId: '{AccountId}', Price: {Currency} {TotalPrice}";
+            $"Id: '{Id}', Number: '{Number}', AccountId: '{AccountId}', Price: {Currency} {TotalPrice}";
     }
 }

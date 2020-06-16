@@ -9,6 +9,7 @@ namespace OrderSvc.Services
     public interface IOrderSvc
     {
         Task SubmitOrder(Order order); 
+        Task<Order> GetOrderByNumber(string number);
         Task<Order> GetOrderById(int id);
         Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId);
         Task OnPaymentProcessed(PaymentResponse message);

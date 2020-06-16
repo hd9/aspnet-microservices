@@ -8,7 +8,8 @@ namespace OrderSvc.Repositories
     {
         Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId);
         Task Insert(Order order);
-        Task<Order> GetById(int orderId, bool fullGraph = false);
+        Task<Order> GetById(int id, bool fullGraph = false);
+        Task<Order> GetByNumber(string number, bool fullGraph = false);
         Task Update(int id, OrderStatus orderStatus, PaymentStatus paymentStatus, ShippingStatus shippingStatus);
     }
 }

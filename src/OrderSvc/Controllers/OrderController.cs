@@ -34,14 +34,14 @@ namespace OrderSvc.Controllers
             return Ok(instruction);
         }
 
-        [Route("/order/{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
+        [Route("/api/v1/order/{number}")]
+        public async Task<IActionResult> GetOrderByNumber(string number)
         {
-            var orders = await _svc.GetOrderById(id);
-            return Ok(orders);
+            var o = await _svc.GetOrderByNumber(number);
+            return Ok(o);
         }
 
-        [Route("/orders/{accountId}")]
+        [Route("/api/v1/orders/{accountId}")]
         public async Task<IActionResult> GetOrdersByAccountId(int accountId)
         {
             var orders = await _svc.GetOrdersByAccountId(accountId);
@@ -54,11 +54,11 @@ namespace OrderSvc.Controllers
         /// <param name="order"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("/orders/submit")]
+        [Route("/api/v1/orders/submit")]
         public async Task<IActionResult> SubmitOrder([FromBody] Order order)
         {
             await _svc.SubmitOrder(order);
-            return Ok(order.Id);
+            return Ok(new { order.Number });
         }
     }
 }

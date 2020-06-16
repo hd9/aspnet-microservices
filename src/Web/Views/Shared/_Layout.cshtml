@@ -36,9 +36,10 @@
                             <a class="nav-link text-danger font-weight-bold" asp-area="" asp-controller="Home" asp-action="Help">Help</a>
                         </li>
                     </ul>
+                    <a class="text-dark mx-3" asp-controller="Order" asp-action="Index">My Cart</a>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <span class="navbar-text text-info"> ( <a asp-controller="Account" asp-action="SignOut">Sign out</a> )</span>
+                        <span class="navbar-text btn btn-warning px-2"><a asp-controller="Account" asp-action="SignOut">Sign out</a></span>
                     }
                 </div>
             </div>

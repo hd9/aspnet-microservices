@@ -42,7 +42,7 @@
             @if (!review)
             {
                 <div class="text-center">
-                    <button class="btn btn-warning btn-sm" v-on:click="clear">Clear Cart</button>
+                    <button class="btn btn-danger btn-sm" v-on:click="clear">Clear Cart</button>
                     <a asp-controller="Order" asp-action="Index" class="btn btn-primary btn-sm">Checkout</a>
                 </div>
                 <p class="text-center small mt-3"><a asp-controller="Order" asp-action="Index">View cart</a></p>

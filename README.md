@@ -185,15 +185,25 @@ git clone https://github.com/hd9/aspnet-microservices
 ```
 
 Code is always the best documentation. The easiest way to understand
-the services and their configurations is by reading the
+the containers and their configurations is by reading the
 `src/docker-compose.yml` file.
 
-### Building and running with Visual Studio
-Building with Visual Studio 2019 should be straightforward.
+### Debugging with Visual Studio
+Building and debugging with Visual Studio 2019 is straightforward.
 Simply open the `AspNetMicroservices.sln` file from the `src` folder
 and debug the project from Visual Studio 2019.
 
-### Building and running the Docker images with Docker Compose
+Next, run the dependencies (`Redis, MongoDB, RabbitMQ and MySQL`) by
+issuing the below command from the `src` folder:   
+```s
+docker-compose -f docker-compose.debug.yml up
+```
+
+**Tip**: if you want, you can run the above command in the background
+by appending a `-d` to it.
+
+
+### Running with Docker Compose
 The recommended way to build the images is by using:
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
@@ -209,18 +219,6 @@ databases so you have your application running as soon as possible.
 For available urls to hit, check the
 [Urls section](https://github.com/hd9/aspnet-microservices#urls).
 
-## Changing Configuration
-There are three places you should go for changing configuration: the
-settings files and `docker-compose.yml`.
-
-To change configuration for the ASP.NET services,
-check the `appsettings.json` and `appsettings.Development.json` files
-in each project's folder. Essentially you want to modify:
-* **appsettings.json**: to change your container configuration
-* **appsettings.Development.json**: to change your Visual Studio debugging configuration
-
-The docker-compose configuration can be read (and modifed) on the
-`src/docker-compose.yml` file.
 
 ## Building the Docker images independently
 But if you really want, you can also build the images independently.
@@ -233,31 +231,41 @@ just run `build-all` located in the `src` folder. Please note that it'll
 be necessary to run `chmod +x build-all` before you run it.
 
 
-## Making changes to the project
-If you want to make changes to the project, the simplest way by opening
-one of the solutions on this project:
+# Making changes to the project
+If you want to play and make changes to the project, the simplest way by opening
+one of the solutions with Visual Studio:
 * `AspNetMicroservices.sln`: the main solution, consisting on most of the
   projects and services.
 * `Microservices.Core.sln`: source for the core NuGet package. This package is
   necessary so our containers be isolated from each other. The package is
   published on [this project's package repo](https://github.com/hd9/aspnet-microservices/packages/251630)
 
+The 3 places you should look for configuration are:
+* `docker-compose.yml`: if you want to change image/container settings
+* `appsettings.json` and `appsettings.Development.json`: if you want to
+  modify the behaviour of the application (templates, connection strings,
+  usernames/passwords, etc). Change **appsettings.json** will affect the
+  container configuration or change **appsettings.Development.json**  
+  to change your debug configuration.
+
+
 # Running the services
 The most straight forward way to run the application is
 by using [Docker Compose](https://docs.docker.com/compose/).
 Docker Compose is a tool that can be used to define and run
 multiple containers as a single service using the command below:   
+
 ```s
-docker-compose up
-```
-To stop the services, run:   
-```s
+# start all containers
+ docker-compose up
+
+# stop all containers
 docker-compose down
-```
-And to build/rebuild everything:
-```s
+
+# build/rebuild everything:
 docker-compose build
 ```
+
 In case you want to run a specific service (for example, `catalog`,
 the product catalog and its MongoDB database), run:
 ```s
@@ -265,16 +273,20 @@ docker-compose build catalog
 ```
 
 For more information on `docker compose` and other commands,
-please [check this link](https://docs.docker.com/compose/).
+please [check this page](https://docs.docker.com/compose/).
 
 
 ## Manually running the services
 This is a more detailed guide on how to run the services one by one
 and is not required if you're running your services with `docker compose`.
-Feel free to jump [to the next section](https://github.com/hd9/aspnet-microservices#management-interfaces)
-if running with compose is sufficient for you.
+I strongly recommend reviewing either run to run using Visual Studio
+or `Docker Compose` so feel free to jump
+[to the next section](https://github.com/hd9/aspnet-microservices#management-interfaces)
+if either way is sufficient for you.
 
-Start by pulling the required images with:   
+However, if you want to understand how this all glues together
+and you would like try to run these images by yourself, start
+by pulling the required images with:   
 ```s
 docker pull mongo:latest
 docker pull rabbitmq:latest
@@ -290,34 +302,32 @@ docker pull cadvisor:latest
 
 ***Note***: For simplicity, I'm not tagging the images so all images
 will be tagged as `latest` by default by Docker. Feel free to
-modify the name, ports and version.
+modify the name, ports and version. I don't expect any breaking change
+in the short term.
 
-Let's now review how to build each of the services.
 
 ## Setting up the Web service
-The Web service is the frontend for our application. It requires a Redis
+The `Web` service is the frontend for our application. It requires a `Redis`
 instance to provide distributed caching on the server and a distributed and
 faster shopping cart experience.
-Redis is an open source in-memory data store, which is often used as a
-distributed cache. You can use Redis locally, and you can configure an Azure
-Redis Cache for an Azure-hosted ASP.NET Core app.
+`Redis` is an open source in-memory data store, which is often used as a
+distributed cache. You can use Redis locally, and you can configure an `Azure
+Redis Cache` for an Azure-hosted `ASP.NET Core app`.
 
 An app configures the cache implementation using a RedisCache instance
 (`AddStackExchangeRedisCache`) in a non-Development environment in the
 `Startup.ConfigureServices` method.
 
-To build the Web container, run:   
+The commands to run `Web` are:   
+
 ```s
+# build the web container
 docker build -t web .
-```
 
-To run the container, run:   
-```s
+# run the web container
 docker run --name web -p 8000:80 web
-```
 
-To remove the container and its images from the system, do:   
-```s
+# remove the container and its images from the system
 docker container rm -f web
 docker image rm web -f
 ```
@@ -360,8 +370,8 @@ docker run -d -h hildenco --name rabbitmq -p 15672:15672 -p 5672:5672 rabbitmq:m
 
 On the command above we essentially exposed 2 ports
 from the containers to our localhost:
-  * **15672**: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
-  * **5672**: this is what our services will use to intercommunicate
+* **15672**: Rabbitmq's management interface. Can be accessed at: http://localhost:15672/.
+* **5672**: this is what our services will use to intercommunicate
 
 We'll use MassTransit to abstract RabbitMQ so we can implement patterns like
 pub/sub with minimum effort. Please note that we're running our RabbitMQ
@@ -765,7 +775,26 @@ And the management tools are available on:
 * **The ELK Stack (Experimental)**: [http://localhost:5601/app/kibana#/home](http://localhost:5601/app/kibana#/home).
 
 ## Databases
-If the container ports are open, you should reach the databases at the following urls:
+Accessing the databases is also trivial. The simplest way to 
+reach them out is by using `docker-compose`, running
+`Adminer` (MySQL Admin) and accessing them by their internal
+hostnames.
+
+Example: to access the database for `OrderSvc`, open Adminer
+at http://localhost:8010/ and:
+* **Server**: `order-db`
+* **Username**: `root`
+* **Password**: `todo`
+
+The hostnames are configured to match their respective services.
+For example, for `OrderSvc` is `order-db`, for `AccountSvc`, it's
+`account-db`, and so on. For the full reference, check the
+`src/docker-compose.yml` file.
+
+However, if you're looking accessing them via the commandline 
+(or from code), here are the default urls. Please notice that 
+you should bind these ports when running the container, else 
+you won't be able to access them from the host (your machine):
 * **catalog-db**: mongodb://localhost:3301
 * **newsletter-db**: mysql://localhost:3302
 * **order-db**: mysql://localhost:3303
@@ -785,6 +814,9 @@ docker-compose up -d                        # start all the services in the back
 docker-compose down                         # stop and remove all the services
 docker-compose up <service-name>            # start <service-name> and its dependencies. Ex: docker-compose up shipping
 docker-compose build                        # build all the services
+
+# running the backend services for DEBUG
+docker-compose -f docker-compose.debug.yml -d
 
 # running the instances individually
 docker run --name web            -p 8000:80 web

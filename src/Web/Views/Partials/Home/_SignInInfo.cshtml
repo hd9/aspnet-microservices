@@ -7,10 +7,12 @@
 <div class="bg-light p-4 my-3">
     <h5 class="border-bottom py-2">Welcome back, @name!</h5>
     <p class="mb-3 small">You have no unread notifications.</p>
-    <a asp-controller="Account" asp-action="Index" class="btn btn-primary btn-sm">Go to my account</a>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <a asp-controller="Account" asp-action="SignOut" class="btn btn-danger btn-sm">Sign out</a>
-    }
+    <div class="text-center">
+        <a asp-controller="Account" asp-action="Index" class="btn btn-primary btn-sm">My account</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Account" asp-action="SignOut" class="btn btn-warning btn-sm">Sign out</a>
+        }
+    </div>
 </div>
 

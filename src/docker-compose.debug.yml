@@ -1,0 +1,143 @@
+version: '3.7'
+
+services:
+
+  catalog-db:
+    image: mongo
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: todo
+      MONGO_INITDB_DATABASE: catalog
+    volumes:
+    - ./CatalogSvc/db.js:/docker-entrypoint-initdb.d/db.js:ro
+    expose:
+      - "27017"
+    ports:
+      - "3301:27017"
+
+  newsletter-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./NewsletterSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3302:3306"
+    
+  order-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./OrderSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3303:3306"
+
+  account-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./AccountSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3304:3306"
+
+  recommendation-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./RecommendationSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3305:3306"
+
+  notification-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./NotificationSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+
+  payment-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./PaymentSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3307:3306"
+
+  shipping-db:
+    image: mysql
+    command: --init-file /data/db.sql
+    volumes:
+      - ./ShippingSvc/db.sql:/data/db.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=todo
+    expose:
+      - "3306"
+    ports:
+      - "3308:3306"
+
+  redis:
+    image: redis:6-alpine
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+
+  mysql-admin:
+     image: adminer:latest
+     ports:
+      - "8010:8080"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8011:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=catalog-db
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: todo
+    depends_on:
+      - catalog-db
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    environment:
+      - todo
+    expose:
+      - "5672"
+    ports:
+      - "5672:5672"
+      - "8012:15672"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=redis
+    ports:
+      - "8013:8081"
+    depends_on:
+      - redis

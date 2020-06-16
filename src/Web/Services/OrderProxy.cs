@@ -12,6 +12,7 @@ using Web.Models.Order;
 
 namespace Web.Services
 {
+
     public class OrderProxy :
         ProxyBase<OrderProxy>,
         IOrderProxy
@@ -28,12 +29,15 @@ namespace Web.Services
 
         public async Task Submit(Order order)
         {
-            await PostAsync("order", order, "/orders/submit");
+            var on = await PostAsync<OrderNumberResponse>(
+                "order", order, "/api/v1/orders/submit");
+
+            order.Number = on.Number;
         }
 
         public async Task<List<Order>> GetOrdersByAccountId(string accountId)
         {
-            var endpoint = $"/orders/{accountId}";
+            var endpoint = $"/api/v1/orders/{accountId}";
             return await GetAsync<List<Order>>(
                 "accountid", accountId, endpoint);
         }

@@ -12,7 +12,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-center">Order</th>
+                        <th scope="col" class="text-center">Number</th>
                         <th scope="col" style="min-width:50%">Item(s)</th>
                         <th scope="col">Submitted On</th>
                         <th scope="col">Last Update</th>
@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="o in orders">
-                        <th scope="row" class="text-center">{{ o.id }}</th>
+                        <th scope="row" class="text-center small">{{ o.number }}</th>
                         <td>
                             <ul class="list-unstyled">
                                 <li v-for="li in o.lineItems">{{ li.qty }} x {{ li.name }} </li>

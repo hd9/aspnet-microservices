@@ -37,6 +37,11 @@ namespace OrderSvc.Services
             return await _repo.GetById(id, true);
         }
 
+        public async Task<Order> GetOrderByNumber(string number)
+        {
+            return await _repo.GetByNumber(number, true);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByAccountId(int accountId)
         {
             return await _repo.GetOrdersByAccountId(accountId);

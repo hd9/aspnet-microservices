@@ -1,5 +1,15 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent font-size: 13.6px;
+}
+
+:root {
+    font-size: 13.6px;
+}
 
 article h1, article h2, article h3, article h4 {
     margin-top: 3rem;

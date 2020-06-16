@@ -19,7 +19,9 @@ namespace OrderSvc.Repositories
         readonly string insShippingInfo = "INSERT INTO shipping_info (order_id, payment_info_id, name, street, city, region, postal_code, country, created_at, last_updated) values (@order_id, @payment_info_id, @name, @street, @city, @region, @postal_code, @country, sysdate(), sysdate());";
         readonly string insLineItem = "insert into lineitem (order_id, name, slug, price, qty) values (@order_id, @name, @slug, @price, @qty)";
         readonly string selById = "select * from orders where id = @id";
+        readonly string selByNumber = "select * from orders where number = @number";
         readonly string selByIdFull = "select * from orders o inner join lineitem li on li.order_id = o.id inner join payment_info pi on pi.order_id = o.id inner join shipping_info si on si.order_id = o.id where o.id = @id";
+        readonly string selByNumberFull = "select * from orders o inner join lineitem li on li.order_id = o.id inner join payment_info pi on pi.order_id = o.id inner join shipping_info si on si.order_id = o.id where o.number = @number";
         readonly string selByAcctId = "select * from orders o inner join lineitem li on li.order_id = o.id where o.account_id=@accountId  order by o.last_modified desc limit 10;";
 
         // order history
@@ -65,10 +67,11 @@ namespace OrderSvc.Repositories
                 await conn.OpenAsync();
                 using (MySqlTransaction transaction = conn.BeginTransaction())
                 {
+                    var on = NewOrderNumber();
                     await conn.ExecuteAsync(insOrder, new
                     {
                         @accountId = order.AccountId,
-                        @number = NewOrderNumber(),
+                        @number = on,
                         @currency = order.Currency,
                         @price = order.Price,
                         @tax = order.Tax,
@@ -80,6 +83,7 @@ namespace OrderSvc.Repositories
                     });
 
                     order.Id = await GetLastInsertId<int>(conn);
+                    order.Number = on;
 
                     // insert order lines
                     order.LineItems.ForEach(async (li) =>
@@ -209,6 +213,41 @@ namespace OrderSvc.Repositories
             return od.Select(x => x.Value).FirstOrDefault();
         }
 
+        public async Task<Order> GetByNumber(string number, bool fullGraph = false)
+        {
+            if (!fullGraph)
+            {
+                using (var conn = new MySqlConnection(_connStr))
+                    return await conn.QuerySingleOrDefaultAsync<Order>(selByNumber, new { number });
+            }
+
+            var od = new Dictionary<int, Order>();
+            using (var conn = new MySqlConnection(_connStr))
+            {
+                var orders = await conn.QueryAsync<Order, LineItem, PaymentInfo, ShippingInfo, Order>(
+                    selByNumberFull,
+                    (o, li, pi, si) =>
+                    {
+                        Order order;
+                        if (!od.TryGetValue(o.Id, out order))
+                        {
+                            order = o;
+                            order.LineItems = new List<LineItem>();
+                            od.Add(order.Id, order);
+                        }
+
+                        order.LineItems.Add(li);
+                        order.PaymentInfo = pi;
+                        order.ShippingInfo = si;
+
+                        return order;
+
+                    }, new { number });
+            }
+
+            return od.Select(x => x.Value).FirstOrDefault();
+        }
+
         private async Task<T> GetLastInsertId<T>(MySqlConnection conn)
         {
             return (await conn.QueryAsync<T>("select LAST_INSERT_ID();")).Single();
@@ -253,7 +292,7 @@ namespace OrderSvc.Repositories
 
         private string NewOrderNumber()
         {
-            return $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10).ToUpper()}";
+            return $"O-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 6).ToUpper()}";
         }
     }
 }
