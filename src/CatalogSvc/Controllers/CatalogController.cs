@@ -15,29 +15,11 @@ namespace CatalogSvc.Controllers
     public class CatalogController : ControllerBase
     {
         readonly ICatalogSvc svc;
-        readonly IConfiguration cfg;
         const string instruction = "The Catalog service is alive! Try GET /categories";
 
-        public CatalogController(ICatalogSvc svc, IConfiguration cfg)
+        public CatalogController(ICatalogSvc svc)
         {
             this.svc = svc;
-            this.cfg = cfg;
-        }
-
-        /// <summary>
-        /// Settings: Returns the connection string. Use for debugging purposes.
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Settings()
-        {
-            // Note: the configuration manager loads configuration based on the following criteria:
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1#default-configuration
-            // In our container, we'll provide them via env vars 
-            var cs = cfg["DbSettings:ConnStr"];
-            var db = cfg["DbSettings:Db"];
-            var c = cfg["DbSettings:Collection"];
-
-            return Ok($"Connection String: {cs}, Db: {db}, Collection: {c}");
         }
 
         [Route("/ping")]
@@ -53,14 +35,14 @@ namespace CatalogSvc.Controllers
         }
 
         [HttpGet]
-        [Route("/product/{slug}")]
+        [Route("/api/v1/product/{slug}")]
         public async Task<Product> GetProductBySlug(string slug)
         {
             return await svc.GetProduct(slug);
         }
 
         [HttpGet]
-        [Route("/products/search")]
+        [Route("/api/v1/products/search")]
         public async Task<IActionResult> GetProductBySlugs(string slugs)
         {
             var lst = (slugs ?? "").Split(
@@ -75,21 +57,21 @@ namespace CatalogSvc.Controllers
         }
 
         [HttpGet]
-        [Route("/products/{slug}")]
+        [Route("/api/v1/products/{slug}")]
         public async Task<IList<Product>> GetProductsByCategory(string slug)
         {
             return await svc.GetProductsByCategory(slug);
         }
 
         [HttpGet]
-        [Route("/categories")]
+        [Route("/api/v1/categories")]
         public async Task<IList<Category>> GetCategories()
         {
             return await svc.GetCategories();
         }
 
         [HttpGet]
-        [Route("/categories/{slug}")]
+        [Route("/api/v1/categories/{slug}")]
         public async Task<Category> GetCategory(string slug)
         {
             return await svc.GetCategory(slug);

@@ -10,7 +10,7 @@ namespace ShippingSvc.Controllers
     public class ShippingController : ControllerBase
     {
         readonly IShippingSvc _svc;
-        const string help = @"The Shipping service is alive! Try GET /shippings/{ShippingId}.";
+        const string help = @"The Shipping service is alive! Try GET /api/v1/shippings/{ShippingId}.";
 
         public ShippingController(IShippingSvc svc)
         {
@@ -29,13 +29,13 @@ namespace ShippingSvc.Controllers
             return Ok(help);
         }
 
-        [Route("/Shippings/{id}")]
+        [Route("/api/v1/shippings/{id}")]
         public async Task<Shipping> GetShippingById(string id)
         {
             return await _svc.GetById(id);
         }
 
-        [Route("/shippings/search")]
+        [Route("/api/v1/shippings/search")]
         public async Task<Shipping> GetShippingByAccountId(string accountId)
         {
             return await _svc.GetByAccountId(accountId);

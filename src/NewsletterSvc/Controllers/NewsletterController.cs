@@ -38,7 +38,7 @@ namespace NewsletterSvc.Controllers
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        [Route("/signup")]
+        [Route("/api/v1/signup")]
         [HttpPost]
         public async Task<IActionResult> Signup(Signup s)
         {

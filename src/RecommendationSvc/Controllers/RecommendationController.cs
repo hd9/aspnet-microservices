@@ -9,7 +9,7 @@ namespace RecommendationSvc.Controllers
     public class RecommendationController : ControllerBase
     {
         readonly IRecommendationSvc _svc;
-        const string help = @"The Recommendation service is alive! Try GET /recommendations/{product-slug}";
+        const string help = @"The Recommendation service is alive! Try GET /api/v1/recommendations/{product-slug}";
 
         public RecommendationController(IRecommendationSvc svc)
         {
@@ -28,13 +28,13 @@ namespace RecommendationSvc.Controllers
             return Ok(help);
         }
 
-        [Route("/recommendations/{slug}")]
+        [Route("/api/v1/recommendations/{slug}")]
         public async Task<IActionResult> GetByProductSlug(string slug)
         {
             return Ok(await _svc.GetByProductSlug(slug));
         }
 
-        [Route("/recommendations/account/{accountId}")]
+        [Route("/api/v1/recommendations/account/{accountId}")]
         public async Task<IActionResult> GetByAccountId(string accountId)
         {
             return Ok(await _svc.GetByAccountId(accountId));

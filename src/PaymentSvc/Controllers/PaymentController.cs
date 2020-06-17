@@ -14,7 +14,7 @@ namespace PaymentSvc.Controllers
     public class PaymentController : ControllerBase
     {
         readonly IPaymentSvc _svc;
-        const string help = @"The Payment service is alive! Try GET /payments/{paymentId}.";
+        const string help = @"The Payment service is alive! Try GET /api/v1/payments/{paymentId}.";
 
         public PaymentController(IPaymentSvc svc)
         {
@@ -33,13 +33,13 @@ namespace PaymentSvc.Controllers
             return Ok(help);
         }
 
-        [Route("/payments/{id}")]
+        [Route("/api/v1/payments/{id}")]
         public async Task<Payment> GetPaymentById(string id)
         {
             return await _svc.GetById(id);
         }
 
-        [Route("/payments/search")]
+        [Route("/api/v1/payments/search")]
         public async Task<Payment> GetPaymentByAccountId(string accountId)
         {
             return await _svc.GetByAccountId(accountId);

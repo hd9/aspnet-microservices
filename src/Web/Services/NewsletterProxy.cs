@@ -29,7 +29,7 @@ namespace Web.Services
 
         public async Task Signup(NewsletterSignUp signup)
         {
-            await PostAsync("signup", signup, "/signup");
+            await PostAsync("signup", signup, "/api/v1/signup");
         }
     }
 }

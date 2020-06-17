@@ -30,33 +30,34 @@ namespace Web.Services
 
         public async Task<Account> GetAccountById(string id)
         {
-            var endpoint = $"/account/{id}";
+            var endpoint = $"/api/v1/account/{id}";
             return await GetAsync<Account>(
                 "account", id, endpoint);
         }
 
         public async Task<Account> GetAccountByEmail(string email)
         {
-            var endpoint = $"/account/search?email={email}";
+            var endpoint = $"/api/v1/account/search?email={email}";
             return await GetAsync<Account>(
                 "email", email, endpoint);
         }
 
         public async Task<HttpStatusCode> CreateAccount(Account acct)
         {
-            return await PostAsync("account", acct, "/account/");
+            return await PostAsync(
+                "account", acct, "/api/v1/account/");
         }
 
         public async Task<HttpStatusCode> UpdateAccount(AccountDetails acct)
         {
             return await PostAsync(
-                "account-upd", acct, "/account/");
+                "account-upd", acct, "/api/v1/account/");
         }
 
         public async Task<Account> TrySignIn(SignIn signIn)
         {
             return await PostAsync<Account>(
-                "signin", signIn, "/account/signin");
+                "signin", signIn, "/api/v1/account/signin");
         }
 
         public async Task<HttpStatusCode> UpdatePassword(UpdatePassword updPassword)
@@ -64,43 +65,43 @@ namespace Web.Services
             return await PostAsync(
                 "update-password",
                 updPassword,
-                "/account/update-password");
+                "/api/v1/account/update-password");
         }
 
         public async Task<Address> GetAddressById(string addrId)
         {
-            var endpoint = $"/account/address/{addrId}";
+            var endpoint = $"/api/v1/account/address/{addrId}";
             return await GetAsync<Address>(
                 "address", addrId, endpoint);
         }
 
         public async Task<HttpStatusCode> AddAddress(Address addr)
         {
-            return await PostAsync("address", addr, "/account/address");
+            return await PostAsync("address", addr, "/api/v1/account/address");
         }
 
         public async Task<HttpStatusCode> UpdateAddress(Address addr)
         {
-            return await PutAsync("address-upd", addr, "/account/address");
+            return await PutAsync("address-upd", addr, "/api/v1/account/address");
         }
 
         public async Task<HttpStatusCode> RemoveAddress(string addressId)
         {
             return await DeleteAsync(
                 "address-del",
-                $"/account/address/{addressId}");
+                $"/api/v1/account/address/{addressId}");
         }
 
         public async Task<IList<Address>> GetAddressesByAccountId(string acctId)
         {
-            var endpoint = $"/account/address/search?accountId={acctId}";
+            var endpoint = $"/api/v1/account/address/search?accountId={acctId}";
             return await GetAsync<IList<Address>>(
                 "address-by-accountid", acctId, endpoint);
         }
 
         public async Task<HttpStatusCode> SetDefaultAddress(string acctId, int addressId)
         {
-            var endpoint = $"/account/address/default?accountId={acctId}&addressId={addressId}";
+            var endpoint = $"/api/v1/account/address/default?accountId={acctId}&addressId={addressId}";
             return await PostAsync(
                 "address-default", 
                 new { acctId, addressId }, 
@@ -109,14 +110,14 @@ namespace Web.Services
 
         public async Task<PaymentInfo> GetPaymentInfoById(string pmtId)
         {
-            var endpoint = $"/account/payment/{pmtId}";
+            var endpoint = $"/api/v1/account/payment/{pmtId}";
             return await GetAsync<PaymentInfo>(
                 "payment", pmtId, endpoint);
         }
 
         public async Task<IList<PaymentInfo>> GetPaymentInfos(string accountId)
         {
-            var endpoint = $"/account/payment/search?accountId={accountId}";
+            var endpoint = $"/api/v1/account/payment/search?accountId={accountId}";
             return await GetAsync<IList<PaymentInfo>>(
                 "payment-accountid", accountId, endpoint);
         }
@@ -126,19 +127,19 @@ namespace Web.Services
             return await PostAsync(
                 "payment-add",
                 pmtInfo,
-                "/account/payment");
+                "/api/v1/account/payment");
         }
 
         public async Task<HttpStatusCode> RemovePayment(string pmtId)
         {
             return await DeleteAsync(
                 "payment-remove",
-                $"/account/payment/{pmtId}");
+                $"/api/v1/account/payment/{pmtId}");
         }
 
         public async Task<HttpStatusCode> SetDefaultPayment(string acctId, int pmtId)
         {
-            var endpoint = $"/account/payment/default?accountId={acctId}&pmtId={pmtId}";
+            var endpoint = $"/api/v1/account/payment/default?accountId={acctId}&pmtId={pmtId}";
             return await PostAsync(
                 "payment-default",
                 new { acctId, pmtId },
@@ -150,12 +151,12 @@ namespace Web.Services
             return await PutAsync(
                 "payment-upd",
                 pmtInfo,
-                "/account/payment");
+                "/api/v1/account/payment");
         }
 
         public async Task<IList<AccountHistory>> GetAccountHistory(string acctId)
         {
-            var endpoint = $"/account/history/{acctId}";
+            var endpoint = $"/api/v1/account/history/{acctId}";
             return await GetAsync<IList<AccountHistory>>(
                 "account-history", acctId, endpoint);
         }

@@ -29,7 +29,7 @@ namespace Web.Services
 
         public async Task<List<Product>> GetProductsByCategory(string slug)
         {
-            var endpoint = $"/products/{slug}";
+            var endpoint = $"/api/v1/products/{slug}";
             return await GetAsync<List<Product>>(
                 "product", slug, endpoint);
         }
@@ -37,19 +37,19 @@ namespace Web.Services
         public async Task<List<Category>> GetCategories()
         {
             return await GetAsync<List<Category>>(
-                "categories", null, "/categories");
+                "categories", null, "/api/v1/categories");
         }
 
         public async Task<Product> GetProductBySlug(string slug)
         {
-            var endpoint = $"/product/{slug}";
+            var endpoint = $"/api/v1/product/{slug}";
             return await GetAsync<Product>(
                 "product", slug, endpoint);
         }
 
         public async Task<Category> GetCategory(string slug)
         {
-            var endpoint = $"/categories/{slug}";
+            var endpoint = $"/api/v1/categories/{slug}";
             return await GetAsync<Category>(
                 "categories", slug, endpoint);
         }

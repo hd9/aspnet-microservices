@@ -26,7 +26,7 @@ namespace Web.Services
 
         public async Task<List<Recommendation>> GetByProductSlug(string slug)
         {
-            var url = $"/recommendations/{slug}";
+            var url = $"/api/v1/recommendations/{slug}";
 
             return await GetAsync<List<Recommendation>>(
                 "product", slug, url);
@@ -34,7 +34,7 @@ namespace Web.Services
 
         public async Task<List<Recommendation>> GetByAccountId(string accountId)
         {
-            var url = $"/recommendations/account/{accountId}";
+            var url = $"/api/v1/recommendations/account/{accountId}";
 
             return await GetAsync<List<Recommendation>>(
                 "account", accountId, url);
