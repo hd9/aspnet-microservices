@@ -50,7 +50,7 @@ namespace Web.Services
 
         public async Task<HttpStatusCode> UpdateAccount(AccountDetails acct)
         {
-            return await PostAsync(
+            return await PutAsync(
                 "account-upd", acct, "/api/v1/account/");
         }
 
