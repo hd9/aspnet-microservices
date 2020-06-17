@@ -1,0 +1,121 @@
+﻿@*
+    This should be a reasonably recent clone of
+    https://github.com/hd9/aspnet-microservices#aspnet-microservices
+*@
+
+    <article>
+
+        <h4 class="display-4">Cheatsheet</h4>
+        <p class="lead">Summary of tips for running and accessing the services.</p>
+
+        <h1>Debugging</h1>
+        <p>
+            The easiest way to debug this project is by opening the
+            <code>src/AspNetMicroservices.sln</code> solution with Visual Studio 2019
+            and running it as debug (F5).
+            You should also run the dependencies (dbs, queues, redis, etc) with:
+            <pre>docker-compose -f docker-compose.debug.yml up</pre>
+        </p>
+
+        <h2>Urls</h2>
+        <p>With the project running, the microservices should be available at:</p>
+        <ul>
+            <li><strong>Web</strong>: <a href="http://localhost:8000" rel="nofollow">http://localhost:8000</a></li>
+            <li><strong>Catalog</strong>: <a href="http://localhost:8001" rel="nofollow">http://localhost:8001</a></li>
+            <li><strong>Newsletter</strong>: <a href="http://localhost:8002" rel="nofollow">http://localhost:8002</a></li>
+            <li><strong>Order</strong>: <a href="http://localhost:8003" rel="nofollow">http://localhost:8003</a></li>
+            <li><strong>Account</strong>: <a href="http://localhost:8004" rel="nofollow">http://localhost:8004</a></li>
+            <li><strong>Recommendation</strong>: <a href="http://localhost:8005" rel="nofollow">http://localhost:8005</a></li>
+            <li><strong>Notification</strong>: <a href="/hd9/aspnet-microservices/blob/master/v">http://localhost:8006</a></li>
+            <li><strong>Payment</strong>: <a href="http://localhost:8007" rel="nofollow">http://localhost:8007</a></li>
+            <li><strong>Shipping</strong>: <a href="http://localhost:8008" rel="nofollow">http://localhost:8008</a></li>
+        </ul>
+        <p>And the management tools are available on:</p>
+        <ul>
+            <li><strong>Grafana</strong>: <a href="http://localhost:3000/" rel="nofollow">http://localhost:3000/</a></li>
+            <li><strong>MySQL Admin</strong>: <a href="http://localhost:8010/" rel="nofollow">http://localhost:8010/</a></li>
+            <li><strong>Mongo Express</strong>: <a href="http://localhost:8011/" rel="nofollow">http://localhost:8011/</a></li>
+            <li><strong>RabbitMQ dashboard</strong>: <a href="http://localhost:8012/" rel="nofollow">http://localhost:8012/</a></li>
+            <li><strong>Redis Commander</strong>: <a href="http://localhost:8013/" rel="nofollow">http://localhost:8013/</a></li>
+            <li><strong>The ELK Stack (Experimental)</strong>: <a href="http://localhost:5601/app/kibana#/home" rel="nofollow">http://localhost:5601/app/kibana#/home</a></li>
+        </ul>
+
+        <h1>Databases</h1>
+        <p>
+            Accessing the databases is also trivial. The simplest way to
+            reach them out is by using the <code>docker-compose</code> command mentioned
+            above on the Debugging section and accessing them by their internal hostnames.
+            Since the hostnames are configured to match their respective services,
+            it should be straightforward to access them.
+            For example, for <code>OrderSvc</code> is <code>order-db</code>, for <code>AccountSvc</code>, it's
+            <code>account-db</code>, and so on. For the full reference, check the
+            <code>src/docker-compose.yml</code> file.
+        </p>
+
+        <h4>Accessing the MySQL databases with MySQL Admin</h4>
+        <p>
+            You can access the MySQL databases using <strong>MySQL Admin</strong>
+            (available at <a href="http://localhost:8010/" rel="nofollow">http://localhost:8010/</a>),
+            specifying the server name (eg. <code>catalog-db</code>), and entering
+            username: <code>root</code>, password: <code>todo</code>.
+            For example, to access the database for <code>OrderSvc</code>, open Adminer
+            at <a href="http://localhost:8010/" rel="nofollow">http://localhost:8010/</a> and:
+        </p>
+        <ul>
+            <li><strong>Server</strong>: <code>order-db</code></li>
+            <li><strong>Username</strong>: <code>root</code></li>
+            <li><strong>Password</strong>: <code>todo</code></li>
+        </ul>
+
+
+
+        <h4>Accessing MongoDB with MongoExpress</h4>
+        <p>
+            You can access the MongoDB database using <strong>Mongo Express</strong> available at <a href="http://localhost:8011/" rel="nofollow">http://localhost:8011/</a>.
+        </p>
+
+        <h4>Accessing from code or via the command line</h4>
+        <p>
+            However, if you're looking accessing them via the commandline
+            (or from code), here are the default urls. Please notice that
+            you should bind these ports when running the container, else
+            you won't be able to access them from the host (your machine):
+        </p>
+
+        <ul>
+            <li><strong>catalog-db</strong>: mongodb://localhost:3301</li>
+            <li><strong>newsletter-db</strong>: mysql://localhost:3302</li>
+            <li><strong>order-db</strong>: mysql://localhost:3303</li>
+            <li><strong>account-db</strong>: mysql://localhost:3304</li>
+            <li><strong>recommendation-db</strong>: mysql://localhost:3305</li>
+            <li><strong>notification-db</strong>: mysql://localhost:3306</li>
+            <li><strong>payment-db</strong>: mysql://localhost:3307</li>
+            <li><strong>shipping-db</strong>: mysql://localhost:3308</li>
+        </ul>
+
+        <h1>Commands</h1>
+        <p>The main commands to run are:</p>
+        <div class="highlight highlight-source-m68k">
+            <pre># running just the backend dependencies (MySQL, MongoDB, Redis, RabbitMQ, etc)
+docker-compose -f docker-compose.debug.yml up
+
+# running the containers (recommended)
+<span class="pl-e">docker</span>-compose up                           # start all the services in the foreground
+<span class="pl-e">docker</span>-compose up -d                        # start all the services in the background
+<span class="pl-e">docker</span>-compose down                         # <span class="pl-c1">stop </span><span class="pl-c1">and</span> remove all the services
+<span class="pl-e">docker</span>-compose up &lt;service-name&gt;            # start &lt;service-name&gt; <span class="pl-c1">and</span> its dependencies. Ex: docker-compose up shipping
+<span class="pl-e">docker</span>-compose build                        # build all the services
+
+# running the instances individually
+<span class="pl-e">docker</span> run --name web            -p <span class="pl-c1">8000</span>:<span class="pl-c1">80</span> web
+<span class="pl-e">docker</span> run --name catalog        -p <span class="pl-c1">8001</span>:<span class="pl-c1">80</span> catalog
+<span class="pl-e">docker</span> run --name newsletter     -p <span class="pl-c1">8002</span>:<span class="pl-c1">80</span> newsletter
+<span class="pl-e">docker</span> run --name order          -p <span class="pl-c1">8003</span>:<span class="pl-c1">80</span> order
+<span class="pl-e">docker</span> run --name account        -p <span class="pl-c1">8004</span>:<span class="pl-c1">80</span> account
+<span class="pl-e">docker</span> run --name recommendation -p <span class="pl-c1">8005</span>:<span class="pl-c1">80</span> recommendation
+<span class="pl-e">docker</span> run --name notification   -p <span class="pl-c1">8006</span>:<span class="pl-c1">80</span> notification
+<span class="pl-e">docker</span> run --name payment        -p <span class="pl-c1">8007</span>:<span class="pl-c1">80</span> payment
+<span class="pl-e">docker</span> run --name shipping       -p <span class="pl-c1">8008</span>:<span class="pl-c1">80</span> shipping</pre>
+        </div>
+
+    </article>

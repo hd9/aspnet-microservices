@@ -1,5 +1,9 @@
 ﻿<div id="catApp">
     <partial name="~/Views/Shared/_Spinner.cshtml" />
+    <div v-if="error" class="p-3 mt-3 h5 alert-danger">
+        Error loading the catalog. Check if you can connect to the
+        catalog service.
+    </div>
     <div class="row">
         <div class="col-sm-6 col-lg-4 my-3" v-for="c in categories">
             <div class="card">

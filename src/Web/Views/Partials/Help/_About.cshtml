@@ -1,0 +1,43 @@
+﻿@using Web.Infrastructure.Global;
+
+<h4 class="display-4 mt-5">About</h4>
+<p class="lead">Help and information about the project.</p>
+
+<div>
+    <h2 class="mt-5">Microservices included in the @Site.StoreSettings.StoreName</h2>
+    <p class="lead">This project is composed of the following microservices:</p>
+    <div class="row my-3">
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Web.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Account.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Catalog.cshtml" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Order.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Notification.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Newsletter.cshtml" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Payment.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Recommendation.cshtml" />
+        </div>
+        <div class="col-md-4">
+            <partial name="~/Views/Partials/Help/_Shipping.cshtml" />
+        </div>
+    </div>
+
+</div>

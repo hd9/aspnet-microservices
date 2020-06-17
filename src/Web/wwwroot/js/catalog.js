@@ -3,7 +3,8 @@ var catApp = new Vue({
     el: '#catApp',
     data: {
         categories: [],
-        loaded: false
+        loaded: false,
+        error: false
     },
     mounted() {
         axios.get('/api/categories')
@@ -17,7 +18,7 @@ var catApp = new Vue({
             })
             .catch(function (error) {
                 console.log(error);
-                alert('Error loading the catalog. Check your log for more information');
+                catApp.error = true;
             })
             .then(function () {
                 catApp.loaded = true;

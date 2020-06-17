@@ -18,6 +18,12 @@ namespace Web.Controllers
             return View();
         }
 
+        [Route("/cheatsheet")]
+        public IActionResult Cheatsheet()
+        {
+            return View();
+        }
+
         [Route("/about")]
         public IActionResult About()
         {

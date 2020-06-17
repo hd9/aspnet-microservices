@@ -30,10 +30,10 @@ the foundations of Docker, Compose, Kubernetes and microservices and serves as a
 intuitive guide for those starting in this area.
 
 Please, **don't use this project in production** as its objective is be a
-simple reference for those building microservices in .NET. However, this
-project can be a good fork candidate for those looking for a 
-base setup. Check the [Areas of improvement](https://github.com/hd9/aspnet-microservices#areas-for-improvement)
-section for more details on open and pending fields.
+simple starting point for those building microservices in .NET. However, this
+project can be a good fork candidate for those looking for a simple
+setup to get started quickly. Check the [Areas of improvement](https://github.com/hd9/aspnet-microservices#areas-for-improvement)
+section for more details on what could be improved.
 
 If you want a project containing all the design patterns in 
 a single solution, please check [Microsoft's eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
@@ -745,17 +745,12 @@ Then run the below command:
 docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 8082:8081 rediscommander/redis-commander:latest
 ```
 
-
-## Kubernetes
-todo
-
-
 # Cheatsheet
-Okay, I admit, this got complicated enough. So here are some
-commands to free up some of your memory.
+Okay, I admit, this got complicated enough. So here's some
+information to start with the project.
 
 ## Urls
-By default, the apps are configured at:
+By default, the microservices are configured to run at:
 * **Web**: [http://localhost:8000](http://localhost:8000)
 * **Catalog**: [http://localhost:8001](http://localhost:8001)
 * **Newsletter**: [http://localhost:8002](http://localhost:8002)
@@ -776,21 +771,30 @@ And the management tools are available on:
 
 ## Databases
 Accessing the databases is also trivial. The simplest way to 
-reach them out is by using `docker-compose`, running
-`Adminer` (MySQL Admin) and accessing them by their internal
-hostnames.
-
-Example: to access the database for `OrderSvc`, open Adminer
-at http://localhost:8010/ and:
-* **Server**: `order-db`
-* **Username**: `root`
-* **Password**: `todo`
-
-The hostnames are configured to match their respective services.
+reach them out is by using `docker-compose` and
+accessing them by their internal hostnames.
+Since the hostnames are configured to match their respective
+services, it should be straightforward to access them. 
 For example, for `OrderSvc` is `order-db`, for `AccountSvc`, it's
 `account-db`, and so on. For the full reference, check the
 `src/docker-compose.yml` file.
 
+### Accessing the MySQL databases with MySQL Admin
+You can access the MySQL databases using MySQL Admin
+(available at http://localhost:8010/), specifying the server
+name (eg. `catalog-db`), and entering username: `root`,
+password: `todo`. 
+For example, to access the database for `OrderSvc`, open Adminer
+and enter:
+* **Server**: `order-db`
+* **Username**: `root`
+* **Password**: `todo`
+
+### Accessing MongoDB with MongoExpress
+You can access the MongoDB database using Mongo Express available at
+http://localhost:8011/. No username or password is required.
+
+### Accessing from code or via the command line
 However, if you're looking accessing them via the commandline 
 (or from code), here are the default urls. Please notice that 
 you should bind these ports when running the container, else 
@@ -807,7 +811,7 @@ you won't be able to access them from the host (your machine):
 # Commands
 The main commands to run are:
 ```s
-# running the backend dependencies (MySQL, MongoDB, Redis, RabbitMQ, etc)
+# running just the backend dependencies (MySQL, MongoDB, Redis, RabbitMQ, etc)
 docker-compose -f docker-compose.debug.yml up
 
 # running the containers (recommended)
