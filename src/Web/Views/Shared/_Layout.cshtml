@@ -27,16 +27,19 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-danger font-weight-bold" asp-area="" asp-controller="Home" asp-action="Help">Help</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Help">Help</a>
                         </li>
                     </ul>
-                    <a class="text-dark mx-3" asp-controller="Order" asp-action="Index">My Cart</a>
+                    <a class="mx-3 text-secondary" asp-controller="Order" asp-action="Index">My Cart</a>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <span class="navbar-text btn btn-warning px-2"><a asp-controller="Account" asp-action="SignOut">Sign out</a></span>

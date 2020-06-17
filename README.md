@@ -26,8 +26,8 @@ When you create a sample microservice-based application, you need to deal with
 complexity and make some choices. I chose to explicitly reduce the complexity by
 avoiding some parallel design patterns and focused on development of the
 services themselves. That said, this application was built so that it presents
-the foundations of Docker, Compose, Kubernetes and microservices and serves as a
-more intuitive guide for those starting in this area.
+the foundations of Docker, Compose, Kubernetes and microservices and serves as an
+intuitive guide for those starting in this area.
 
 Please, **don't use this project in production** as its objective is be a
 simple reference for those building microservices in .NET. However, this
@@ -76,11 +76,11 @@ are some of the areas that could be improved:
   [Azure Service Bus](https://azure.microsoft.com/en-us/services/service-bus/)
   or equivalent. 
 * **Versioning**: when developing complex applications, its inevitable that
-  we'll have to make changes to our apis. This project doesn't take that into
-  account as it would grow it in size and complexity. For more information on 
-  that topic, consider reading 
+  we'll have to make changes to our apis. This project takes opinionated decisions
+  which may not be the best for every project.
+  For more information on the topic, consider reading 
   [this document](https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning-a-restful-web-api).
-* **Single Repository**: at first sight, having all microservices in the same .NET
+* **Single Git Repository**: at first sight, having all microservices in the same .NET
   solution may sound strange. And indeed it is because on large organizations,
   different microservices are developed by different teams using potentially
   different tools (programming languages, databases, etc) and are usually hosted on
@@ -204,7 +204,7 @@ by appending a `-d` to it.
 
 
 ### Running with Docker Compose
-The recommended way to build the images is by using:
+The recommended way to build the images is by using
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 installed, you should be able to build the project with:   
@@ -807,16 +807,17 @@ you won't be able to access them from the host (your machine):
 # Commands
 The main commands to run are:
 ```s
-# running it all with docker-compose (recommended)
-# from the src folder, run:
+# running the backend dependencies (MySQL, MongoDB, Redis, RabbitMQ, etc)
+docker-compose -f docker-compose.debug.yml up
+
+# running the containers (recommended)
 docker-compose up                           # start all the services in the foreground
 docker-compose up -d                        # start all the services in the background
 docker-compose down                         # stop and remove all the services
 docker-compose up <service-name>            # start <service-name> and its dependencies. Ex: docker-compose up shipping
-docker-compose build                        # build all the services
 
-# running the backend services for DEBUG
-docker-compose -f docker-compose.debug.yml -d
+# building the images
+docker-compose build
 
 # running the instances individually
 docker run --name web            -p 8000:80 web
@@ -831,7 +832,7 @@ docker run --name shipping       -p 8008:80 shipping
 ```
 
 
-# Further Reading
+# References
 * [Microservices architecture](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture)
 * [Create a web API with ASP.NET Core and MongoDB](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mongo-app?view=aspnetcore-3.1&tabs=visual-studio)
 * [Google Accounts - Sign in using App Passwords](https://support.google.com/accounts/answer/185833)
@@ -843,7 +844,7 @@ docker run --name shipping       -p 8008:80 shipping
 This project is licensed under [the MIT License](https://opensource.org/licenses/MIT).
 
 ## Final Thoughts
-First and foremost: Have fun!
+First and foremost: have fun!
 
 Then, to learn more about this app, Docker, Azure, Kubernetes, Linux
 and microservices, check my blog at: [blog.hildenco.com](https://blog.hildenco.com)

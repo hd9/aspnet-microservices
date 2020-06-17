@@ -2,7 +2,8 @@
 var catApp = new Vue({
     el: '#catApp',
     data: {
-        categories: []
+        categories: [],
+        loaded: false
     },
     mounted() {
         axios.get('/api/categories')
@@ -16,6 +17,10 @@ var catApp = new Vue({
             })
             .catch(function (error) {
                 console.log(error);
+                alert('Error loading the catalog. Check your log for more information');
+            })
+            .then(function () {
+                catApp.loaded = true;
             });
     }
 });
@@ -25,7 +30,8 @@ const prodsApp = new Vue({
     el: '#prodsApp',
     data: {
         products: [],
-        slug: ''
+        slug: '',
+        loaded: false
     },
     methods: {
         shortDesc: function (val) {
@@ -52,6 +58,10 @@ const prodsApp = new Vue({
             })
             .catch(function (error) {
                 console.log(error);
+                alert('Error loading the catalog. Check your log for more information');
+            })
+            .then(function () {
+                prodsApp.loaded = true;
             });
     }
 });
