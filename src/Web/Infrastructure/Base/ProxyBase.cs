@@ -20,6 +20,7 @@ namespace Web.Infrastructure.Base
         readonly string _svcName = typeof(T).Name;
         readonly string _keyFmt;
         readonly string _host;
+        protected DistributedCacheEntryOptions cacheOptions;
 
         private enum RequestType
         {
@@ -56,7 +57,11 @@ namespace Web.Infrastructure.Base
 
                 var resp = await _httpClient.GetAsync(url);
                 data = await resp.Content.ReadAsStringAsync();
-                await _cache.SetStringAsync(cacheKey, data);
+                
+                await _cache.SetStringAsync(
+                    cacheKey, 
+                    data, 
+                    cacheOptions ?? new DistributedCacheEntryOptions());
             }
 
             return JsonConvert.

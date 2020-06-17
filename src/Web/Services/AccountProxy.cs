@@ -25,7 +25,11 @@ namespace Web.Services
             IDistributedCache cache) :
             base(httpClient, cfg, logger, cache)
         {
-
+            // because account info is more volatile than catalog, etc
+            // we want its cache to be refreshed more frequently
+            cacheOptions = new DistributedCacheEntryOptions {
+                SlidingExpiration = TimeSpan.FromSeconds(10)
+            };
         }
 
         public async Task<Account> GetAccountById(string id)
