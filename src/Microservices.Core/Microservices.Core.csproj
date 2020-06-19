@@ -5,12 +5,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Microservices</Authors>
     <Company>Microservices</Company>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageProjectUrl>https://github.com/hd9/aspnet-microservices</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hd9/aspnet-microservices</RepositoryUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>MIT</Copyright>
-    <Description>Demo package needed to build the AspNetMicroservices project available at https://github.com/hd9/aspnet-microservices. For more information visit https://blog.hildenco.com.</Description>
+    <Description>Demo package needed to build the AspNetMicroservices project available at https://github.com/hd9/aspnet-microservices.
+
+For more information visit https://blog.hildenco.com.</Description>
   </PropertyGroup>
 
   <ItemGroup>
