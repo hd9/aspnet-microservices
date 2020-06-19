@@ -14,7 +14,7 @@ namespace PaymentSvc.Controllers
     public class PaymentController : ControllerBase
     {
         readonly IPaymentSvc _svc;
-        const string help = @"The Payment service is alive! Try GET /api/v1/payments/{paymentId}.";
+        const string help = @"The Payment service is alive! Try GET /api/v1/payments/{id}.";
 
         public PaymentController(IPaymentSvc svc)
         {

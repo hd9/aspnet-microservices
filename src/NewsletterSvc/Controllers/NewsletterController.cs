@@ -24,7 +24,7 @@ namespace NewsletterSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            return Ok("The Newsletter service is alive! Try GET /signups");
+            return Ok("The Newsletter service is alive! Try GET /api/v1/signups");
         }
 
         [Route("/ping")]
@@ -50,7 +50,7 @@ namespace NewsletterSvc.Controllers
             return Ok();
         }
 
-        [Route("/signups")]
+        [Route("/api/v1/signups")]
         public async Task<IActionResult> GetSignups()
         {
             var signups = await _svc.GetSignups();

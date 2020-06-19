@@ -42,7 +42,7 @@ namespace ShippingSvc
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
                         e.PrefetchCount = 16;
-                        e.UseMessageRetry(n => n.Interval(2, 100));
+                        e.UseMessageRetry(n => n.Interval(2, 3000));
                         e.ConfigureConsumer<ShippingRequestConsumer>(context);
                     });
                 }));
@@ -70,7 +70,7 @@ namespace ShippingSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["ConnectionString"]}");
+            logger.LogInformation($"Connection String: {cfg.ConnectionString}");
         }
     }
 }

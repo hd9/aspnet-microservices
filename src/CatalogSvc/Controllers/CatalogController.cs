@@ -15,7 +15,7 @@ namespace CatalogSvc.Controllers
     public class CatalogController : ControllerBase
     {
         readonly ICatalogSvc svc;
-        const string instruction = "The Catalog service is alive! Try GET /categories";
+        const string instruction = "The Catalog service is alive! Try GET /api/v1/categories";
 
         public CatalogController(ICatalogSvc svc)
         {

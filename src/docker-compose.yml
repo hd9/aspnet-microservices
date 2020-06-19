@@ -1,3 +1,12 @@
+# ####################################################
+# ASP.NET Microservices | HildenCo Webstore
+#   * Source code: github.com/hd9/aspnet-microservices
+#   * More about this app at: blog.hildenco.com
+# ####################################################
+
+# If you're looking to run all the microservices, run:
+# docker-compose up
+
 version: '3.7'
 
 volumes:
@@ -47,8 +56,6 @@ services:
     - ./CatalogSvc/db.js:/docker-entrypoint-initdb.d/db.js:ro
     expose:
       - "27017"
-    ports:
-      - "3301:27017"
 
   newsletter:
     image: newsletter
@@ -72,8 +79,6 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3302:3306"
     
   order:
     image: order
@@ -97,8 +102,6 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3303:3306"
 
   account:
     build: ./AccountSvc
@@ -122,8 +125,6 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3304:3306"
 
   recommendation:
     image: recommendation
@@ -147,15 +148,16 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3305:3306"
 
 
   notification:
     image: notification
     build: ./NotificationSvc
     environment:
-      - todo=true
+      # enter your gmail settings by setting the following env vars
+      - SmtpOptions__Username=${SmtpOptions__EmailOverride}
+      - SmtpOptions__Password=${SmtpOptions__Password}
+      - SmtpOptions__EmailOverride=${SmtpOptions__Username}
     expose:
       - "80"
     ports:
@@ -173,8 +175,6 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3306:3306"
 
   payment:
     image: payment
@@ -198,8 +198,6 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3307:3306"
 
   shipping:
     image: shipping
@@ -223,15 +221,11 @@ services:
       - MYSQL_ROOT_PASSWORD=todo
     expose:
       - "3306"
-    ports:
-      - "3308:3306"
 
   redis:
     image: redis:6-alpine
     expose:
       - "6379"
-    ports:
-      - "6379:6379"
 
   mysql-admin:
      image: adminer:latest
@@ -257,7 +251,6 @@ services:
     expose:
       - "5672"
     ports:
-      - "5672:5672"
       - "8012:15672"
 
   redis-commander:
@@ -270,7 +263,7 @@ services:
       - redis
 
   # config for prometheus (time-series db)
-  # uncomment the port if you want to access it
+  # uncomment the port if you want to access it from localhost
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -284,7 +277,7 @@ services:
     - cadvisor
 
   # config for cadvisor (tool to gather container metrics)
-  # uncomment the port if you want to access it
+  # uncomment the port if you want to access it from localhost
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor

@@ -10,7 +10,7 @@ namespace ShippingSvc.Controllers
     public class ShippingController : ControllerBase
     {
         readonly IShippingSvc _svc;
-        const string help = @"The Shipping service is alive! Try GET /api/v1/shippings/{ShippingId}.";
+        const string help = @"The Shipping service is alive! Try GET /api/v1/shippings/{id}";
 
         public ShippingController(IShippingSvc svc)
         {

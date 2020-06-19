@@ -44,7 +44,7 @@ namespace RecommendationSvc
                     c.Host(cfg.MassTransit.Host);
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
-                        e.UseMessageRetry(n => n.Interval(2, 100));
+                        e.UseMessageRetry(n => n.Interval(2, 3000));
                         e.ConfigureConsumer<OrderSubmittedConsumer>(context);
                     });
                 }));
@@ -75,7 +75,7 @@ namespace RecommendationSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["ConnectionString"]}");
+            logger.LogInformation($"Connection String: {cfg.ConnectionString}");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace AccountSvc
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
                         e.PrefetchCount = 16;
-                        e.UseMessageRetry(r => r.Interval(2, 100));
+                        e.UseMessageRetry(r => r.Interval(2, 3000));
                         e.ConfigureConsumer<NewsletterSubscribedConsumer>(context);
                         e.ConfigureConsumer<AccountInfoRequestConsumer>(context);
                     });
@@ -76,7 +76,7 @@ namespace AccountSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["ConnectionString"]}");
+            logger.LogInformation($"Connection String: {cfg.ConnectionString}");
         }
     }
 }

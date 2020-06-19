@@ -14,7 +14,7 @@ namespace OrderSvc.Controllers
     {
         readonly IOrderSvc _svc;
         readonly IBusControl _bus;
-        const string instruction = @"The Order service is alive! Try GET /order/{id}.";
+        const string instruction = @"The Order service is alive! Try GET /api/v1/order/{id}.";
 
         public OrderController(IOrderSvc svc, IBusControl bus)
         {

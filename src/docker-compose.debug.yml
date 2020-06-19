@@ -1,3 +1,14 @@
+# ####################################################
+# ASP.NET Microservices | HildenCo Webstore
+#   * Source code: github.com/hd9/aspnet-microservices
+#   * More about this app at: blog.hildenco.com
+# ####################################################
+
+# Run this file if when you're debugging the application
+# Open `scr/AspNetMicroservices.sln` with Visual Studio and hit debug (F5)
+# Then run the dependencies described on this file with:
+# docker-compose -f docker-compose.debug.yml up
+
 version: '3.7'
 
 services:

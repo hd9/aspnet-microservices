@@ -46,7 +46,7 @@
             <strong>Testing</strong>: as any time-constraint project, no tests were written for the
             services. However, if you'd like to implement yours,
             feel free to write your tests using your testing framework of choice.
-            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps" rel="nofollow">For a good introduction on how to test .NET Core and ASP.NET Core, read this</a>.
+            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps">For a good introduction on how to test .NET Core and ASP.NET Core, read this</a>.
         </li>
         <li>
             <strong>Security</strong>: most of the settings here are default, or even no credentials.
@@ -55,14 +55,14 @@
             MySQL and  RabbitMQ for example). Minimum cryptography and random Ids (like GUIDs)
             were used to keep the system as simple as possible. For more informantion
             on security best practices on ASP.NET microservices,
-            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/secure-net-microservices-web-applications/" rel="nofollow">check this link</a>.
+            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/secure-net-microservices-web-applications/">check this link</a>.
         </li>
         <li>
             <strong>Performance</strong>: performance isn't also implemented by default -
             the databases contain no indexes and no microservice (apart from <code>Web</code>) contains
             caching. However, I implemented a simple caching strategy on <code>Web</code> using <code>Redis</code>
             so everyone understands the essentials of
-            <a href="https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed" rel="nofollow">distributed caching in ASP.NET Core 3.1</a>.
+            <a href="https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed">distributed caching in ASP.NET Core 3.1</a>.
         </li>
         <li>
             <strong>Async-Communication</strong>: the project used <code>MassTransit</code> to provide async
@@ -82,14 +82,14 @@
             note that in production it would represent a risk as it would become a single point
             of failure. For high availability and high scalability, you should consider
             using cloud-based solutions such as
-            <a href="https://azure.microsoft.com/en-us/services/service-bus/" rel="nofollow">Azure Service Bus</a>
+            <a href="https://azure.microsoft.com/en-us/services/service-bus/">Azure Service Bus</a>
             or equivalent.
         </li>
         <li>
             <strong>Versioning</strong>: when developing complex applications, its inevitable that
             we'll have to make changes to our apis. This project This project takes opinionated decisions
             which may not be the best for every project. For more information on the topic, consider reading
-            <a href="https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning-a-restful-web-api" rel="nofollow">this document</a>.
+            <a href="https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning-a-restful-web-api">this document</a>.
         </li>
         <li>
             <strong>Single Git Repository</strong>: at first sight, having all microservices in the same .NET
@@ -102,20 +102,20 @@
         </li>
         <li>
             <strong>Resiliency</strong>: the project also does not apply resiliency patterns such as
-            <a href="https://en.wikipedia.org/wiki/Exponential_backoff" rel="nofollow">exponential backoffs</a>
-            or <a href="https://microservices.io/patterns/reliability/circuit-breaker.html" rel="nofollow">circuit breakers</a>.
+            <a href="https://en.wikipedia.org/wiki/Exponential_backoff">exponential backoffs</a>
+            or <a href="https://microservices.io/patterns/reliability/circuit-breaker.html">circuit breakers</a>.
             But feel free to fork and write your own.
-            For more information, <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/resilient-high-availability-microservices" rel="nofollow">check this document</a>.
+            For more information, <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/resilient-high-availability-microservices">check this document</a>.
             A nice way to learn that would be using dedicated libraries to the purpose
             such as <a href="https://github.com/App-vNext/Polly">Polly.net</a> or use the built-in
             functionality provided by frameworks
             such as <a href="https://github.com/App-vNext/Polly">NServiceBus</a> or
-            <a href="https://masstransit-project.com/" rel="nofollow">MassTransit</a>.
+            <a href="https://masstransit-project.com/">MassTransit</a>.
         </li>
         <li>
             <strong>Monolithic UI</strong>: the <code>Web</code> service is also implemented as a
-            <a href="https://xebia.com/blog/the-monolithic-frontend-in-the-microservices-architecture/" rel="nofollow">monolithic frontend</a>.
-            While today, the preferred approach would be using <a href="https://martinfowler.com/articles/micro-frontends.html" rel="nofollow">Micro Frontends</a>,
+            <a href="https://xebia.com/blog/the-monolithic-frontend-in-the-microservices-architecture/">monolithic frontend</a>.
+            While today, the preferred approach would be using <a href="https://martinfowler.com/articles/micro-frontends.html">Micro Frontends</a>,
             it would almost exponentially increase the scope of work and the complexity of
             the project. However, this project serves as a solid foundation for those
             wanting to learn and implement that pattern.
@@ -123,7 +123,7 @@
         <li>
             <strong>Diagnostics</strong>: there's also room for improvemente on the diagnostics
             side either with health checks either with out of the box functionality
-            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/monitor-app-health#implement-health-checks-in-aspnet-core-services" rel="nofollow">provided by ASP.NET Core</a>
+            <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/monitor-app-health#implement-health-checks-in-aspnet-core-services">provided by ASP.NET Core</a>
             or with external libraries such as <a href="https://github.com/Xabaril/BeatPulse">Beat Pulse</a>.
         </li>
         <li>
@@ -172,6 +172,7 @@
         <li><strong>Redis Commander</strong>: tool to manage our Redis instance</li>
         <li><strong>The ELK Stack (Experimental)</strong>: the ELK stack to capture, review and query container logs</li>
     </ul>
+
     <h1>Info for developers</h1>
     <p>
         On this section we'll list the essentials on how to modify
@@ -179,24 +180,26 @@
         If you're not interested in details about development feel
         free to jump <a href="https://github.com/hd9/aspnet-microservices#running-the-services">to the next section</a>.
     </p>
+
     <h2>Technical Requirements</h2>
     <p>To run this project on your machine, please make sure you have installed:</p>
     <ul>
         <li>
-            <a href="https://www.docker.com/products/docker-desktop" rel="nofollow">Docker Desktop</a> (Mac, Windows) or
-            <a href="https://docs.docker.com/engine/install/" rel="nofollow">Docker Engine</a> (Linux)
+            <a href="https://www.docker.com/products/docker-desktop">Docker Desktop</a> (Mac, Windows) or
+            <a href="https://docs.docker.com/engine/install/">Docker Engine</a> (Linux)
         </li>
-        <li><a href="https://dotnet.microsoft.com/download/dotnet-core/3.1" rel="nofollow">.NET SDK 3.1</a></li>
-        <li>A <a href="https://git-scm.com/downloads" rel="nofollow">git client</a></li>
-        <li>A Linux shell or <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" rel="nofollow">WSL</a></li>
+        <li><a href="https://dotnet.microsoft.com/download/dotnet-core/3.1">.NET SDK 3.1</a></li>
+        <li>A <a href="https://git-scm.com/downloads">git client</a></li>
+        <li>A Linux shell or <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a></li>
     </ul>
     <p>If you want to develop/extend/modify it, then I'd suggest you to also have:</p>
     <ul>
         <li>a valid <a href="https://github.com">GitHub</a> account</li>
-        <li><a href="https://visualstudio.microsoft.com/vs/" rel="nofollow">Visual Studio 2019</a></li>
-        <li>(or) <a href="https://code.visualstudio.com/" rel="nofollow">Visual Studio Code</a></li>
+        <li><a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2019</a></li>
+        <li>(or) <a href="https://code.visualstudio.com/">Visual Studio Code</a></li>
     </ul>
-    <h3>Images used</h3>
+
+    <h2>Images used</h2>
     <p>These are the Docker images that we'll use:</p>
     <ul>
         <li>ASP.NET Core SDK</li>
@@ -212,15 +215,18 @@
         <li>prometheus:latest</li>
         <li>cadvisor:latest</li>
     </ul>
-    <h3>Initializing the project</h3>
+
+    <h2>Initializing the project</h2>
     <p>To initialize the project run:</p>
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">git</span> clone https://github.com/hd9/aspnet-microservices</pre></div>
-    <h2>Understanding the services</h2>
+
+    <h3>Understanding the services</h3>
     <p>
         Code is always the best documentation. The easiest way to understand
         the services and their configurations is by reading the
         <code>src/docker-compose.yml</code> file.
     </p>
+
     <h3>Debugging with Visual Studio</h3>
     <p>
         Building with Visual Studio 2019 should be straightforward.
@@ -234,11 +240,46 @@
 docker-compose -f docker-compose.debug.yml up
 </pre>
     </p>
+
+    <h3>Changing Configuration</h3>
+    <p>
+        To change configuration for the ASP.NET services,
+        check the <code>appsettings.json</code> and <code>appsettings.Development.json</code> files
+        in each project's folder. Essentially you want to modify:
+    </p>
+    <ul>
+        <li><strong>appsettings.json</strong>: to change your container configuration</li>
+        <li><strong>appsettings.Development.json</strong>: to change your Visual Studio debugging configuration</li>
+    </ul>
+
+    <h3>SMTP Settings</h3>
+    <p>
+        The <code>Notification Service</code> uses Gmail to send emails. In order to
+        make it work correctly, set these environment variables:
+        <ul>
+            <li>SmtpOptions__Username=your-username@gmail.com</li>
+            <li>SmtpOptions__Password=your-app-password</li>
+            <li>SmtpOptions__EmailOverride=email-where-all-messages-should-go-to</li>
+        </ul>
+    </p>
+    <p>
+        For more information, check
+        <a href="https://support.google.com/accounts/answer/185833?hl=en">how to configure Gmail's App passwords</a>
+    </p>
+
+
+    <h2>Docker Compose</h2>
+    <p>
+        For more information about the compose spec, please
+        check the <a href="https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml">docker-compose.yml file</a>
+        in the <code>src</code> folder.
+    </p>
+
     <h3>Building and running the Docker images with Docker Compose</h3>
     <p>
         The recommended way to build the images is by using
-        <a href="https://docs.docker.com/compose/" rel="nofollow">Docker Compose</a>. Assuming you have
-        <a href="https://dotnet.microsoft.com/download/dotnet-core/3.1" rel="nofollow">.NET SDK 3.1</a>
+        <a href="https://docs.docker.com/compose/">Docker Compose</a>. Assuming you have
+        <a href="https://dotnet.microsoft.com/download/dotnet-core/3.1">.NET SDK 3.1</a>
         installed, you should be able to build the project with:
     </p>
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">docker</span>-compose build</pre></div>
@@ -251,34 +292,21 @@ docker-compose -f docker-compose.debug.yml up
         For available urls to hit, check the
         <a href="https://github.com/hd9/aspnet-microservices#urls">Urls section</a>.
     </p>
-    <h2>Changing Configuration</h2>
-    <p>
-        To change configuration for the ASP.NET services,
-        check the <code>appsettings.json</code> and <code>appsettings.Development.json</code> files
-        in each project's folder. Essentially you want to modify:
-    </p>
-    <ul>
-        <li><strong>appsettings.json</strong>: to change your container configuration</li>
-        <li><strong>appsettings.Development.json</strong>: to change your Visual Studio debugging configuration</li>
-    </ul>
-    <h2>Docker Compose</h2>
-    <p>
-        For more information about the compose spec, please
-        check the <a href="https://github.com/hd9/aspnet-microservices/blob/master/src/docker-compose.yml">docker-compose.yml file</a>
-        in the <code>src</code> folder.
-    </p>
+
+
     <h2>Building the Docker images independently</h2>
     <p>
         But if you really want, you can also build the images independently.
         Inside each project (and apart from <a href="https://github.com/hd9/aspnet-microservices/tree/master/src/Microservices.Core">Microservices.Core</a>)
         you should see a <code>build</code> script that should be executed on a Linux terminal
-        or on <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10" rel="nofollow">WSL</a>.
+        or on <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>.
     </p>
     <p>
         You could manually run each <code>build</code> script from each folder or simpler,
         just run <code>build-all</code> located in the <code>src</code> folder. Please note that it'll
         be necessary to run <code>chmod +x build-all</code> before you run it.
     </p>
+
     <h2>Making changes to the project</h2>
     <p>
         If you want to make changes to the project, the simplest way by opening
@@ -295,10 +323,11 @@ docker-compose -f docker-compose.debug.yml up
             published on <a href="https://github.com/hd9/aspnet-microservices/packages/251630">this project's package repo</a>
         </li>
     </ul>
+
     <h1>Running the services</h1>
     <p>
         The most straight forward way to run the application is
-        by using <a href="https://docs.docker.com/compose/" rel="nofollow">Docker Compose</a>.
+        by using <a href="https://docs.docker.com/compose/">Docker Compose</a>.
         Docker Compose is a tool that can be used to define and run
         multiple containers as a single service using the command below:
     </p>
@@ -314,7 +343,7 @@ docker-compose -f docker-compose.debug.yml up
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">docker</span>-compose build catalog</pre></div>
     <p>
         For more information on <code>docker compose</code> and other commands,
-        please <a href="https://docs.docker.com/compose/" rel="nofollow">check this link</a>.
+        please <a href="https://docs.docker.com/compose/">check this link</a>.
     </p>
     <h2>Manually running the services</h2>
     <p>
@@ -394,7 +423,7 @@ docker-compose -f docker-compose.debug.yml up
         from the containers to our localhost:
     </p>
     <ul>
-        <li><strong>15672</strong>: Rabbitmq's management interface. Can be accessed at: <a href="http://localhost:15672/" rel="nofollow">http://localhost:15672/</a>.</li>
+        <li><strong>15672</strong>: Rabbitmq's management interface. Can be accessed at: <a href="http://localhost:15672/">http://localhost:15672/</a>.</li>
         <li><strong>5672</strong>: this is what our services will use to intercommunicate</li>
     </ul>
     <p>
@@ -423,8 +452,8 @@ docker-compose -f docker-compose.debug.yml up
     </div>
     <p>For more information about RabbitMQ, visit:</p>
     <ul>
-        <li><a href="https://rabbitmq.com/" rel="nofollow">RabbitMQ's website</a></li>
-        <li><a href="https://hub.docker.com/_/rabbitmq" rel="nofollow">RabbitMQ on Docker Hub</a></li>
+        <li><a href="https://rabbitmq.com/">RabbitMQ's website</a></li>
+        <li><a href="https://hub.docker.com/_/rabbitmq">RabbitMQ on Docker Hub</a></li>
     </ul>
     <h2>CatalogSvc</h2>
     <p>The Catalog service holds catalog and product information.</p>
@@ -617,11 +646,11 @@ docker-compose -f docker-compose.debug.yml up
     <p>
         In order for Grafana to run, you'll also have to configure <code>Prometheus</code>
         and <code>cadvisor</code>. Check <code>docker-compose.yml</code> for more information.
-        By default, <code>Grafana</code> should be available at <a href="http://localhost:3000" rel="nofollow">http://localhost:3000</a>.
+        By default, <code>Grafana</code> should be available at <a href="http://localhost:3000">http://localhost:3000</a>.
     </p>
     <h2>MySQL Admin (Adminer)</h2>
     <p>
-        <a href="https://www.adminer.org/" rel="nofollow">Adminer</a> (formerly phpMinAdmin) is a full-featured
+        <a href="https://www.adminer.org/">Adminer</a> (formerly phpMinAdmin) is a full-featured
         database management tool written in PHP. Conversely to phpMyAdmin, it consist
         of a single file ready to deploy to the target server. Adminer is available
         for MySQL, PostgreSQL, SQLite, MS SQL, Oracle, Firebird, SimpleDB, Elasticsearch
@@ -630,7 +659,7 @@ docker-compose -f docker-compose.debug.yml up
     <p>If you want to manage your MySQL databases with adminer, run it with:</p>
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">docker</span> run -d -p <span class="pl-c1">8010</span>:<span class="pl-c1">8080</span> --name adminer adminer</pre></div>
     <p>
-        To open Adminer, please open <a href="http://localhost:8012/" rel="nofollow">http://localhost:8012/</a>
+        To open Adminer, please open <a href="http://localhost:8012/">http://localhost:8012/</a>
         on your browser, enter the IP of your MySQL Docker instance (see below) as host
         and login with its password (default: <code>root|todo</code>).
     </p>
@@ -644,23 +673,23 @@ docker-compose -f docker-compose.debug.yml up
         </li>
     </ul>
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">docker</span> inspect network bridge -<span class="pl-c1">f</span> <span class="pl-c1">'{{json .Containers}}' | jq</span></pre></div>
-    <p><strong>Note</strong>: you'll need <a href="https://stedolan.github.io/jq/" rel="nofollow">jq</a> to format the output.</p>
+    <p><strong>Note</strong>: you'll need <a href="https://stedolan.github.io/jq/">jq</a> to format the output.</p>
     <h2>RabbitMQ Management Console</h2>
     <p>
         RabbitMQ is an open source multi-protocol messaging broker. It's used in this
         project via MassTransit to provide asynchronous communications via pub/sub and
         async request/responses. RabbitMQ Management Console is available at:
-        <a href="http://localhost:8010/" rel="nofollow">http://localhost:8010/</a>. Login with <code>guest/guest</code>.
+        <a href="http://localhost:8010/">http://localhost:8010/</a>. Login with <code>guest/guest</code>.
     </p>
     <h2>Redis Commander</h2>
     <p>
         If you want, you can optionally start a
-        <a href="http://joeferner.github.io/redis-commander/" rel="nofollow">Redis Commander</a> container
+        <a href="http://joeferner.github.io/redis-commander/">Redis Commander</a> container
         and use as a WYSIWYG admin interface for Redis with the information below.
     </p>
     <p>
         If you're running with <code>docker-compose</code>, it be available on
-        <a href="http://localhost:8011/" rel="nofollow">http://localhost:8011/</a>.
+        <a href="http://localhost:8011/">http://localhost:8011/</a>.
     </p>
     <p>Else, first get the redis IP with:</p>
     <div class="highlight highlight-source-m68k"><pre><span class="pl-e">web_redis_ip</span>=$(docker inspect redis -<span class="pl-c1">f</span> <span class="pl-c1">'{{json .NetworkSettings.IPAddress</span>}}')</pre></div>

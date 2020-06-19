@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using static Microservices.Core.Infrastructure.Extensions.ExceptionExtensions;
+using Microsoft.Extensions.Logging;
 
 namespace NotificationSvc.Consumers
 {
@@ -16,13 +17,15 @@ namespace NotificationSvc.Consumers
 
         #region Attributes
         readonly SmtpOptions _smtpOptions;
+        readonly ILogger<SendMailConsumer> _logger;
         readonly INotificationRepository _repo;
         #endregion
 
-        public SendMailConsumer(INotificationRepository repo, SmtpOptions smtpOptions)
+        public SendMailConsumer(INotificationRepository repo, SmtpOptions smtpOptions, ILogger<SendMailConsumer> logger)
         {
             _repo = repo;
             _smtpOptions = smtpOptions;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<SendMail> context)
@@ -55,8 +58,12 @@ namespace NotificationSvc.Consumers
 
             mail.To.Add(_smtpOptions.EmailOverride ?? msg.Email);
 
+            _logger.LogInformation($"Logging event on the db...");
             await _repo.Insert(toName, email, 'E');
+
+            _logger.LogInformation($"Sending email to {toName} <{email}>...");
             await smtpClient.SendMailAsync(mail);
+            _logger.LogInformation("Email successfully sent!");
         }
     }
 }

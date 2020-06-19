@@ -184,6 +184,16 @@ To initialize the project run:
 git clone https://github.com/hd9/aspnet-microservices
 ```
 
+### SMTP Settings
+The `Notification Service` uses Gmail to send emails. In order to
+make it work correctly, set these environment variables:
+* SmtpOptions__Username=your-username@gmail.com
+* SmtpOptions__Password=your-app-password
+* SmtpOptions__EmailOverride=email-where-all-messages-should-go-to
+
+For more information, check
+[how to configure Gmail's App passwords](https://support.google.com/accounts/answer/185833?hl=en).
+
 Code is always the best documentation. The easiest way to understand
 the containers and their configurations is by reading the
 `src/docker-compose.yml` file.
@@ -218,7 +228,6 @@ databases so you have your application running as soon as possible.
 
 For available urls to hit, check the
 [Urls section](https://github.com/hd9/aspnet-microservices#urls).
-
 
 ## Building the Docker images independently
 But if you really want, you can also build the images independently.
@@ -747,7 +756,13 @@ docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 808
 
 # Cheatsheet
 Okay, I admit, this got complicated enough. So here's some
-information to start with the project.
+information to get started with the project.
+
+## Debugging
+* Open `src/AspNetMicroservices.sln` with Visual Studio 2019
+* Configure SMTP Settings (see section above)
+* Run the depencies with `docker-compose -f docker-compose.debug.yml up`
+* From Visual Studio, run the project as debug (F5)
 
 ## Urls
 By default, the microservices are configured to run at:

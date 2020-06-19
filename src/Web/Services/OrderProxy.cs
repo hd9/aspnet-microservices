@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -24,7 +25,12 @@ namespace Web.Services
             IDistributedCache cache) :
             base(httpClient, cfg, logger, cache)
         {
-
+            // because order info is more volatile than catalog, etc
+            // we want its cache to be refreshed more frequently
+            cacheOptions = new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromSeconds(10)
+            };
         }
 
         public async Task Submit(Order order)

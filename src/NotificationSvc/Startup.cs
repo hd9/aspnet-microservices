@@ -31,7 +31,7 @@ namespace NotificationSvc
         {
             services.AddControllers();
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.AddScoped<INotificationRepository>(x => new NotificationRepository(Configuration["ConnectionString"]));
+            services.AddScoped<INotificationRepository>(x => new NotificationRepository(cfg.ConnectionString));
             services.AddScoped<INotificationSvc, Svc.NotificationSvc>();
             services.AddSingleton(cfg.SmtpOptions);
 
@@ -47,7 +47,7 @@ namespace NotificationSvc
                     c.ReceiveEndpoint(cfg.MassTransit.Queue, e =>
                     {
                         e.PrefetchCount = 16;
-                        e.UseMessageRetry(r => r.Interval(2, 100));
+                        e.UseMessageRetry(r => r.Interval(2, 3000));
                         e.ConfigureConsumer<SendMailConsumer>(context);
                     });
                 }));
@@ -75,7 +75,8 @@ namespace NotificationSvc
                 endpoints.MapControllers();
             });
 
-            logger.LogInformation($"Connection String: {Configuration["DbSettings:ConnStr"]}, Db: {Configuration["DbSettings:Db"]}, Collection: {Configuration["DbSettings:Collection"]}");
+            logger.LogInformation($"Connection String: {cfg.ConnectionString}");
+            logger.LogInformation($"SMTP Settings: {cfg.SmtpOptions.Host}, Username: {cfg.SmtpOptions.Username}, Password: {cfg.SmtpOptions.Password}");
         }
 
     }

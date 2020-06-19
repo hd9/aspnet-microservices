@@ -1,4 +1,0 @@
-# to run this script run:
-# chmod +x ./build
-# so it can be executed on your WSL terminal
-docker.exe build -t order -q .
