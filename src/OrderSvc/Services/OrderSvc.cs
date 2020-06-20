@@ -259,8 +259,7 @@ namespace OrderSvc.Services
             await _bus.Publish(new SendMail
             {
                 ToName = acct.Name,
-                FromName = tpl.FromName,
-                Email = acct.Email,
+                ToEmail = acct.Email,
                 Body = tpl.Body.FormatWith(acct.Name),
                 Subject = tpl.Subject
             });

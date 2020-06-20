@@ -19,19 +19,35 @@
 
         <h2>SMTP Settings</h2>
         <p>
-            The <code>Notification Service</code> uses Gmail to send emails. In order to
+            The <code>Notification Service</code> uses SMTP to send emails. In order to
             make it work correctly, set these environment variables:
             <ul>
-                <li>SmtpOptions__Username=your-username@gmail.com</li>
-                <li>SmtpOptions__Password=your-app-password</li>
-                <li>SmtpOptions__EmailOverride=email-where-all-messages-should-go-to</li>
+                <li>SmtpOptions__Host=host</li>
+                <li>SmtpOptions__Username=username</li>
+                <li>SmtpOptions__Password=password</li>
+                <li>SmtpOptions__EmailOverride=email-override</li>
             </ul>
         </p>
         <p>
-            For more information, check
-            <a href="https://support.google.com/accounts/answer/185833?hl=en">how to configure Gmail's App passwords</a>.
+            <strong>Notes:</strong>
+            <ul>
+                <li>
+                    It's recommended that you specify those parameters as environment
+                    variables as they'll work on either debug and with <code>docker-compose</code>.
+                </li>
+                <li>
+                    Setting the environment variables should be done in the format <code>SmtpOptions__Username="your-value"</code>
+                </li>
+                <li>
+                    To configure <code>docker-compose</code> to use the environment variables, do: 
+                    <code>SmtpOptions__Username=${SmtpOptions__Username}</code>
+                </li>
+                <li>
+                    It's STRONGLY RECOMMENDED that you set `email override`,
+                    or else the system will spam email accounts.
+                </li>
+            </ul>
         </p>
-
 
         <h2>Urls</h2>
         <p>With the project running, the microservices should be available at:</p>

@@ -16,12 +16,10 @@ namespace NotificationSvc.Controllers
     {
 
         readonly INotificationSvc _svc;
-        readonly SmtpOptions _smtpOptions;
 
-        public NotificationController(INotificationSvc svc, SmtpOptions smtpOptions)
+        public NotificationController(INotificationSvc svc)
         {
             _svc = svc;
-            _smtpOptions = smtpOptions;
         }
 
         [Route("/ping")]
@@ -33,9 +31,7 @@ namespace NotificationSvc.Controllers
         [Route("/help")]
         public IActionResult Help()
         {
-            var cfg = $"Host: {_smtpOptions.Host}, Username: {_smtpOptions.Username}, Password: {_smtpOptions.Password}";
-            var instruction = $@"The Notification service is alive! Try GET /api/v1/notifications\nSettings: {cfg}";
-            
+            var instruction = $@"The Notification service is alive! Try GET /api/v1/notifications";
             return Ok(instruction);
         }
 

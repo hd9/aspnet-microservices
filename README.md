@@ -184,24 +184,34 @@ To initialize the project run:
 git clone https://github.com/hd9/aspnet-microservices
 ```
 
-### SMTP Settings
-The `Notification Service` uses Gmail to send emails. In order to
-make it work correctly, set these environment variables:
-* SmtpOptions__Username=your-username@gmail.com
-* SmtpOptions__Password=your-app-password
-* SmtpOptions__EmailOverride=email-where-all-messages-should-go-to
-
-For more information, check
-[how to configure Gmail's App passwords](https://support.google.com/accounts/answer/185833?hl=en).
-
+### Understanding the project
 Code is always the best documentation. The easiest way to understand
 the containers and their configurations is by reading the
-`src/docker-compose.yml` file.
+`src/docker-compose.yml` file. To understand the code, open the solution
+`src/AspNetContainers.sln` with Visual Studio 2019.
+
+### SMTP Settings
+The `Notification Service` uses SMTP to send emails. In order to
+make it work correctly, set these environment variables:
+* SmtpOptions__Host=<host>
+* SmtpOptions__Username=<username>
+* SmtpOptions__Password=<password>
+* SmtpOptions__EmailOverride=<email-override>
+
+**Note 1**: It's recommended that you specify those parameters as environment
+variables. That way it will either work on debug or when running
+with `docker-compose`. To use them with `docker-compose`, set
+as:
+* SmtpOptions__Username=${SmtpOptions__Username}
+
+**Note 2**: it's STRONGLY RECOMMENDED that you set `email override`,
+or else the system will spam email accounts.
+
 
 ### Debugging with Visual Studio
 Building and debugging with Visual Studio 2019 is straightforward.
-Simply open the `AspNetMicroservices.sln` file from the `src` folder
-and debug the project from Visual Studio 2019.
+Simply open the `AspNetMicroservices.sln` solution from the `src`
+folder, build and run the project as debug (F5).
 
 Next, run the dependencies (`Redis, MongoDB, RabbitMQ and MySQL`) by
 issuing the below command from the `src` folder:   

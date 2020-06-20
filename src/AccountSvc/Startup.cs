@@ -2,7 +2,7 @@ using AccountSvc.Consumers;
 using AccountSvc.Infrastructure.Options;
 using AccountSvc.Repositories;
 using AccountSvc.Services;
-using Microservices.Core.Infrastructure.Options;
+using GreenPipes;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,9 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using Svc = AccountSvc.Services;
-using GreenPipes;
 
 namespace AccountSvc
 {

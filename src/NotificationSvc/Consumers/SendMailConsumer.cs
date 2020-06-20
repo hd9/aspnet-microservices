@@ -1,14 +1,12 @@
-﻿using Microservices.Core.Contracts.Notification;
+﻿using MassTransit;
+using Microservices.Core.Contracts.Notification;
 using Microservices.Core.Infrastructure.Extensions;
 using Microservices.Core.Infrastructure.Options;
-using MassTransit;
+using Microsoft.Extensions.Logging;
 using NotificationSvc.Repositories;
-using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using static Microservices.Core.Infrastructure.Extensions.ExceptionExtensions;
-using Microsoft.Extensions.Logging;
 
 namespace NotificationSvc.Consumers
 {
@@ -21,7 +19,10 @@ namespace NotificationSvc.Consumers
         readonly INotificationRepository _repo;
         #endregion
 
-        public SendMailConsumer(INotificationRepository repo, SmtpOptions smtpOptions, ILogger<SendMailConsumer> logger)
+        public SendMailConsumer(
+            INotificationRepository repo, 
+            SmtpOptions smtpOptions, 
+            ILogger<SendMailConsumer> logger)
         {
             _repo = repo;
             _smtpOptions = smtpOptions;
@@ -41,27 +42,27 @@ namespace NotificationSvc.Consumers
             };
 
             var msg = context.Message;
-            var toName = msg.ToName;
-            var email = msg.Email;
-
             var mail = new MailMessage
             {
-                From = new MailAddress(_smtpOptions.Username, msg.FromName),
+                From = new MailAddress(_smtpOptions.FromEmail, _smtpOptions.FromName),
                 Subject = msg.Subject,
                 Body = msg.Body
             };
 
-            Throw<ArgumentNullException>.If(
-                !_smtpOptions.EmailOverride.HasValue() &&
-                !msg.Email.HasValue(),
-                "Missing target email. Did you forget to send or configure it?");
+            if(!_smtpOptions.EmailOverride.HasValue() &&
+                !msg.ToEmail.HasValue())
+            {
+                _logger.LogError("Missing target email. Did you forget to send or configure it?");
+                return;
+            }
 
-            mail.To.Add(_smtpOptions.EmailOverride ?? msg.Email);
+            // if set, overrides with smtpOptions.EmailOverride
+            mail.To.Add(_smtpOptions.EmailOverride ?? msg.ToEmail);
 
             _logger.LogInformation($"Logging event on the db...");
-            await _repo.Insert(toName, email, 'E');
+            await _repo.Insert(msg.ToName, msg.ToEmail, 'E');
 
-            _logger.LogInformation($"Sending email to {toName} <{email}>...");
+            _logger.LogInformation($"Sending email to \"{msg.ToName} <{msg.ToEmail}>\"...");
             await smtpClient.SendMailAsync(mail);
             _logger.LogInformation("Email successfully sent!");
         }

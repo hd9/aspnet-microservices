@@ -10,9 +10,9 @@
     <RepositoryUrl>https://github.com/hd9/aspnet-microservices</RepositoryUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>MIT</Copyright>
-    <Description>Demo package needed to build the AspNetMicroservices project available at https://github.com/hd9/aspnet-microservices.
+    <Description>Demo package needed to build the AspNetMicroservices project available at: https://github.com/hd9/aspnet-microservices.
 
-For more information visit https://blog.hildenco.com.</Description>
+For more information visit https://blog.hildenco.com</Description>
   </PropertyGroup>
 
   <ItemGroup>

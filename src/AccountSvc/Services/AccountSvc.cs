@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Models;
+using Microsoft.Extensions.Logging;
 
 namespace AccountSvc.Services
 {
@@ -19,12 +20,18 @@ namespace AccountSvc.Services
         readonly IAccountRepository _repo;
         readonly IBusControl _bus;
         readonly List<EmailTemplate> _emailTemplates;
+        readonly ILogger<AccountSvc> _logger;
 
-        public AccountSvc(IAccountRepository acctRepo, IBusControl bus, List<EmailTemplate> emailTemplates)
+        public AccountSvc(
+            IAccountRepository acctRepo, 
+            IBusControl bus, 
+            List<EmailTemplate> emailTemplates, 
+            ILogger<AccountSvc> logger)
         {
             _repo = acctRepo;
             _bus = bus;
             _emailTemplates = emailTemplates;
+            _logger = logger;
         }
 
         public async Task CreateAccount(CreateAccount cmd)
@@ -38,8 +45,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = cmd.Name,
-                    FromName = tpl.FromName,
-                    Email = cmd.Email,
+                    ToEmail = cmd.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(cmd.Name)
                 });
@@ -63,8 +69,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = cmd.Name,
-                    FromName = tpl.FromName,
-                    Email = cmd.Email,
+                    ToEmail = cmd.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(cmd.Name)
                 });
@@ -76,7 +81,7 @@ namespace AccountSvc.Services
 
             if (acct.Password != cmd.CurrentPassword)
             {
-                // todo :: log
+                _logger.LogError($"Incorret password for account: ID: {acct.Id}, Name: {acct.Name}, Email: {acct.Email}");
                 return;
             }
 
@@ -89,8 +94,7 @@ namespace AccountSvc.Services
                 new SendMail
                 {
                     ToName = acct.Name,
-                    FromName = tpl.FromName,
-                    Email = acct.Email,
+                    ToEmail = acct.Email,
                     Subject = tpl.Subject,
                     Body = tpl.Body.FormatWith(acct.Name)
                 });

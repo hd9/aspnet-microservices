@@ -154,10 +154,11 @@ services:
     image: notification
     build: ./NotificationSvc
     environment:
-      # enter your gmail settings by setting the following env vars
-      - SmtpOptions__Username=${SmtpOptions__EmailOverride}
+      # Enter your SMTP settings by setting the following env vars
+      - SmtpOptions__Host=${SmtpOptions__Host}
+      - SmtpOptions__Username=${SmtpOptions__Username}
       - SmtpOptions__Password=${SmtpOptions__Password}
-      - SmtpOptions__EmailOverride=${SmtpOptions__Username}
+      - SmtpOptions__EmailOverride=${SmtpOptions__EmailOverride}
     expose:
       - "80"
     ports:

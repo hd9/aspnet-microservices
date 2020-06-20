@@ -76,7 +76,7 @@ namespace NotificationSvc
             });
 
             logger.LogInformation($"Connection String: {cfg.ConnectionString}");
-            logger.LogInformation($"SMTP Settings: {cfg.SmtpOptions.Host}, Username: {cfg.SmtpOptions.Username}, Password: {cfg.SmtpOptions.Password}");
+            logger.LogInformation($"SMTP Settings: {cfg.SmtpOptions}");
         }
 
     }

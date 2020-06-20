@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microservices.Core" Version="0.0.1" />
+    <PackageReference Include="Microservices.Core" Version="0.0.2" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.3.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="6.3.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.3" />
