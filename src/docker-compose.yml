@@ -22,6 +22,9 @@ services:
         GITHUB_API_KEY: ${GITHUB_API_KEY}
     ports:
       - "8000:80"
+      # use this if you want to scale up the service with:
+      # docker-compose up --scale web=3
+      #- 80
     depends_on:
       - catalog
       - newsletter
