@@ -16,7 +16,10 @@ services:
 
   web:
     image: web
-    build: ./Web
+    build:
+      context: ./Web
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     ports:
       - "8000:80"
     depends_on:
@@ -35,7 +38,10 @@ services:
 
   catalog:
     image: catalog
-    build: ./CatalogSvc
+    build:
+      context: ./CatalogSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     expose:
       - "80"
     environment:
@@ -59,7 +65,10 @@ services:
 
   newsletter:
     image: newsletter
-    build: ./NewsletterSvc
+    build:
+      context: ./NewsletterSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     expose:
       - "80"
     environment:
@@ -82,7 +91,10 @@ services:
     
   order:
     image: order
-    build: ./OrderSvc
+    build:
+      context: ./OrderSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     expose:
       - "80"
     environment:
@@ -104,7 +116,10 @@ services:
       - "3306"
 
   account:
-    build: ./AccountSvc
+    build:
+      context: ./AccountSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     image: account
     expose:
       - "80"
@@ -128,7 +143,10 @@ services:
 
   recommendation:
     image: recommendation
-    build: ./RecommendationSvc
+    build:
+      context: ./RecommendationSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     expose:
       - "80"
     environment:
@@ -152,7 +170,10 @@ services:
 
   notification:
     image: notification
-    build: ./NotificationSvc
+    build:
+      context: ./NotificationSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     environment:
       # Enter your SMTP settings by setting the following env vars
       - SmtpOptions__Host=${SmtpOptions__Host}
@@ -179,7 +200,10 @@ services:
 
   payment:
     image: payment
-    build: ./PaymentSvc
+    build:
+      context: ./PaymentSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     environment:
       - todo=true
     expose:
@@ -202,9 +226,10 @@ services:
 
   shipping:
     image: shipping
-    build: ./ShippingSvc
-    environment:
-      - todo=true
+    build:
+      context: ./ShippingSvc
+      args:
+        GITHUB_API_KEY: ${GITHUB_API_KEY}
     expose:
       - "80"
     ports:

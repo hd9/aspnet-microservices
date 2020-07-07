@@ -5,6 +5,8 @@ using [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet),
 [Docker Compose](https://docs.docker.com/compose/), 
 [MongoDB](https://www.mongodb.com/), [MySQL](https://www.mysql.com/),
 [Redis](https://redis.io/), [Vue.js](https://vuejs.org/),
+[RabbitMQ](https://www.rabbitmq.com/),
+[MassTransit](https://www.rabbitmq.com/),
 [Dapper ORM](https://dapper-tutorial.net/dapper),
 [Prometheus](https://prometheus.io/),
 [Grafana](https://grafana.com/),
@@ -21,100 +23,32 @@ The source code is available at
 [github.com/hd9/aspnet-microservices](https://github.com/hd9/aspnet-microservices).
 
 
-## Introduction
+# Introduction
 When you create a sample microservice-based application, you need to deal with
-complexity and make some choices. I chose to explicitly reduce the complexity by
-avoiding some parallel design patterns and focused on development of the
-services themselves. That said, this application was built so that it presents
-the foundations of Docker, Compose, Kubernetes and microservices and serves as an
+complexity and make some choices. I deliberately chose to decrease the
+complexity by reducing the emphasis on design patterns to focus on development
+of the services themselves. This application was built so that it presents the
+foundations of Docker, Compose, Kubernetes and microservices and serves as an
 intuitive guide for those starting in this area.
 
-Please, **don't use this project in production** as its objective is be a
-simple starting point for those building microservices in .NET. However, this
-project can be a good fork candidate for those looking for a simple
-setup to get started quickly. Check the [Areas of improvement](https://github.com/hd9/aspnet-microservices#areas-for-improvement)
-section for more details on what could be improved.
+## Disclaimer
+When you create a sample microservice-based application, you need to deal with
+complexity and make tough choices. For the aspnet-microservices application, I
+deliberately chose to balance complexity and architecture by reducing the
+emphasis on design patterns and focusing on the development of the services
+themselves. The project was built to serve as an introduction and a start-point
+for those looking forward to working of Docker, Compose and microservices. 
+
+Check [Areas for improvement](areas-for-improvement)
+for more details on what could be improved.
 
 If you want a project containing all the design patterns in 
-a single solution, please check [Microsoft's eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
+a single solution, please check 
+[Microsoft's eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers).
 
-## Areas for improvement
-Because this project is supposed to be a lightweight introduction to microservices
-adding all the recommended patterns would increase a lot its complexity. Here
-are some of the areas that could be improved:
-* **Testing**: as any time-constraint project, no tests were written for the
-  services. However, if you'd like to implement yours,
-  feel free to write your tests using your testing framework of choice.
-  [For a good introduction on how to test .NET Core and ASP.NET Core, read this](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/test-aspnet-core-services-web-apps).
-* **Security**: most of the settings here are default, or even no credentials.
-  That was done un purpose so it's simpler for people to understand the
-  different parts of the application, interact with the services (Redis, MongoDB,
-  MySQL and  RabbitMQ for example). Minimum cryptography and random Ids (like GUIDs)
-  were used to keep the system as simple as possible. For more informantion
-  on security best practices on ASP.NET microservices, 
-  [check this link](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/secure-net-microservices-web-applications/).
-* **Performance**: performance isn't also implemented by default -
-  the databases contain no indexes and no microservice (apart from `Web`) contains 
-  caching. However, I implemented a simple caching strategy on `Web` using `Redis`
-  so everyone understands the essentials of
-  [distributed caching in ASP.NET Core 3.1](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed).
-* **Async-Communication**: the project used `MassTransit` to provide async
-  request/response essentially between the backend services. While I do 
-  use async request/replies between `Order`, `Shipping` and `Payment`,
-  I didn't utilize the pattern in   `Web` where I essentially proxied external
-  services and issued restful calls to those services. For most queries, this is
-  an acceptable pattern but some `commands` were also implemented like that.
-  Wen designing microservices, asynchronous communication should be preferred
-  as it reduces coupling and increases the resilience of the communicating service
-  especially for background events such as subscribing to newsletters or creating
-  orders.
-* **Infrastructure**: for this exercise, we utilized `RabbitMQ`
-  as a lightweight message-broker running on a `Docker` container. However,
-  note that in production it would represent a risk as it would become a single point
-  of failure. For high availability and high scalability, you should consider
-  using cloud-based solutions such as
-  [Azure Service Bus](https://azure.microsoft.com/en-us/services/service-bus/)
-  or equivalent. 
-* **Versioning**: when developing complex applications, its inevitable that
-  we'll have to make changes to our apis. This project takes opinionated decisions
-  which may not be the best for every project.
-  For more information on the topic, consider reading 
-  [this document](https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design#versioning-a-restful-web-api).
-* **Single Git Repository**: at first sight, having all microservices in the same .NET
-  solution may sound strange. And indeed it is because on large organizations,
-  different microservices are developed by different teams using potentially
-  different tools (programming languages, databases, etc) and are usually hosted on
-  different repositories. However, the purpose of this project is to expose the
-  essential bits of the microservice architecture without significantily
-  increased complexity.
-* **Resiliency**: the project also does not apply resiliency patterns such as
-  [exponential backoffs](https://en.wikipedia.org/wiki/Exponential_backoff)
-  or [circuit breakers](https://microservices.io/patterns/reliability/circuit-breaker.html).
-  But feel free to fork and write your own.
-  For more information, [check this document](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/resilient-high-availability-microservices).
-  A nice way to learn that would be using dedicated libraries to the purpose 
-  such as [Polly.net](https://github.com/App-vNext/Polly) or use the built-in
-  functionality provided by frameworks
-  such as [NServiceBus](https://github.com/App-vNext/Polly) or
-  [MassTransit](https://masstransit-project.com/).
-* **Monolithic UI**: the `Web` service is also implemented as a
-  [monolithic frontend](https://xebia.com/blog/the-monolithic-frontend-in-the-microservices-architecture/).
-  While today, the preferred approach would be using [Micro Frontends](https://martinfowler.com/articles/micro-frontends.html),
-  it would almost exponentially increase the scope of work and the complexity of 
-  the project. However, this project serves as a solid foundation for those
-  wanting to learn and implement that pattern.
-* **Diagnostics**: there's also room for improvemente on the diagnostics
-  side either with health checks either with out of the box functionality
-  [provided by ASP.NET Core](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/monitor-app-health#implement-health-checks-in-aspnet-core-services)
-  or with external libraries such as [Beat Pulse](https://github.com/Xabaril/BeatPulse).
-* **Logs and event streams**: A microservice-based application should not try
-  to store the output stream of events or logfiles by itself, nor try to manage
-  the routing of the events to a central place. Instead it should be transparent,
-  meaning that each process should just write its event stream to a standard output
-  so that it could be collected by the execution environment infrastructure
-  where it's running.
+# About the project
 
-## Services included in this project
+## Microservices included in this project
 So far, the project consists of the following services:
 * **Web**: the frontend for the web store
 * **Catalog**: provides catalog information for the web store
@@ -126,10 +60,19 @@ So far, the project consists of the following services:
 * **Payment**: simulates a _fake_ payment store
 * **Shipping**: simulates a _fake_ shipping store
 
-## Third-party tools included in this project
+## Technologies used
 Of course, we could (and should!) have some fun with 3rd party tool.
 Included in this project you'll have:
 
+* **ASP.NET Core**: as the base for the microservices
+* **RabbitMQ**: which will serve as the queue/communication layer our services will talk;
+* **MassTransit**: which will be the interface between our apps and RabbitMQ supporting asynchronous communications between them;
+* **Dapper**: used to simplify interaction with the MySQL database;
+* **SendGrid**: used to send emails from our Notification service;
+* **MySQL** Admin: tool to manage our MySQL databases
+* **Mongo Express**: tool to manage our Mongo db
+* **RabbitMQ** dashboard: tool to manage our RabbitMQ service
+* **Redis Commander**: tool to manage our Redis instance
 * **Grafana**: a multi-platform open source analytics and interactive
   visualization web application. It provides charts, graphs, and alerts
   for the web when connected to supported data sources.
@@ -138,22 +81,23 @@ Included in this project you'll have:
   and performance characteristics of their running containers.
   It is a running daemon that collects, aggregates, processes,
   and exports information about running containers. 
-* **MySQL** Admin: tool to manage our MySQL databases
-* **Mongo Express**: tool to manage our Mongo db
-* **RabbitMQ** dashboard: tool to manage our RabbitMQ service
-* **Redis Commander**: tool to manage our Redis instance
 * **The ELK Stack (Experimental)**: the ELK stack to capture, review and query container logs.
 
-# Info for developers
-On this section we'll list the essentials on how to modify
-and run this project on your machine.
-If you're not interested in details about development feel
-free to jump [to the next section](https://github.com/hd9/aspnet-microservices#running-the-services).
+## Conventions and Design Considerations
+Among others, you'll find in this project that:
+* The Web microservice serves as the frontend e-commerce application and implements the API Gateway / BFF design patterns routing the requests from the user to other services on an internal Docker network;
+* Web caches catalog data a Redis data store; Feel free to use Redis Commander to delete cached entries if you wish.
+* Each microservice has its own database isolating its state from external services. MongoDB and MySQL were chosen as the main databases.
+* All services were implemeneted as ASP.NET Core webapps exposing the endpoints /help and /ping so they can be inspected from and observed automatically the the running engine.
+* No special logging infrastructure was added. All logs are captured by Docker logs and can be easily accessed via docker logs or indexes by a different application.
+* Microservices communicate between themselves via Pub/Sub and asynchronous request/response using MassTransit and RabbitMQ.
+* The Notification microservice will eventually send emails. This project was tested with SendGrid but other SMTP services will also work from within/without the containers.
 
 ## Technical Requirements
 To run this project on your machine, please make sure you have installed:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop) (Mac, Windows) or
   [Docker Engine](https://docs.docker.com/engine/install/) (Linux)
+* [Docker Compose](https://docs.docker.com/compose/)
 * [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 * A [git client](https://git-scm.com/downloads)
 * A Linux shell or [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
@@ -178,37 +122,22 @@ These are the Docker images that we'll use:
 * prometheus:latest
 * cadvisor:latest
 
-### Initializing the project
-To initialize the project run:   
+# Running the microservices
+So let's get quickly learn how to load and build our own microservices. 
+
+## Initializing the project
+First, clone the project with:
 ```s
 git clone https://github.com/hd9/aspnet-microservices
 ```
 
-### Understanding the project
-Code is always the best documentation. The easiest way to understand
-the containers and their configurations is by reading the
-`src/docker-compose.yml` file. To understand the code, open the solution
-`src/AspNetContainers.sln` with Visual Studio 2019.
+## Understanding the project
+Next, open the solution `src/AspNetContainers.sln` with Visual Studio Code.
+Since code is always the best documentation, the easiest way to understand the
+containers and their configurations is by reading the `src/docker-compose.yml`
+file.
 
-### SMTP Settings
-The `Notification Service` uses SMTP to send emails. In order to
-make it work correctly, set these environment variables:
-* SmtpOptions__Host=<host>
-* SmtpOptions__Username=<username>
-* SmtpOptions__Password=<password>
-* SmtpOptions__EmailOverride=<email-override>
-
-**Note 1**: It's recommended that you specify those parameters as environment
-variables. That way it will either work on debug or when running
-with `docker-compose`. To use them with `docker-compose`, set
-as:
-* SmtpOptions__Username=${SmtpOptions__Username}
-
-**Note 2**: it's STRONGLY RECOMMENDED that you set `email override`,
-or else the system will spam email accounts.
-
-
-### Debugging with Visual Studio
+## Debugging with Visual Studio
 Building and debugging with Visual Studio 2019 is straightforward.
 Simply open the `AspNetMicroservices.sln` solution from the `src`
 folder, build and run the project as debug (F5).
@@ -222,8 +151,7 @@ docker-compose -f docker-compose.debug.yml up
 **Tip**: if you want, you can run the above command in the background
 by appending a `-d` to it.
 
-
-### Running with Docker Compose
+## Running with Docker Compose
 The recommended way to build the images is by using
 [Docker Compose](https://docs.docker.com/compose/). Assuming you have
 [.NET SDK 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
@@ -236,8 +164,20 @@ This command will not only pull the images you don't have
 but also build them (in case they aren't) and init the 
 databases so you have your application running as soon as possible.
 
-For available urls to hit, check the
-[Urls section](https://github.com/hd9/aspnet-microservices#urls).
+To start all containers:
+```s
+ docker-compose up
+```
+
+To stop and remove all containers:
+```s
+docker-compose down -v
+```
+
+To start a specific container run:
+```s
+ docker-compose up <service-name>
+```
 
 ## Building the Docker images independently
 But if you really want, you can also build the images independently.
@@ -695,6 +635,26 @@ To manually import the database, run:
 mysql --protocol=tcp -u root -ptodo -P 3308 < ShippingSvc/db.sql
 ```
 
+# Configuration
+For more information, check the `Cheatsheet` section below.
+
+## SMTP Settings
+The `Notification Service` uses SMTP to send emails. In order to
+make it work correctly, set these environment variables:
+* SmtpOptions__Host=<host>
+* SmtpOptions__Username=<username>
+* SmtpOptions__Password=<password>
+* SmtpOptions__EmailOverride=<email-override>
+
+**Note 1**: It's recommended that you specify those parameters as environment
+variables. That way it will either work on debug or when running
+with `docker-compose`. To use them with `docker-compose`, set
+as:
+* SmtpOptions__Username=${SmtpOptions__Username}
+
+**Note 2**: it's STRONGLY RECOMMENDED that you set `email override`,
+or else the system will spam email accounts.
+
 
 # Management Interfaces
 The project also includes management interfaces for RabbitMQ and MySQL
@@ -764,115 +724,17 @@ Then run the below command:
 docker run --rm --name redis-commander -d --env REDIS_HOSTS=$web_redis_ip -p 8082:8081 rediscommander/redis-commander:latest
 ```
 
-# Cheatsheet
-Okay, I admit, this got complicated enough. So here's some
-information to get started with the project.
-
-## Debugging
-* Open `src/AspNetMicroservices.sln` with Visual Studio 2019
-* Configure SMTP Settings (see section above)
-* Run the depencies with `docker-compose -f docker-compose.debug.yml up`
-* From Visual Studio, run the project as debug (F5)
-
-## Urls
-By default, the microservices are configured to run at:
-* **Web**: [http://localhost:8000](http://localhost:8000)
-* **Catalog**: [http://localhost:8001](http://localhost:8001)
-* **Newsletter**: [http://localhost:8002](http://localhost:8002)
-* **Order**: [http://localhost:8003](http://localhost:8003)
-* **Account**: [http://localhost:8004](http://localhost:8004)
-* **Recommendation**: [http://localhost:8005](http://localhost:8005)
-* **Notification**: [http://localhost:8006](v)
-* **Payment**: [http://localhost:8007](http://localhost:8007)
-* **Shipping**: [http://localhost:8008](http://localhost:8008)
-
-And the management tools are available on:
-* **Grafana**: [http://localhost:3000/](http://localhost:3000/)
-* **MySQL Admin**: [http://localhost:8010/](http://localhost:8010/)
-* **Mongo Express**: [http://localhost:8011/](http://localhost:8011/)
-* **RabbitMQ dashboard**: [http://localhost:8012/](http://localhost:8012/)
-* **Redis Commander**: [http://localhost:8013/](http://localhost:8013/)
-* **The ELK Stack (Experimental)**: [http://localhost:5601/app/kibana#/home](http://localhost:5601/app/kibana#/home).
-
-## Databases
-Accessing the databases is also trivial. The simplest way to 
-reach them out is by using `docker-compose` and
-accessing them by their internal hostnames.
-Since the hostnames are configured to match their respective
-services, it should be straightforward to access them. 
-For example, for `OrderSvc` is `order-db`, for `AccountSvc`, it's
-`account-db`, and so on. For the full reference, check the
-`src/docker-compose.yml` file.
-
-### Accessing the MySQL databases with MySQL Admin
-You can access the MySQL databases using MySQL Admin
-(available at http://localhost:8010/), specifying the server
-name (eg. `catalog-db`), and entering username: `root`,
-password: `todo`. 
-For example, to access the database for `OrderSvc`, open Adminer
-and enter:
-* **Server**: `order-db`
-* **Username**: `root`
-* **Password**: `todo`
-
-### Accessing MongoDB with MongoExpress
-You can access the MongoDB database using Mongo Express available at
-http://localhost:8011/. No username or password is required.
-
-### Accessing from code or via the command line
-However, if you're looking accessing them via the commandline 
-(or from code), here are the default urls. Please notice that 
-you should bind these ports when running the container, else 
-you won't be able to access them from the host (your machine):
-* **catalog-db**: mongodb://localhost:3301
-* **newsletter-db**: mysql://localhost:3302
-* **order-db**: mysql://localhost:3303
-* **account-db**: mysql://localhost:3304
-* **recommendation-db**: mysql://localhost:3305
-* **notification-db**: mysql://localhost:3306
-* **payment-db**: mysql://localhost:3307
-* **shipping-db**: mysql://localhost:3308
-
-# Commands
-The main commands to run are:
-```s
-# running just the backend dependencies (MySQL, MongoDB, Redis, RabbitMQ, etc)
-docker-compose -f docker-compose.debug.yml up
-
-# running the containers (recommended)
-docker-compose up                           # start all the services in the foreground
-docker-compose up -d                        # start all the services in the background
-docker-compose down                         # stop and remove all the services
-docker-compose up <service-name>            # start <service-name> and its dependencies. Ex: docker-compose up shipping
-
-# building the images
-docker-compose build
-
-# running the instances individually
-docker run --name web            -p 8000:80 web
-docker run --name catalog        -p 8001:80 catalog
-docker run --name newsletter     -p 8002:80 newsletter
-docker run --name order          -p 8003:80 order
-docker run --name account        -p 8004:80 account
-docker run --name recommendation -p 8005:80 recommendation
-docker run --name notification   -p 8006:80 notification
-docker run --name payment        -p 8007:80 payment
-docker run --name shipping       -p 8008:80 shipping
-```
-
-
 # References
 * [Microservices architecture](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture)
 * [Create a web API with ASP.NET Core and MongoDB](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mongo-app?view=aspnetcore-3.1&tabs=visual-studio)
-* [Google Accounts - Sign in using App Passwords](https://support.google.com/accounts/answer/185833)
 * [Docker images for ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-3.1)
 * [Development workflow for Docker apps](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/docker-application-development-process/docker-app-development-workflow)
 * [Dockerize an ASP.NET Core application](https://docs.docker.com/engine/examples/dotnetcore/)
 
-## License
+# License
 This project is licensed under [the MIT License](https://opensource.org/licenses/MIT).
 
-## Final Thoughts
+# Final Thoughts
 First and foremost: have fun!
 
 Then, to learn more about this app, Docker, Azure, Kubernetes, Linux
